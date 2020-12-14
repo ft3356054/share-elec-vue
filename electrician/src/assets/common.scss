@@ -1,0 +1,86 @@
+html,body,div,p,iframe,ul,ol,dl,dt,dd,li,dl,h1,h2,h3,h4,table,th,td,input,span,a,img,button,select,textarea {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    letter-spacing:0.5px;
+}
+
+ol,
+ul,
+li {
+    list-style: none;
+}
+
+img {
+    border: 0;
+    vertical-align: middle;
+}
+
+body {
+    color: #000000;
+    // background: #f3f8fe;
+    overflow-x: hidden;
+}
+
+.clear {
+    clear: both;
+    height: 1px;
+    width: 100%;
+    overflow: hidden;
+    margin-top: -1px;
+}
+
+a {
+    color: #000000;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #F00;
+}
+
+body,html,.wrap,.container{
+    width: 100%;
+    height: 100%;
+}
+
+.wrap{
+    overflow: hidden;
+}
+
+.container{
+    position: relative;
+}
+
+.imgbox{
+    width: 100%;
+}
+.imgbox li,.imgList{
+    display: flex;
+    flex-wrap: wrap;
+}
+.imgbox li>div,.imgList>li{
+    width: 100px;
+    height: 100px;
+    position: relative;
+}
+.imgbox li>div div{
+    position: absolute;
+    top:0;
+    left:0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0,.5);
+    color:#fff;
+    text-align: center;
+}
+.imgbox li>div img,.imgList>li img{
+    width: 100%;
+    height: 100%;
+}

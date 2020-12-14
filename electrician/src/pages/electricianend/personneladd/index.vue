@@ -1,0 +1,329 @@
+<template>
+<div class="contianer">
+    <div class="backgroundbox">
+        <p  @click="goback"><img src="../../../assets/images/jiantou.png" alt=""></p>
+        <p>订单详情</p>
+    </div>
+    <div class="contentbox">
+        <div class="content">
+            <div>
+                <p class="titles"><span></span>订单信息</p>
+                <p class="pswidth"><span>订单编号</span><span>2202323232323</span></p>
+                <p class="pswidth"><span>标题</span><span>插座跳闸</span></p>
+                <p class="pswidth"><span>联系人</span><span>杨磊</span></p>
+                <p class="pswidth"><span>联系电话</span><span>155****4545</span></p>
+                <p class="pswidth"><span>发单时间</span><span>2020/11/03 16:10</span></p>
+                <p class="pswidth"><span>状态</span><span>带现场勘察</span></p>
+                <p class="pswidth"><span>维修价格</span><span id="money">¥1500</span></p>
+                <p class="pswidth"><span>勘察情况</span> <span>变压器故障，变压器故障原因当前未知，请于业主联系</span> </p>
+            </div>
+             <div>
+                <p class="add"><span></span><span>人员增加</span><span><img src="../../../assets/images/peopleadd.png" alt=""></span></p>
+                <p style="font-size:13px;color:#9d9d9d">请输入人员姓名和手机号，多个人员用逗号分隔</p>
+                <textarea name="" id="" cols="30" rows="5" style="width:100%;background:#f7fbff;border:0;outline:none;font-size:13px;font-weight:bold" placeholder="例：刘强 13812345678，杨磊 15584552222"></textarea>
+                <p><button @click="showPopup">保存</button><button>删除</button></p>
+            </div>
+        </div>
+    <div class="buttons"><button @click="Order">开始施工</button></div>
+    <van-popup v-model="show">
+        <p class="guanbi" @click="guanbi"><img src="../../../assets/images/close.png" alt=""></p>
+        <p class="title">请确认增加人员信息是否正确</p>
+        <div class="context">
+            <p>刘强 138555454545</p>
+            <p>杨磊 138555454545</p>
+        </div>
+        <div class="btnbox">
+            <button>否</button><button>是</button>
+        </div>
+    </van-popup>
+    </div>
+</div>
+</template>
+
+<script>
+export default {
+  data () {
+    return {
+      times: '',
+      show: false
+    }
+  },
+  methods: {
+    goback () {
+      this.$router.go(-1)
+    },
+    Order () {
+      this.$router.push('/completion')
+    },
+    returnorder () {
+      this.$router.push('/returnorder')
+    },
+    showPopup () {
+      this.show = true
+    },
+    guanbi () {
+      this.show = false
+    }
+  }
+}
+</script>
+
+<style scoped>
+.contianer{
+width: 100%;
+height: 100%;
+background: #f0f6fd;
+position: relative;
+box-sizing: border-box;
+overflow: auto;
+}
+.contianer .backgroundbox{
+    width: 100%;
+    height: 150px;
+    background-color: #87cefa;
+    border-bottom-right-radius: 20%;
+    border-bottom-left-radius: 20%;
+display: flex;
+padding-top: 45px;
+    box-sizing: border-box;
+}
+.contianer .backgroundbox p{
+    padding: 0;
+    margin: 0;
+    color: #ffffff;
+}
+.contianer .backgroundbox p:nth-child(1){
+font-size: 25px;
+padding-left: 20px;
+}
+.contianer .backgroundbox p:nth-child(2){
+flex: 1;
+text-align: center;
+font-size: 20px;
+font-weight: bold;
+}
+.contentbox{
+    position: absolute;
+    top: 85px;
+    left: 0;
+    width: 100%;
+    height: auto;
+    padding: 0 15px;
+    box-sizing: border-box;
+}
+.contentbox .content{
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+    background: #ffffff;
+    padding: 15px 20px;
+box-sizing: border-box;
+    margin-top: 10px;
+   box-shadow: 0px -5px 0px  #b4e0fc,0 -9px 0 #93d3fb;
+}
+
+.contentbox .content div{
+margin-top: 30px;
+}
+.contentbox .content div:nth-child(1){
+margin-top: 20px;
+}
+.contentbox .content div .titles{
+font-size: 15px;
+font-weight: bold;
+}
+
+.contentbox .content div .titles span{
+display: inline-block;
+width: 4px;
+height: 13px;
+background-color: #f65b6a;
+margin-right: 10px;
+}
+.contentbox .content div .add{
+font-size: 15px;
+font-weight: bold;
+display: flex;
+}
+.contentbox .content div .add span:nth-child(1){
+display: inline-block;
+width: 4px;
+height: 13px;
+background-color: #f65b6a;
+margin-right: 10px;
+margin-top: 3px;
+}
+.contentbox .content div:nth-child(2) p,textarea{
+margin-left: 0 15px;
+}
+.contentbox .content div:nth-child(2) p button{
+margin: 0;
+padding: 0;
+border: 0;
+outline: none;
+background: #ffffff;
+font-size: 13px;
+}
+.contentbox .content div:nth-child(2) p button:nth-child(1){
+color: #157ebf;
+font-weight: bold;
+margin-right: 20px;
+}
+.contentbox .content div:nth-child(2) p button:nth-child(2){
+color: #626262;
+font-weight: bold;
+}
+.contentbox .content div .add span:nth-child(2){
+flex: 1;
+}
+.contentbox .content div .add span:nth-child(3) img{
+width: 25px;
+height: 25px;
+display: block;
+}
+.contentbox .content div .pswidth{
+display: flex;
+}
+.contentbox .content div .pswidth span:nth-child(1){
+width: 55px;
+font-size: 13px;
+margin-right: 27px;
+margin-left: 14px;
+color: #6f6f6f;
+}
+.contentbox .content div .pswidth span:nth-child(2){
+flex: 1;
+width: 55px;
+font-size: 13px;
+margin-right: 27px;
+color: #111111;
+font-weight: bold;
+}
+.contentbox .content div .pswidth span:nth-child(3) {
+    font-size: 14px;
+    color: #83ccfa;
+}
+.contentbox .content div .pswidth span:nth-child(3) img{
+float: left;
+width: 20px;
+height: 20px;
+margin-right: 10px;
+}
+.contentbox .yuyuetime{
+    width: 100%;
+    height: 60px;
+    background: #ffffff;
+    margin-top: 15px;
+    border-radius: 16px;
+    line-height: 60px;
+    display: flex;
+    font-size: 15px;
+}
+.contentbox .yuyuetime span:nth-child(1){
+    color: red;
+    padding-left: 34px;
+    box-sizing: border-box;
+}
+.contentbox .yuyuetime span:nth-child(3){
+flex: 1;
+padding-left: 22px;
+box-sizing: border-box;
+}
+.contentbox .yuyuetime span input{
+border:none;
+color: #4097ce;
+background: #ffffff;
+}
+.contentbox .yuyuetime span input::-webkit-clear-button{
+visibility:hidden;
+}
+.contentbox .yuyuetime span input::-webkit-calendar-picker-indicator{
+border: 0;
+outline: none;
+background: #ffffff;
+}
+#money{
+    color: #f76f7c;
+}
+.van-popup{
+    width: 287px;
+    height: 200px;
+    border-radius: 15px;
+    padding: 12px 15px;
+    box-sizing: border-box;
+}
+.van-popup p{
+margin: 0;
+padding: 0;
+}
+.van-popup .guanbi{
+text-align: right;
+}
+.van-popup .guanbi img{
+    width: 13px;
+    height: 13px;
+}
+.van-popup .title{
+    font-size: 15px;
+    font-weight: bold;
+}
+.van-popup .context{
+    width: 100%;
+    height:100px;
+    font-size: 13px;
+    font-weight: bold;
+    /* margin-top: 20px; */
+    overflow: auto;
+}
+.van-popup .context p{
+margin-top: 10px;
+}
+.van-popup .btnbox{
+    width: 100%;
+    height: 50px;
+    border-top: 1px solid #cccccc;
+    box-sizing: border-box;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: flex;
+}
+.van-popup .btnbox button{
+    flex: 1;
+    border: 0;
+    outline: none;
+    background: #ffffff;
+}
+.van-popup .btnbox button:nth-child(1){
+border-right: 1px solid #cccccc;
+color: #686868;
+}
+.van-popup .btnbox button:nth-child(2){
+color: #3397ea;
+}
+.buttons{
+    text-align: center;
+    margin-top: 20px;
+}
+.buttons button{
+width: 140px;
+height: 40px;
+border: 0;
+outline: none;
+border-radius: 20px;
+background: #6dc0f5;
+color: #ffffff;
+font-size: 15px;
+font-weight: bold;
+}
+@media (max-width: 375px) {
+  .contentbox{
+    width: 100%;
+    height: 710px;
+    padding: 0 15px;
+    box-sizing: border-box;
+    overflow: auto;
+}
+}
+
+</style>>
