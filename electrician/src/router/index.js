@@ -4,11 +4,12 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
-const routes = [{
+const routes = [
+  //用户端
+  {
     path: '/customer',
     name: 'Home',
     component: () => import("../views/customer/Home/home.vue"),
-
   },
   {
     path: '/Pay', //支付
@@ -61,29 +62,50 @@ const routes = [{
     name: 'demand',
     component: () => import('../views/demand/demand.vue')
   }, {
-    path: '/noArrived', //订单详情  未到达
-    name: 'noArrived',
-    component: () => import('../views/About/noArrived.vue')
+    path: '/search', //搜索页面
+    name: 'search',
+    component: () => import('../views/order/search.vue')
   }, {
     path: '/Message', //消息列表
     name: 'Message',
     component: () => import('../views/Message/Message.vue')
   }, {
+    path: '/noArrived', //订单详情  未到达
+    name: 'noArrived',
+    component: () => import('../views/About/noArrived.vue')
+  }, {
     path: '/accepted', //订单详情  待验收
     name: 'accepted',
     component: () => import('../views/About/accepted.vue')
-  }, {
-    path: '/search', //搜索页面
-    name: 'search',
-    component: () => import('../views/order/search.vue')
-  },{
+  },,{
     path: '/complete', //订单详情  以完成
     name: 'complete',
     component: () => import('../views/About/complete.vue')
-  },
-
-
-
+  },{
+      path: '/stayOrder',  //订单详情  待接单
+      name: 'stayOrder',
+      component: () => import('../views/About/stayOrder.vue')
+    },
+    {
+       path: '/stayMake',  //订单详情  待预约
+       name: 'stayMake',
+      component: () => import('../views/About/stayMake.vue')
+     },
+     {
+      path: '/stayRepair',  //订单详情  待维修
+      name: 'stayRepair',
+      component: () => import('../views/About/stayRepair.vue')
+    },
+    {
+      path: '/stayScene',  //订单详情  待现场勘查
+      name: 'stayScene',
+      component: () => import('../views/About/stayScene.vue')
+    },
+   {
+      path: '/cancelled',  //订单详情  以取消
+      name: 'cancelled',
+      component: () => import('../views/About/cancelled.vue')
+    },
    // 电工端
     // 首页
     {
@@ -208,28 +230,3 @@ export default router
 
 
 
-// ,{
-//   path: '/accepted',  //订单详情  待验收
-//   name: 'accepted',
-//   component: () => import('../views/About/accepted.vue')
-// },{
-//   path: '/stayOrder',  //订单详情  待接单
-//   name: 'stayOrder',
-//   component: () => import('../views/About/stayOrder.vue')
-// },{
-//   path: '/stayMake',  //订单详情  待预约
-//   name: 'stayMake',
-//   component: () => import('../views/About/stayMake.vue')
-// },{
-//   path: '/stayRepair',  //订单详情  待维修
-//   name: 'stayRepair',
-//   component: () => import('../views/About/stayRepair.vue')
-// },{
-//   path: '/stayScene',  //订单详情  待现场勘查
-//   name: 'stayScene',
-//   component: () => import('../views/About/stayScene.vue')
-// },{
-//   path: '/cancelled',  //订单详情  以取消
-//   name: 'cancelled',
-//   component: () => import('../views/About/cancelled.vue')
-// }
