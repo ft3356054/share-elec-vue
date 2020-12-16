@@ -111,7 +111,6 @@
 </template>
 
 <script>
-import "@/assets/tab.scss";
 import BaseTab from "@/components/tab.vue";
 export default {
   name: "Home",
