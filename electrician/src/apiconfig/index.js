@@ -42,3 +42,12 @@ export function fetch (requestUrl, params = '') {
     }
   })
 }
+export function fetch (requestUrl, params = '') {
+  return axios({
+    url: requestUrl,
+    method: 'get',
+    data: {
+      'body': params
+    }
+  })
+}

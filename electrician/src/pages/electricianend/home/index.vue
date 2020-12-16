@@ -114,7 +114,17 @@ export default {
   created () {
     setInterval(this.scroll, 3000)
   },
+  mounted(){
+        this.getlist()
+  },
   methods: {
+    getlist(){
+       this.$api.get('notifyAnnounceUser/userId/customer002',{
+
+       },response=>{
+           console.log(response)
+       })
+     },
     scroll () {
       this.animate = true
       setTimeout(() => {
