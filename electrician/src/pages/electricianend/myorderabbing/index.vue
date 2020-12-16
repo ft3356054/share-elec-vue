@@ -158,20 +158,22 @@ flex-direction: column;
 }
 header{
 width: 100%;
-height: 144px;
+height: 120px;
 }
 .topserch{
 width: 100%;
-height: 88px;
+height: 80px;
 background: #87cefa;
 display: flex;
+padding-top: 15px;
+box-sizing: border-box;
 }
 .topserch p{
 margin: 0;
 padding: 0;
 }
 .topserch p:nth-child(1){
-line-height: 88px;
+line-height: 80px;
 padding-left: 15px;
 }
 .topserch p:nth-child(2){
@@ -181,17 +183,17 @@ box-sizing: border-box;
 }
 .topserch p:nth-child(2) input{
   width: 100%;
-  height: 36px;
+  height: 32px;
   border-radius: 20px;
   border: 0;
   outline: none;
-  font-size: 14px;
+  font-size: 11px;
   padding-left: 20px;
   box-sizing: border-box;
 }
 .tabbox{
   width: 100%;
-  height: 56px;
+  height: 40px;
   background: #ffffff;
 }
 .tabbox ul{
@@ -203,15 +205,15 @@ display: flex;
 list-style: none;
 flex: 1;
 margin: 0 20px;
-line-height: 54px;
+line-height: 40px;
 text-align: center;
-font-size: 13px;
+font-size: 11px;
 }
 .active{
     color: #54abe1;
     border-bottom: 2px solid #2293d8;
 box-sizing: border-box;
-font-size: 15px;
+font-size: 13px;
 }
 section{
     flex: 1;
@@ -232,14 +234,14 @@ section .contentbox .content{
     border-radius: 16px;
     background: #ffffff;
     padding: 15px 20px;
-box-sizing: border-box;
+    box-sizing: border-box;
     margin-top: 10px;
 
 }
 section .contentbox .content .typebox{
 display: flex;
-font-size: 14px;
 border-bottom: 1px solid #f2f2f2;
+box-sizing: border-box;
 }
 section .contentbox .content .typebox p:nth-child(2){
     flex: 1;
@@ -256,13 +258,14 @@ section .contentbox .content .typebox p:nth-child(1) span:nth-child(1){
 }
 section .contentbox .content .typebox p:nth-child(1) span:nth-child(2){
     display: inline-block;
-    font-size: 16px;
+    font-size: 13px;
     font-weight: bold;
     margin-left: 7px;
 }
 section .contentbox .content .typebox p:nth-child(3){
     line-height: 22px;
     color: #aeaeae;
+    font-size: 10px;
 }
 section .contentbox .content .addressbox{
 width: 100%;
@@ -275,29 +278,22 @@ display: flex;
 margin: 0;
 }
 section .contentbox .content .addressbox dt{
-width: auto;
-font-size: 14px;
+  flex: 1;
+font-size: 11px;
 }
 section .contentbox .content .addressbox dt p{
 margin: 0;
 padding: 0;
 margin-top: 5px;
 }
-section .contentbox .content .addressbox dt p:nth-child(1){
-  width: 200px;
-word-wrap:break-word;
-}
 section .contentbox .content .addressbox dd{
-flex: 1;
-padding: 0;
-margin: 0;
 text-align: right;
 padding-left: 10px;
 box-sizing: border-box;
 }
 section .contentbox .content .addressbox dd button{
-width: 53px;
-height: 25px;
+width: 50px;
+height: 20px;
 border-radius: 20px;
 outline: none;
 border: 0;
@@ -306,7 +302,7 @@ border: 1px solid #aeaeae;
 margin-top: 30px;
 box-sizing: border-box;
 color: #666666;
-font-size: 15px;
+font-size: 10px;
 }
 section .contentbox .content .addressbox dd .jiedan{
 border-color: #52aae1;

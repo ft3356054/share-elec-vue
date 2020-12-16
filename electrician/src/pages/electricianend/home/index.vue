@@ -2,33 +2,35 @@
 <template>
 <div class="contianer">
 <header>
-    <div>
-        <p @click="gomessages"><img src="../../../assets/images/message.png" alt=""></p>
-        <p></p>
-         <p @click="gouser"><img src="../../../assets/images/information.png" alt=""></p>
+    <div class="backimg">
+        <p>
+            <span><img src="@/assets/images/message.png" alt="" @click="gomessages"></span>
+            <span></span>
+            <span><img src="@/assets/images/information.png" alt="" @click="gouser"></span>
+        </p>
     </div>
-    <div class="dingdan">
-<div class="positionbox">
-        <div class="topbox">
-        <dl @click="gordergrabbing">
-            <dt><img src="../../../assets/images/ordergrabbing.png" alt=""></dt>
-            <dd>抢单</dd>
-        </dl>
-        <dl>
-            <dt><img src="../../../assets/images/stoporders.png" alt=""></dt>
-            <dd>暂停接单</dd>
-        </dl>
-        <dl @click="gomyorderabbing">
-            <dt><img src="../../../assets/images/Myorder.png" alt=""></dt>
-            <dd>我的订单</dd>
-        </dl>
-        </div>
-        <div class="message" id="box">
-            <p id="con1" ref="con1" :class="{anim:animate==true}">系统消息：<span v-for="(item,index) in messages" :key="index">{{item.name}}</span></p>
+    <div class="positionbox">
+        <div class="contentbox">
+            <div class="dlbox">
+                <dl @click="gordergrabbing">
+                    <dt><img src="@/assets/images/ordergrabbing.png" alt=""></dt>
+                    <dd>抢单</dd>
+                </dl>
+                <dl>
+                    <dt><img src="@/assets/images/stoporders.png" alt=""></dt>
+                    <dd>暂停接单</dd>
+                </dl>
+                <dl @click="gomyorderabbing">
+                    <dt><img src="@/assets/images/Myorder.png" alt=""></dt>
+                    <dd>我的订单</dd>
+                </dl>
+            </div>
+             <div class="message">
+            <p>系统消息：<span>本系统将于24日凌晨24:00开始停机更新1</span></p>
             <p></p>
-            <p><img src="../../../assets/images/messagejiantou.png" alt=""></p>
+            <p><img src="@/assets/images/messagejiantou.png" alt=""></p>
         </div>
-    </div>
+        </div>
     </div>
 </header>
 <section>
@@ -80,6 +82,7 @@
     </div>
 </section>
 </div>
+
 </template>
 
 <script>
@@ -144,125 +147,100 @@ export default {
 width: 100%;
 height: 100%;
 background: #f0f6fd;
-}
-#box{
-    /* width: 300px; */
-    /* height: 32px; */
-    overflow: hidden;
-    /* padding-left: 30px; */
-    /* border: 1px solid black; */
-}
-.anim{
-    transition: all 1.5s;
-    margin-top: -30px;
-}
-#con1 li{
-    list-style: none;
-    line-height: 30px;
-    height: 30px;
+display: flex;
+flex-direction: column;
 }
 header{
     width: 100%;
-    height: 315px;
-    background: url(../../../assets/images/banner.png) no-repeat;
-    background-size: 100% 238px;
+    height: 285px;
     position: relative;
 }
-header div{
+header .backimg{
     width: 100%;
-    height: 25px;
-    display: flex;
-    padding-top: 45px;
+    height: 214px;
+     background: url(../../../assets/images/banner.png) no-repeat;
+    background-size: 100% 100%;
+    padding-top: 40px;
     box-sizing: border-box;
 }
-header div p{
-padding: 0;
-margin: 0;
+header .backimg p{
+display: flex;
+padding: 0 10px;
+box-sizing: border-box;
 }
-header div p:nth-child(1) img{
-width: 28px;
-height: 28px;
-margin-left: 15px;
+header .backimg p span:nth-child(1) img{
+width: 20px;
+height: 20px;
+display: block;
 }
-header div p:nth-child(3) img{
-width: 28px;
-height: 28px;
-margin-right: 15px;
-}
-header div p:nth-child(2){
-flex: 1;
-}
-.dingdan{
-    width: 100%;
-    padding: 0 15px;
-    box-sizing: border-box;
-}
-.positionbox{
-    width: 100%;
-    height: 155px;
-    background: #f5faff;
-    margin-top: 118px;
-    border-radius: 16px;
-    padding: 0;
-    position: relative;
-}
-.positionbox .topbox{
-    width: 100%;
-    height: 130px;
-    display: flex;
-    background: #ffffff;
-    padding: 0;
-    border-radius: 16px;
-}
-.positionbox .topbox dl{
+header .backimg p span:nth-child(2){
     flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
 }
-.positionbox .topbox dl dt img{
-width: 55px;
-height: 55px;
+header .backimg p span:nth-child(3) img{
+width: 20px;
+height: 20px;
+display: block;
 }
-.positionbox .topbox dl dd{
-padding: 0;
-margin: 0;
-letter-spacing: 1px;
-font-size: 14px;
-color: #333333;
-}
-.positionbox .message{
+header .positionbox{
+    width: 100%;
+    height: 140px;
+    padding: 0 10px;
+    box-sizing: border-box;
     position: absolute;
     bottom: 0;
     left: 0;
-    display: flex;
-    font-size: 14px;
-    color: #2991e2;
-    line-height: 25px;
-    box-sizing: border-box;
-    padding: 0;
 }
-.positionbox .message p:nth-child(1){
-width:320px;
-overflow: hidden;
-text-overflow: ellipsis;
-white-space: nowrap;
-font-size: 12px;
-padding-left: 22px;
-box-sizing: border-box;
+header .positionbox .contentbox{
+    width:100%;
+    height:100%;
+    background:#ffffff;
+    border-radius: 10px;
 }
-.positionbox .message p:nth-child(2){
+header .positionbox .contentbox .dlbox{
+width: 100%;
+height: 105px;
+display: flex;
+}
+header .positionbox .contentbox .dlbox dl{
 flex: 1;
+text-align: center;
+display: flex;
+flex-direction: column;
+text-align: center;
+justify-content: center;
+font-size: 12px;
 }
-.positionbox .message p:nth-child(3) img{
-width: 5px;
-height: 10px;
+header .positionbox .contentbox .dlbox dl dt img{
+width: 50px;
+height: 50px;
+display: inline-block;
 }
-
+header .message{
+    width: 100%;
+    height: 35px;
+    background: #f5faff;
+    display: flex;
+    font-size: 11px;
+    line-height: 35px;
+    padding: 0 10px;
+    box-sizing: border-box;
+    color: #3f99e4;
+}
+header .message p:nth-child(2){
+    flex: 1;
+}
+header .message p:nth-child(3) img{
+    width: 6px;
+    height: 8px;
+    display: block;
+    margin-top: 12px;
+}
 section{
-    padding-top: 15px;
-
+    flex: 1;
+    overflow: auto;
+}
+section::-webkit-scrollbar{
+    width: 0;
 }
 section .tab-box{
     width: 100%;
@@ -271,18 +249,18 @@ section .tab-box{
 section .tab-box ul{
 width: 100%;
 height: 100%;
+line-height: 37px;
 }
 section .tab-box ul li{
 list-style: none;
 float: left;
 margin-left: 48px;
-line-height: 38px;
-
+font-size: 13px;
 }
 
 section .contentbox{
     width: 100%;
-    height: 320px;
+    height: auto;
     padding: 0 15px;
     box-sizing: border-box;
     overflow: auto;
@@ -295,14 +273,12 @@ section .contentbox .content{
     height: auto;
     border-radius: 16px;
     background: #ffffff;
-    padding: 15px 20px;
+    padding: 15px 12px;
 box-sizing: border-box;
-    margin-top: 10px;
-
+margin-top: 10px;
 }
 section .contentbox .content .typebox{
 display: flex;
-font-size: 14px;
 border-bottom: 1px solid #f2f2f2;
 }
 section .contentbox .content .typebox p:nth-child(2){
@@ -320,13 +296,14 @@ section .contentbox .content .typebox p:nth-child(1) span:nth-child(1){
 }
 section .contentbox .content .typebox p:nth-child(1) span:nth-child(2){
     display: inline-block;
-    font-size: 16px;
+    font-size: 13px;
     font-weight: bold;
     margin-left: 7px;
 }
 section .contentbox .content .typebox p:nth-child(3){
     line-height: 22px;
     color: #aeaeae;
+    font-size: 10px;
 }
 section .contentbox .content .addressbox{
 width: 100%;
@@ -339,8 +316,8 @@ display: flex;
 margin: 0;
 }
 section .contentbox .content .addressbox dt{
-width: auto;
-font-size: 14px;
+    flex: 1;
+font-size: 11px;
 }
 section .contentbox .content .addressbox dt p{
 margin: 0;
@@ -348,7 +325,6 @@ padding: 0;
 margin-top: 5px;
 }
 section .contentbox .content .addressbox dd{
-flex: 1;
 padding: 0;
 margin: 0;
 text-align: right;
@@ -356,8 +332,8 @@ padding-left: 10px;
 box-sizing: border-box;
 }
 section .contentbox .content .addressbox dd button{
-width: 53px;
-height: 25px;
+width: 50px;
+height: 20px;
 border-radius: 20px;
 outline: none;
 border: 0;
@@ -366,7 +342,7 @@ border: 1px solid #aeaeae;
 margin-top: 30px;
 box-sizing: border-box;
 color: #666666;
-font-size: 15px;
+font-size: 10px;
 }
 section .contentbox .content .addressbox dd .jiedan{
 border-color: #52aae1;
@@ -376,24 +352,7 @@ color: #52aae1;
     color: #54abe1;
     border-bottom: 2px solid #2293d8;
 box-sizing: border-box;
-}
-@media (max-width: 414px) {
- section .contentbox{
-    width: 100%;
-    height: 350px;
-    padding: 0 15px;
-    box-sizing: border-box;
-    overflow: auto;
-}
-}
-@media (max-width: 375px) {
- section .contentbox{
-    width: 100%;
-    height: 410px;
-    padding: 0 15px;
-    box-sizing: border-box;
-    overflow: auto;
-}
+font-size: 15px;
 }
 
 </style>>

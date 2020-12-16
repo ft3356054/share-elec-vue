@@ -70,7 +70,7 @@ export default {
               // 定位成功 自动将marker和circle移到定位点
               o.getCurrentPosition((status, result) => {
                 console.log(result)
-                vm.center = [result.position.lng, result.position.lat]
+                // vm.center = [result.position.lng, result.position.lat]
               })
             }
           }
@@ -78,7 +78,7 @@ export default {
     }
   },
   mounted () {
-    this.getLocation()
+    // this.getLocation()
   },
   methods: {
     goback () {
@@ -90,10 +90,10 @@ export default {
     },
     getLocation () {
       // let _that = this
-      let geolocation = location.initMap('map-container') // 定位
-      AMap.event.addListener(geolocation, 'complete', result => {
-        console.log(result)
-      })
+      // let geolocation = location.initMap('map-container') // 定位
+      // AMap.event.addListener(geolocation, 'complete', result => {
+      //   console.log(result)
+      // })
     }
   }
 }
@@ -116,7 +116,7 @@ box-sizing: border-box;
     left: 20px;
 }
 .amap-wrapper{
-  height:575px;
+  height:400px;
 }
 .btnbox{
   text-align: center;

@@ -1,7 +1,7 @@
 <template>
     <div class="contianer">
         <header>
-             <p  @click="goback"><img src="../../../assets/images/jiantou.png" alt=""></p>
+             <p  @click="goback"><img src="@/assets/images/jiantou.png" alt=""></p>
             <p>消息列表</p>
         </header>
         <section>
@@ -18,7 +18,7 @@
                         <p>{{item.progess}}</p>
                     </dt>
                     <dd>
-                        <button class="jiedan">接单 ></button>
+                        <button class="jiedan">接单 <img src="@/assets/images/messagejiantou.png" alt=""></button>
                     </dd>
                 </dl>
             </div>
@@ -67,10 +67,10 @@ box-sizing: border-box;
 }
 header{
     width: 100%;
-    height: 90px;
+    height: 80px;
     background: #87cefa;
     display: flex;
-    line-height: 90px;
+    line-height: 80px;
 
 }
 header p{
@@ -80,7 +80,7 @@ header p{
 header p:nth-child(2){
     flex: 1;
     text-align: center;
-    font-size: 20px;
+    font-size: 15px;
     color: #ffffff;
     font-weight: bold;
 }
@@ -99,21 +99,17 @@ section::-webkit-scrollbar{
 }
 .content{
     width: 100%;
-    height: 110px;
+    height: auto;
     background: #ffffff;
     border-radius: 15px;
     padding: 20px;
     box-sizing: border-box;
     margin-top: 20px;
 }
-.content p,dl,dd{
-margin: 0;
-padding: 0;
-}
 .typebox{
     display: flex;
     border-bottom: 1px solid #cccccc;
-    padding-bottom: 10px;
+    padding-bottom: 5px;
     box-sizing: border-box;
 }
 .typebox p:nth-child(2){
@@ -130,13 +126,14 @@ padding: 0;
     background-size: 100% 100%;
 }
 .typebox p:nth-child(1) span:nth-child(2){
-font-size: 15px;
+font-size: 13px;
 font-weight: bold;
 margin-left: 8px;
 }
 .typebox p:nth-child(3){
 font-size: 8px;
 color: #b2b2b2;
+line-height: 20px;
 }
 .addressbox{
     width: 100%;
@@ -154,13 +151,22 @@ box-sizing: border-box;
 }
 .addressbox dl dd{
     flex: 1;
-    text-align: right;
-    padding-top: 15px;
+    text-align: center;
+    padding-top: 22px;
+    font-size: 12px;
+    padding-left: 10px;
 }
 .addressbox dl dd button{
     border: 0;
     outline: none;
     background: #ffffff;
     color: #4aa4dd;
+}
+.addressbox dl dd button img{
+float:right;
+margin-top: 5px;
+margin-left: 3px;
+width: 5;
+height: 8px;
 }
 </style>

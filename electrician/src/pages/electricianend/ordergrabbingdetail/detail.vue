@@ -56,12 +56,12 @@ position: relative;
 }
 .contianer .backgroundbox{
     width: 100%;
-    height: 150px;
+    height: 135px;
     background-color: #87cefa;
     border-bottom-right-radius: 20%;
     border-bottom-left-radius: 20%;
 display: flex;
-padding-top: 45px;
+padding-top: 42px;
     box-sizing: border-box;
 }
 .contianer .backgroundbox p{
@@ -70,13 +70,13 @@ padding-top: 45px;
     color: #ffffff;
 }
 .contianer .backgroundbox p:nth-child(1){
-font-size: 25px;
+font-size: 15px;
 padding-left: 20px;
 }
 .contianer .backgroundbox p:nth-child(2){
 flex: 1;
 text-align: center;
-font-size: 20px;
+font-size: 15px;
 font-weight: bold;
 }
 .contentbox{
@@ -104,25 +104,26 @@ box-sizing: border-box;
 margin-top: 30px;
 }
 .contentbox .content div:nth-child(1){
-margin-top: 20px;
+margin-top: 15px;
 }
 .contentbox .content div .titles{
-font-size: 15px;
+font-size: 13px;
 font-weight: bold;
 }
 .contentbox .content div .titles span{
 display: inline-block;
-width: 4px;
-height: 13px;
+width: 2px;
+height: 10px;
 background-color: #f65b6a;
 margin-right: 10px;
 }
 .contentbox .content div .pswidth{
 display: flex;
+margin-top: 5px;
 }
 .contentbox .content div .pswidth span:nth-child(1){
 width: 55px;
-font-size: 13px;
+font-size: 11px;
 margin-right: 27px;
 margin-left: 14px;
 color: #6f6f6f;
@@ -130,7 +131,7 @@ color: #6f6f6f;
 .contentbox .content div .pswidth span:nth-child(2){
 flex: 1;
 width: 55px;
-font-size: 13px;
+font-size: 11px;
 margin-right: 27px;
 color: #111111;
 font-weight: bold;
@@ -143,8 +144,8 @@ font-weight: bold;
     margin-top: 20px;
 }
 .buttons button{
-width: 140px;
-height: 40px;
+width: 123px;
+height: 37px;
 border: 0;
 outline: none;
 border-radius: 20px;
@@ -153,14 +154,6 @@ color: #ffffff;
 font-size: 15px;
 font-weight: bold;
 }
-@media (max-width: 375px) {
-  .contentbox{
-    width: 100%;
-    height: 710px;
-    padding: 0 15px;
-    box-sizing: border-box;
-    overflow: auto;
-}
-}
+
 
 </style>>

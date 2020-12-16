@@ -69,15 +69,19 @@ width: 100%;
 height: 100%;
 background: #f0f6fd;
 position: relative;
+overflow: auto;
+}
+.contianer::-webkit-scrollbar{
+    width: 0;
 }
 .contianer .backgroundbox{
     width: 100%;
-    height: 150px;
+    height: 135px;
     background-color: #87cefa;
     border-bottom-right-radius: 20%;
     border-bottom-left-radius: 20%;
 display: flex;
-padding-top: 45px;
+padding-top: 42px;
     box-sizing: border-box;
 }
 .contianer .backgroundbox p{
@@ -86,13 +90,13 @@ padding-top: 45px;
     color: #ffffff;
 }
 .contianer .backgroundbox p:nth-child(1){
-font-size: 25px;
+font-size: 15px;
 padding-left: 20px;
 }
 .contianer .backgroundbox p:nth-child(2){
 flex: 1;
 text-align: center;
-font-size: 20px;
+font-size: 15px;
 font-weight: bold;
 /* margin-left: -30px; */
 }
@@ -101,7 +105,7 @@ font-weight: bold;
     top: 85px;
     left: 0;
     width: 100%;
-    height: 640px;
+    height: auto;
     padding: 0 15px;
     box-sizing: border-box;
     overflow: auto;
@@ -140,13 +144,14 @@ border-bottom: 1px solid #f2f2f2;
 }
 .contentbox .content .typebox p:nth-child(1) span:nth-child(2){
     display: inline-block;
-    font-size: 16px;
+    font-size: 12px;
     font-weight: bold;
     margin-left: 7px;
 }
 .contentbox .content .typebox p:nth-child(3){
     line-height: 22px;
     color: #aeaeae;
+    font-size: 10px;
 }
 .contentbox .content .addressbox{
 width: 100%;
@@ -159,8 +164,13 @@ display: flex;
 margin: 0;
 }
 .contentbox .content .addressbox dt{
-width: auto;
-font-size: 14px;
+  flex: 1;
+font-size: 11px;
+}
+.contentbox .content .addressbox dt p{
+margin: 0;
+padding: 0;
+margin-top: 5px;
 }
 .contentbox .content .addressbox dt p{
 margin: 0;
@@ -168,16 +178,13 @@ padding: 0;
 margin-top: 5px;
 }
 .contentbox .content .addressbox dd{
-flex: 1;
-padding: 0;
-margin: 0;
-text-align: center;
+text-align: right;
 padding-left: 10px;
 box-sizing: border-box;
 }
 .contentbox .content .addressbox dd button{
-width: 53px;
-height: 25px;
+width: 50px;
+height: 20px;
 border-radius: 20px;
 outline: none;
 border: 0;
@@ -185,28 +192,11 @@ background: #ffffff;
 border: 1px solid #aeaeae;
 margin-top: 30px;
 box-sizing: border-box;
+color: #666666;
+font-size: 10px;
 }
 .contentbox .content .addressbox dd .jiedan{
 border-color: #52aae1;
 color: #52aae1;
-}
-
-@media (max-width: 375px) {
-  .contentbox{
-    width: 100%;
-    height: 710px;
-    padding: 0 15px;
-    box-sizing: border-box;
-    overflow: auto;
-}
-}
-@media (max-height: 667px) {
-  .contentbox{
-    width: 100%;
-    height: 570px;
-    padding: 0 15px;
-    box-sizing: border-box;
-    overflow: auto;
-}
 }
 </style>>
