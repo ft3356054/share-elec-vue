@@ -2,6 +2,8 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
+import Api from './api/axios.js';
+Vue.prototype.$api = Api;
 // Vant
 import Vant from 'vant';
 import 'vant/lib/index.css';
@@ -39,17 +41,6 @@ VueAMap.initAMapApiLoader({
   v: '1.4.4',
   uiVersion: '1.0' // ui版本
 })
-
-// import { Uploader, Button, Rate,Tab,Tabs,Badge,Dialog,search  } from "vant";
-
-// Vue.use(Uploader)
-// Vue.use(Button)
-// Vue.use(Rate)
-// Vue.use(Tab)
-// Vue.use(Tabs)
-// Vue.use(Badge)
-// Vue.use(Dialog )
-// Vue.use(search)
 
 Vue.config.productionTip = false
 

@@ -25,7 +25,7 @@
                 </dl>
               </div>
 
-              <p>电工证</p>
+              <p style="margin-top:10px">电工证</p>
               <div class="xuxian">
                  <dl>
                   <dt>
@@ -105,7 +105,7 @@ overflow: auto;
 }
 .contianer .backgroundbox{
     width: 100%;
-    height: 110px;
+    height: 100px;
     background-color: #87cefa;
     border-bottom-right-radius: 20%;
     border-bottom-left-radius: 20%;
@@ -125,7 +125,7 @@ box-sizing: border-box;
 .contianer .backgroundbox p:nth-child(2){
 flex: 1;
 text-align: center;
-font-size: 20px;
+font-size: 15px;
 font-weight: bold;
 }
 .content{
@@ -192,7 +192,7 @@ margin-top: 40px;
   height: 100px;
   border:1px dashed #bae2fc;
   box-sizing: border-box;
-  margin-top: 15px;
+  margin-top: 5px;
   background: #f7fbff;
   position: relative;
   overflow: hidden;
@@ -253,8 +253,8 @@ background: #f7fbff;
   border: 0;
   outline: none;
   border-radius: 25px;
-  width: 145px;
-  height: 45px;
+  width: 130px;
+  height: 35px;
   background: #6ec1f5;
   color: #ffffff;
   font-size: 15px;

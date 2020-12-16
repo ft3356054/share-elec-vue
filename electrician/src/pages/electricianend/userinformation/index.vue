@@ -134,12 +134,15 @@ margin: 0;
 padding: 0;
 background: #f0f6fd;
 position: relative;
+overflow: auto;
 }
 .topbox{
     width: 100%;
-    height: 155px;
+    height: 135px;
     background: #87cefa;
     display: flex;
+    padding-top: 10px;
+    box-sizing: border-box;
 }
 .topbox p:nth-child(1){
    padding-left: 15px;
@@ -152,7 +155,7 @@ position: relative;
 }
 .userbox{
     width: 100%;
-    height: 427px;
+    height: 350px;
     position: absolute;
     top: 92px;
     left: 0;
@@ -171,8 +174,8 @@ height: 100%;
 display: flex;
 }
 .imgbox dl dt img{
-    width: 58px;
-    height: 58px;
+    width: 50px;
+    height: 50px;
     display: block;
     margin-top: 34px;
     margin-left: 23px;
@@ -190,12 +193,12 @@ margin-top: 36px;
     padding: 0;
 }
 .imgbox dl dd div:nth-child(1) p:nth-child(1){
-    font-size: 21px;
+    font-size: 15px;
     font-weight: bold;
 }
 .imgbox dl dd div:nth-child(1) p:nth-child(2){
     margin-top: 5px;
-    font-size: 15px;
+    font-size: 13px;
     font-weight: bold;
 }
 .imgbox dl dd div:nth-child(2){
@@ -215,18 +218,19 @@ margin-top: 45px;
 }
 .information{
     width: 100%;
-    height: 290px;
+    height: auto;
     background: #ffffff;
-    margin-top: 20px;
+    margin-top: 10px;
     border-radius: 15px;
-    padding: 20px 15px;
+    padding: 10px 15px;
     box-sizing: border-box;
 }
 .information p{
     margin: 0;
     padding: 0;
     display: flex;
-    line-height: 65px;
+    line-height: 50px;
+    font-size: 13px;
 }
 .information p span:nth-child(1){
 flex: 1;
@@ -244,7 +248,7 @@ flex: 1;
     width: 285px;
     height: 165px;
     background: #ffffff;
-        position: absolute;
+    position: absolute;
     margin: auto;
     left: 0;
     top: 0;
@@ -271,7 +275,7 @@ float: right;
 }
 .stateset p:nth-child(2){
 text-align: center;
-font-size: 15px;
+font-size: 13px;
 font-weight: bold;
 }
 .stateset div{

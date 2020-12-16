@@ -19,8 +19,8 @@
             </div>
              <div>
                 <p class="add"><span></span><span>人员增加</span><span><img src="../../../assets/images/peopleadd.png" alt=""></span></p>
-                <p style="font-size:13px;color:#9d9d9d">请输入人员姓名和手机号，多个人员用逗号分隔</p>
-                <textarea name="" id="" cols="30" rows="5" style="width:100%;background:#f7fbff;border:0;outline:none;font-size:13px;font-weight:bold" placeholder="例：刘强 13812345678，杨磊 15584552222"></textarea>
+                <p style="font-size:13px;color:#9d9d9d;margin-top:5px">请输入人员姓名和手机号，多个人员用逗号分隔</p>
+                <textarea name="" id="" cols="30" rows="5" style="width:100%;margin-top:5px;background:#f7fbff;border:0;outline:none;font-size:13px;font-weight:bold" placeholder="例：刘强 13812345678，杨磊 15584552222"></textarea>
                 <p><button @click="showPopup">保存</button><button>删除</button></p>
             </div>
         </div>
@@ -79,12 +79,12 @@ overflow: auto;
 }
 .contianer .backgroundbox{
     width: 100%;
-    height: 150px;
+    height: 135px;
     background-color: #87cefa;
     border-bottom-right-radius: 20%;
     border-bottom-left-radius: 20%;
 display: flex;
-padding-top: 45px;
+padding-top: 42px;
     box-sizing: border-box;
 }
 .contianer .backgroundbox p{
@@ -93,13 +93,13 @@ padding-top: 45px;
     color: #ffffff;
 }
 .contianer .backgroundbox p:nth-child(1){
-font-size: 25px;
+font-size: 15px;
 padding-left: 20px;
 }
 .contianer .backgroundbox p:nth-child(2){
 flex: 1;
 text-align: center;
-font-size: 20px;
+font-size: 15px;
 font-weight: bold;
 }
 .contentbox{
@@ -126,22 +126,22 @@ box-sizing: border-box;
 margin-top: 30px;
 }
 .contentbox .content div:nth-child(1){
-margin-top: 20px;
+margin-top: 15px;
 }
 .contentbox .content div .titles{
-font-size: 15px;
+font-size: 13px;
 font-weight: bold;
 }
 
 .contentbox .content div .titles span{
 display: inline-block;
-width: 4px;
-height: 13px;
+width: 2px;
+height: 10px;
 background-color: #f65b6a;
 margin-right: 10px;
 }
 .contentbox .content div .add{
-font-size: 15px;
+font-size: 13px;
 font-weight: bold;
 display: flex;
 }
@@ -162,7 +162,7 @@ padding: 0;
 border: 0;
 outline: none;
 background: #ffffff;
-font-size: 13px;
+font-size: 11px;
 }
 .contentbox .content div:nth-child(2) p button:nth-child(1){
 color: #157ebf;
@@ -177,16 +177,17 @@ font-weight: bold;
 flex: 1;
 }
 .contentbox .content div .add span:nth-child(3) img{
-width: 25px;
-height: 25px;
+width: 21px;
+height: 21px;
 display: block;
 }
 .contentbox .content div .pswidth{
 display: flex;
+margin-top: 5px;
 }
 .contentbox .content div .pswidth span:nth-child(1){
 width: 55px;
-font-size: 13px;
+font-size: 12px;
 margin-right: 27px;
 margin-left: 14px;
 color: #6f6f6f;
@@ -194,7 +195,7 @@ color: #6f6f6f;
 .contentbox .content div .pswidth span:nth-child(2){
 flex: 1;
 width: 55px;
-font-size: 13px;
+font-size: 11px;
 margin-right: 27px;
 color: #111111;
 font-weight: bold;
@@ -211,13 +212,15 @@ margin-right: 10px;
 }
 .contentbox .yuyuetime{
     width: 100%;
-    height: 60px;
+    height: auto;
     background: #ffffff;
     margin-top: 15px;
     border-radius: 16px;
     line-height: 60px;
     display: flex;
     font-size: 15px;
+    padding: 10px 15px;
+    box-sizing: border-box;
 }
 .contentbox .yuyuetime span:nth-child(1){
     color: red;
@@ -246,8 +249,8 @@ background: #ffffff;
     color: #f76f7c;
 }
 .van-popup{
-    width: 287px;
-    height: 200px;
+    width: 269px;
+    height: 180px;
     border-radius: 15px;
     padding: 12px 15px;
     box-sizing: border-box;
@@ -303,27 +306,19 @@ color: #3397ea;
 }
 .buttons{
     text-align: center;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 .buttons button{
-width: 140px;
-height: 40px;
+width: 137px;
+height: 37px;
 border: 0;
 outline: none;
 border-radius: 20px;
 background: #6dc0f5;
 color: #ffffff;
-font-size: 15px;
+font-size: 13px;
 font-weight: bold;
 }
-@media (max-width: 375px) {
-  .contentbox{
-    width: 100%;
-    height: 710px;
-    padding: 0 15px;
-    box-sizing: border-box;
-    overflow: auto;
-}
-}
+
 
 </style>>
