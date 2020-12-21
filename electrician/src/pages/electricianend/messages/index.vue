@@ -41,16 +41,53 @@ export default {
         {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下'},
         {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下'},
         {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下'}
-      ]
+      ],
+      path:"ws://localhost:8083/websocketserver/",
+      socket:''
     }
   },
   mounted () {
-
+      this.WebSocketTest()
   },
   methods: {
     goback () {
       this.$router.go(-1)
-    }
+    },
+    WebSocketTest(){
+         if(typeof(WebSocket) === "undefined"){
+                alert("您的浏览器不支持socket")
+            }else{
+                // 实例化socket
+                var uid = "123";
+                console.log(this.path)
+                this.socket = new WebSocket(this.path+uid)
+                // 监听socket连接
+                this.socket.onopen = this.open
+                // 监听socket错误信息
+                this.socket.onerror = this.error
+                // 监听socket消息
+                this.socket.onmessage = this.getMessage
+                console.log(this.socket)
+            }
+    },
+    open: function () {
+            console.log("socket连接成功")
+        },
+        error: function () {
+            console.log("连接错误")
+        },
+        getMessage: function (msg) {
+            console.log(msg.data)
+        },
+        send: function () {
+            this.socket.send(params)
+        },
+        close: function () {
+            console.log("socket已经关闭")
+        }
+  },
+  destroyed(){
+      this.socket.onclose = this.close
   }
 }
 </script>

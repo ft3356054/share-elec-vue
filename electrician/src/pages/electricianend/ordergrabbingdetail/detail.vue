@@ -40,7 +40,7 @@ export default {
       this.$router.go(-1)
     },
     Order () {
-      alert('抢单成功')
+    Toast.success('成功文案');
       this.$router.push(`/appointment`)
     }
   }

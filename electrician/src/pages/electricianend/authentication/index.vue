@@ -6,7 +6,7 @@
         </div>
         <div class="content">
           <div class="context">
-            <div class="topbox">
+            <div class="topbox" @click="choosebtn">
               <p>所属公司</p>
               <p>天津市东丽区1公司</p>
               <p><img src="../../../assets/images/textjiantou.png" alt=""></p>
@@ -61,6 +61,9 @@ export default {
   methods: {
     goback () {
       this.$router.go(-1)
+    },
+    choosebtn(){
+      this.$router.push("/companyselection")
     },
     afterRead (file) {
       // 此时可以自行将文件上传至服务器
@@ -166,10 +169,10 @@ font-weight: bold;
   margin-left: 20px;
 }
 .topbox p:nth-child(3) img{
-  width: 7px;
-  height: 13px;
+  width: 5px;
+  height: 11px;
   display: block;
-  margin-top: 26px;
+  margin-top: 28px;
 }
 .science{
   width: 100%;
