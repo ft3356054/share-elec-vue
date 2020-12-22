@@ -6,12 +6,12 @@
          <div class="top">
            <div class="top-box">
                <b>支付金额</b>
-               <p>￥<span>150.00</span></p>
+               <p>￥<span>{{this.list.customerPrice}}</span></p>
            </div>
            <div class="top-bottom">
-             <div class="box">商品 <span>配电箱10kV开关烧坏</span></div>
-             <div class="box">订单编号<span>20201110002</span></div>
-             <div class="box">状态 <span class="spans">待支付维修费</span></div>
+             <div class="box">标题 <span>{{this.list.customerEvaluateTitle}}</span></div>
+             <div class="box">订单编号<span class="spa">{{this.list.orderId}}</span></div>
+             <div class="box">状态 <span class="spans">{{this.status}}</span></div>
            </div>
              <div class="bt">
               <button>取消</button>
@@ -24,12 +24,43 @@
 
 <script>
 export default {
+    data() {
+        return {
+            list:"",
+            status:"",
+            orderId:""
+        }
+    },
+    mounted() {
+        console.log(this.$route.params.orderId)
+        this.orderId=this.$route.params.orderId
+         this.$api.get(`/orderCustomer/${this.orderId}`,{
+       },res=>{
+            console.log(res)
+           console.log(res.data.resultValue.items[0])
+           this.list=res.data.resultValue.items[0]
+           console.log(this.list)
+           if(res.data.resultValue.items[0].orderStatus==="0"){
+                this.status="待支付上门费"
+           }else{
+                this.status="待支付维修费"
+           }
+       })
+    },
    methods:{
        fh(){
            this.$router.go(-1)
        },
+    //    支付
        pay(){
-           this.$router.push('/Paytwo') 
+           this.$router.push({
+               path:'/Paytwo',
+                query: {
+                money:this.list.customerPrice,
+                orderId:this.orderId,
+                source:"8888"
+                }
+           }) 
        }
    }
 }
@@ -74,7 +105,7 @@ export default {
     top: 10%;
     left: 3%;
     margin: 0 auto;
-    padding: 0 37px;
+    padding: 0 25px;
     border-radius: 8px;
     box-shadow: 0 -6px  3px #B4E0FC ;
     // box-shadow: 0 -10px  1px #93D3fb;
@@ -108,6 +139,14 @@ export default {
           }
           .spans{
               color: #318Ec8;
+          }
+          .spa{
+                  word-break:normal; 
+                    display:block; 
+                    white-space:pre-wrap;
+                    word-wrap : break-word ;
+                    overflow: hidden ;
+                    font-size: 12px;
           }
        }
     }

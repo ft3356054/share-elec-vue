@@ -3,7 +3,7 @@
     <div class="head">
       <p>
         <span @click="fh()"><img src="@/assets/images/bai.png" alt=""/></span
-        >服务评价
+        >服务投诉
       </p>
     </div>
     <div class="top">
@@ -47,8 +47,8 @@ export default {
     },
     // 点击ul
     topli(item,index){
-      console.log(index ,item)
-       console.log(this.rSelect.indexOf(item));
+      // console.log(index ,item)
+      //  console.log(this.rSelect.indexOf(item));
      if (this.rSelect.indexOf(item) !== -1) {
       this.rSelect.splice(this.rSelect.indexOf(item), 1); //取消
      } else {
@@ -68,10 +68,20 @@ export default {
     submit(){
         console.log(this.message)
         console.log(this.rSelect)
+         this.$api.post('/orderComplaint/save{"orderId":"2020113016481399b534d5707d4b11bdbb0c979e800a6c","complaintDetail":"服务态度差"}',{},res=>{
+           console.log(res.data.resultValue.items)
+      
+         })
     }
   },
   mounted() {
-    console.log(this)
+    this.$api.get('/baseLabel/?params={"pageIndex":1,"pageSize":20,"filter":"labelId=complaint"}',{},res=>{
+      console.log(res.data.resultValue.items)
+       res.data.resultValue.items.forEach(item => {
+         this.data.push(item.labelName)
+       })
+    })
+   
   },
   component:{
     
@@ -81,7 +91,7 @@ export default {
       fileList: [],
       rSelect:[],
       message:"",
-      data: ["没修好，设备损坏", "乱收费", "没修好", "服务态度差", "迟到"],
+      data:[]
     };
   },
 };
@@ -153,9 +163,9 @@ export default {
     margin-top: 20px;
     li {
       // width: 25%;
-      padding: 0 12px;
+      padding: 0 10px;
       text-align: center;
-      margin-left: 9px;
+      margin-left: 5px;
       margin-top: 12px;
       height: 28px;
       line-height: 28px;
@@ -167,7 +177,7 @@ export default {
       font-weight: bold;
     }
     .active {
-      margin-left: 12px;
+      margin-left: 5px;
       background: #87cefa;
       color: #fff;
     }

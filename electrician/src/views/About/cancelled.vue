@@ -54,7 +54,6 @@
 </template>
 
 <script>
-import baseest from "../../components/estimate.vue";
 export default {
   components: {},
   methods: {

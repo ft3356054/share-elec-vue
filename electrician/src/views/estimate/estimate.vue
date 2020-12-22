@@ -47,8 +47,6 @@ export default {
     },
      // 点击ul
     topli(item,index){
-      console.log(index ,item)
-       console.log(this.rSelect.indexOf(item));
      if (this.rSelect.indexOf(item) !== -1) {
       this.rSelect.splice(this.rSelect.indexOf(item), 1); //取消
      } else {
@@ -75,6 +73,15 @@ export default {
         console.log(this.score)
     }
   },
+    mounted() {
+    this.$api.get('/baseLabel/?params={"pageIndex":1,"pageSize":20,"filter":"labelId=evaluate"}',{},res=>{
+      console.log(res.data.resultValue.items)
+       res.data.resultValue.items.forEach(item => {
+         this.data.push(item.labelName)
+       })
+    })
+   
+  },
   data() {
     return {
       value:3,
@@ -82,7 +89,7 @@ export default {
       rSelect:[],
       score:5,
       message:"",
-      data: ["服务态度好", "不错", "非常专业", "懂得多", "准备很充分","按时到达"],
+      data: [],
     };
   },
 };

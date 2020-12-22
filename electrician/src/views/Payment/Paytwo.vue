@@ -6,18 +6,18 @@
          <div class="top">
             <div class="top-box">
                <b>支付金额</b>
-               <p>￥<span>150.00</span></p>
+               <p>￥<span>{{this.money}}</span></p>
            </div>
            <div class="top-bottom">
-             <div class="box">订单编号<span>20201110002</span></div>
-             <div class="box">订单来源 <span class="spans">95598</span></div>
+             <div class="box">订单编号<span class="spa">{{this.orderId}}</span></div>
+             <div class="box">订单来源 <span class="spans">{{this.source}}</span></div>
              <div class="left"></div>
              <div class="right"></div>
            </div>
            <div class="bottom">
                 <p>凭此二维码扫码支付</p>
                 <div class="ma">
-
+                    <base-Options></base-Options>
                 </div>
            </div>
          </div>
@@ -33,6 +33,19 @@ export default {
        fh(){
            this.$router.go(-1)
        }
+   },
+   data () {
+       return {
+        money:"",
+        orderId:"",
+        source:""
+       }
+   },
+   mounted() {
+       console.log(this.$route.query) 
+       this.money=this.$route.query.money;
+       this.orderId=this.$route.query.orderId;
+       this.source=this.$route.query.source
    },
 }
 </script>
@@ -76,7 +89,7 @@ export default {
     top: 10%;
     left: 3%;
     margin: 0 auto;
-    padding: 0 37px;
+    padding: 0 30px;
     border-radius: 8px;
     box-shadow: 0 -6px  3px #B4E0FC ;
     // box-shadow: 0 -10px  1px #93D3fb;
@@ -103,7 +116,7 @@ export default {
         position: relative;
        .box{
            height: 36px;
-            line-height: 30px;
+            line-height: 36px;
             color: #999999;
             font-size: 13px;
           span{
@@ -113,6 +126,14 @@ export default {
           }
           .spans{
               color: #318Ec8;
+          }
+          .spa{
+                  word-break:normal; 
+                    display:block; 
+                    white-space:pre-wrap;
+                    word-wrap : break-word ;
+                    overflow: hidden ;
+                    font-size: 12px;
           }
        }
        .left{
@@ -143,7 +164,7 @@ export default {
              margin: 23px auto;
              width:148px ;
              height: 148px;
-             background: #000;
+            //  background: #000;
              margin-top: 23px;
          }
      }

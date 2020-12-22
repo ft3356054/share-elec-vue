@@ -1,74 +1,281 @@
 <template>
   <div class="warp">
     <div class="head">
-      <p><span @click="fh()"><img src="@/assets/images/bai.png" alt=""></span>需求发起</p>
+      <p>
+        <span @click="fh()"><img src="@/assets/images/bai.png" alt="" /></span
+        >需求发起
+      </p>
     </div>
     <div class="bottom">
-  <div class="btt">
-      <button>提交</button>
-      <!-- <input type="button" value="提交"> -->
+      <div class="btt">
+        <button @click="submit">提交</button>
+        <!-- <input type="button" value="提交"> -->
       </div>
     </div>
     <div class="top">
-       <ul class="ipt">
-           <li><span>*</span><b>标题</b> <input type="text"></li>
-           <li><span>*</span><b>内容说明</b> <textarea v-model="message" placeholder="请输入故障问题"></textarea></li>
-           <li><span>*</span><b>需求类型</b>  <select v-model="selected">
-                                                <option disabled value="">请选择</option>
-                                                <option>故障抢修</option>
-                                                <option>巡检</option>
-                                                <option>试验</option>
-                                                <option>检修</option>
-                                                <option>保电</option>
-                                                <option>其他</option>
-                                              </select></li>
-           <li><span>*</span><b>电压</b> <input type="text"></li>
-           <li><span v-html="err"></span><b>用电户号</b> <input type="text"></li>
-           <li><span>*</span><b>选择身份</b><select v-model="sele">
-                                                <option disabled value="">请选择</option>
-                                                <option>居民</option>
-                                                <option>企业单位</option>
-                                              </select></li>
-           <li class="liimg"><span>*</span><b>地址</b> <input type="text" style="padding-right: 7%;"> <img src="@/assets/images/position.png" alt=""></li>
-           <li><span v-html="err"></span><b>预约时间</b> <input type="text"></li>
-           <li><span>*</span><b>联系人</b> <input type="text"></li>
-           <li><span>*</span><b>联系电话</b> <input type="text"></li>
-           <li><span v-html="err"></span><b>上传照片</b>  
-                  <div class="ploader">
-                    <van-uploader  v-model="fileList"  multiple>
-                      <van-button type="primary" class="loader" >
-                        <dl>
-                          <dt><img src="@/assets/images/addpeople.png" alt="" /></dt>
-                          <dd>添加照片</dd>
-                        </dl>
-                      </van-button>
-                    </van-uploader>
-      </div></li>
-       </ul>
- 
+      <ul class="ipt">
+        <li>
+          <span>*</span><b>标题</b>
+          <input type="text" v-model="customerEvaluateTitle" />
+        </li>
+        <li>
+          <span>*</span><b>内容说明</b>
+          <textarea
+            v-model="customerDescrive"
+            placeholder="请输入故障问题"
+          ></textarea>
+        </li>
+        <li>
+          <span>*</span><b>需求类型</b>
+          <select v-model="selected" >
+            <option disabled value="">请选择</option>
+            <option  v-for="(item,index) in selectList" :key="index" v-bind:value="item.orderTypeId">{{item.orderTypeName}}</option>
+          </select>
+        </li>
+        <li>
+          <span>*</span><b>电压</b>
+          <select v-model="voltage" >
+            <option disabled value="">请选择</option>
+            <option  v-for="(item,index) in baseVoltageData" :key="index" v-bind:value="item.voltage">{{item.voltage}}</option>
+          </select>
+        </li>
+        <li><span v-html="err"></span><b>用电户号</b> <input type="text" v-model="registeredNumber" /></li>
+        <li>
+          <span>*</span><b>选择身份</b     
+          ><select v-model="sele">
+            <option disabled value="">请选择</option>
+            <option v-for="(item,index) in idendata" :key="index" v-bind:value="item.identityId">{{item.identityName}}</option>
+          </select>
+        </li>
+        <li class="liimg">
+          <span>*</span><b>地址</b>
+          <input
+            type="text"
+            v-model="customerAddress"
+            style="padding-right: 7%"
+          />
+          <img src="@/assets/images/position.png" alt="" />
+        </li>
+        <li>
+          <span v-html="err"></span><b>预约时间</b>
+          <van-cell v-model="dataTime" @click="showPopup"
+            ><input type="text" v-model="dataTime"
+          /></van-cell>
+          <van-popup
+            v-model="show"
+            position="bottom"
+            :style="{ height: '40%' }"
+          >
+            <van-datetime-picker
+              v-model="currentDate"
+              type="datetime"
+              title="选择完整时间"
+              :formatter="formatter"
+              :min-date="minDate"
+              :max-date="maxDate"
+              @confirm="confirm"
+              @cancel="cancel"
+            />
+          </van-popup>
+        </li>
+        <li>
+          <span>*</span><b>联系人</b>
+          <input type="text" v-model="customerName" />
+        </li>
+        <li>
+          <span>*</span><b>联系电话</b>
+          <input type="text" v-model="customerPhonenumber" />
+        </li>
+        <li>
+          <span v-html="err"></span><b>上传照片</b>
+          <div class="ploader">
+            <van-uploader v-model="fileList" multiple :after-read="onRead">
+              <van-button type="primary" class="loader">
+                <dl>
+                  <dt><img :src="imgs" alt="" /></dt>
+                  <dd>添加照片</dd>
+                </dl>
+              </van-button>
+            </van-uploader>
+          </div>
+        </li>
+      </ul>
     </div>
-     
   </div>
 </template>
 
 <script>
 export default {
-  components: {
-
-  },
-  methods: {
-    fh() {
-      this.$router.go(-1);
-    },
-  },
   data() {
     return {
-      err:"&#160",
-      message:"",
-      selected:"",
-      sele:"",
-      fileList:[]
+      show: false,
+      err: "&#160",
+      selected: "",
+      sele: "",
+      imgs: require("@/assets/images/addpeople.png"),
+      fileList: [],
+      selectList:[],
+      idendata:[],
+      customerId: "",
+      customerName: "",
+      customerPhonenumber: "",
+      customerEvaluateTitle: "",
+      customerDescrive: "",
+      voltage: "",
+      customerAddress: "",
+      appointmentTime: "",
+      customerDescriveIcon: [],
+      provinceId:"",
+      minDate: new Date(2020, 0, 1),
+      maxDate: new Date(2025, 10, 1),
+      currentDate: new Date(),
+      dataTime: "",
+      registeredNumber:"",
+      baseVoltageData:[]
     };
+  },
+  created() {
+    this.select()   //获取类型的数据
+    this.iden()  //获取身份
+    this.baseVoltage()  //获取电压
+  }, 
+
+  methods: {
+    showPopup() {
+      this.show = true;
+    },
+    confirm(d) {   //时间点击确认
+      
+      this.show = false;
+      this.dataTime =
+        d.getFullYear() +
+        "/" +
+        (Number(d.getMonth()) + 1) +
+        "/" +
+        d.getDate() +
+        "/ " +
+        d.getHours() +
+        "/" +
+        d.getMinutes();
+      console.log(this.dataTime);
+      this.appointmentTime=this.dataTime
+      // this.starttime1 = new Date(this.currentDate).getTime() / 1000
+    },
+    cancel() {     //时间  点击取消
+      
+      this.show = false;
+    },
+
+    formatter(type, val) {
+      if (type === "year") {
+        return val + "年";
+      }
+      if (type === "month") {
+        return val + "月";
+      }
+      if (type === "day") {
+        return val + "日";
+      }
+      if (type === "hour") {
+        return val + "时";
+      }
+      if (type === "minute") {
+        return val + "分";
+      }
+      return val;
+    },
+    fh() {
+      //返回上一级
+      this.$router.go(-1);
+    },
+    select() {    //获取类型
+      this.$api.get(
+        `/baseOrderType/queryAll/`,
+        {},
+        (res) => {
+          // console.log(res.data.resultValue);
+          this.selectList=res.data.resultValue.items    
+        }
+      );
+    },
+    iden(){   //获取身份
+        this.$api.get(
+                `/baseIdentityDetail/queryAll/`,
+                {},
+                (res) => {
+                  // console.log(res.data.resultValue);
+                  this.idendata=res.data.resultValue.items
+                }
+              );
+    },
+    baseVoltage(){  //获取电压
+          this.$api.get(
+                `/baseVoltage/queryAll/`,
+                {},
+                (res) => {
+                  // console.log(res.data.resultValue);
+                  this.baseVoltageData=res.data.resultValue.items
+                }
+              );
+    },
+    submit() {    //提交
+    let items=""
+    let myFile=""
+     items={
+                      customerId:this.customerId, //用户
+                  customerName:this.customerName,    //联系人
+                  customerPhonenumber:this.customerPhonenumber,  //手机号
+                  customerDescriveTitle:this.customerEvaluateTitle,  //标题
+                  customerDescrive:this.customerDescrive,  //详情内容
+                  orderTypeId:this.selected,   //类型ID 
+                  voltage:this.voltage,  //  电压
+                  identityId:this.sele,   //身份ID
+                  registeredNumber:this.registeredNumber, //户号
+                  provinceId:"1",   //省份
+                  customerAddress:this.customerAddress, //地址
+                  appointmentTime:this.appointmentTime, //预约时间
+                  },
+     
+            myFile={
+                      customerDescriveIcon:this.customerDescriveIcon  //图片
+                  }
+             console.log(items)    
+    this.$axios.post(
+                "/orderCustomer/save",{items,myFile}).then(res=>{
+                   console.log(res.data);
+                })
+              
+      console.log(this.customerName);
+       console.log(this.sele)
+       console.log(this.selected)
+       console.log(this.voltage)
+       console.log(this.customerDescrive)
+    },
+    // 用户信息
+    custtom(){
+          this.$api.get(
+                `/customerInfo/${this.customerId}`,
+                {},
+                (res) => {
+                  // console.log(res.data.resultValue.items[0]);
+                  let red=res.data.resultValue.items[0]
+                  this.customerName=red.customerName
+                  this.customerPhonenumber=red.customerPhonenumber
+                  this.registeredNumber=red.registeredNumber
+                }
+              );
+    },
+    //  图片上传
+    onRead(file) {
+          　　console.log(file);//file文件如下图
+            this.customerDescriveIcon=file.file.name
+            console.log(this.customerDescriveIcon)
+    },
+  },
+  mounted() {
+    this.customerId = this.$route.query.cust;
+    console.log(this.customerId);
+     this.custtom()  //获取个人信息
   },
 };
 </script>
@@ -81,32 +288,32 @@ export default {
   position: relative;
   background: #f3f8fe;
 }
-.head{
+.head {
   width: 100%;
-    height: 140px;
-    background: #87CEFA;
-    text-align: center;
-    border-radius:0 0 20% 20%;
-    p{
-        position: relative;
-        display: block;
-        font-size: 20px;
-        color: #fff;
-        padding: 10px 10px;
-        span{
-            position: absolute;
-            top:30%;
-            left: 5%;
-            img{
-                width: 80%;
-                height: 100%;
-            }
-        }
+  height: 140px;
+  background: #87cefa;
+  text-align: center;
+  border-radius: 0 0 20% 20%;
+  p {
+    position: relative;
+    display: block;
+    font-size: 20px;
+    color: #fff;
+    padding: 10px 10px;
+    span {
+      position: absolute;
+      top: 30%;
+      left: 5%;
+      img {
+        width: 80%;
+        height: 100%;
+      }
     }
+  }
 }
-.bottom{
+.bottom {
   height: 520px;
-  background:#f3f8fe;
+  background: #f3f8fe;
   position: relative;
 }
 .top {
@@ -121,19 +328,19 @@ export default {
   border-radius: 8px;
   box-shadow: 0 -6px 3px #b4e0fc;
   // box-shadow: 0 -10px  1px #93D3fb;
-  .ipt{
-    span{
+  .ipt {
+    span {
       color: red;
       margin-right: 5px;
     }
-    li{
-      height:30px ;
-      line-height:20px;
-      margin-bottom:12px;
-      b{
+    li {
+      height: 30px;
+      line-height: 20px;
+      margin-bottom: 12px;
+      b {
         font-size: 12px;
       }
-      input{
+      input {
         width: 70%;
         float: right;
         border-top: none;
@@ -141,9 +348,9 @@ export default {
         border-right: none;
         border-bottom: 1px solid #ebebeb;
         color: #000;
-              font-size: 12px;
+        font-size: 12px;
       }
-      textarea{
+      textarea {
         // margin-top: 1px;
         float: right;
         width: 185px;
@@ -153,71 +360,81 @@ export default {
         border-bottom: 1px solid #ebebeb;
         font-size: 12px;
       }
-      select{
+      select {
         float: right;
-         width: 190px;
+        width: 190px;
         height: 30px;
         border: none;
         border-bottom: 1px solid #ebebeb;
         outline: none;
-         -webkit-appearance: none;
+        -webkit-appearance: none;
       }
     }
-    .liimg{
+    .liimg {
       position: relative;
-      img{
+      img {
         position: absolute;
-        right:0px;
+        right: 0px;
         top: 1%;
         width: 7%;
       }
     }
-     .ploader {
-       float: right;
-       width: 190px;
+    .ploader {
+      float: right;
+      width: 190px;
       height: 73px;
       border: 2px dashed #87cefa;
       color: #87cefa;
       position: relative;
       text-align: center;
       overflow: hidden;
-    dl {
-      width: 70px;
-      // opacity: 1;
-      position: absolute;
-      top: 20%;
-      left: 35%;
-      dt {
-        width: 35px;
-        height: 28px;
-        img {
-          margin-left: 10px;
-          width: 100%;
-          height: 100%;
+      dl {
+        width: 70px;
+        // opacity: 1;
+        position: absolute;
+        top: 20%;
+        left: 35%;
+        dt {
+          width: 35px;
+          height: 28px;
+          img {
+            margin-left: 10px;
+            width: 100%;
+            height: 100%;
+          }
+        }
+        dd {
+          color: #87cefa;
+          font-weight: bold;
+          margin-top: 5px;
+          font-size: 12px;
+          text-align: left;
         }
       }
-      dd {
-        color: #87cefa;
-        font-weight: bold;
-        margin-top: 5px;
-        font-size: 12px;
-        text-align: left;
-      }
-    }
-   /deep/ .van-uploader__preview-image{
-      display: block;
+      /deep/ .van-uploader__preview-image {
+        display: block;
         width: 185px;
         height: 70px;
         overflow: hidden;
+      }
+      .loader {
+        width: 185px;
+        height: 70px;
+        border: none;
+        background: #fff;
+      }
     }
-    .loader {
-     width: 185px;
-      height: 70px;
-      border: none;
-      background: #fff;
+    /deep/ .van-cell {
+      input {
+        border: none;
+        width: 77%;
+        float: left;
+      }
+      width: 70%;
+      float: right;
+      padding: 0 0;
+      border-bottom: 1px solid #ebebeb;
     }
-
-  }
   }
 }
 .btt {
@@ -226,8 +443,8 @@ export default {
   left: 50%;
   margin-left: -61px;
   display: flex;
-    align-items: center;
-    justify-content: center;
+  align-items: center;
+  justify-content: center;
   button {
     // margin: 50px 60px;
     width: 132px;

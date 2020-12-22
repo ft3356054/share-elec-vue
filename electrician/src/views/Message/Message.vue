@@ -4,20 +4,23 @@
       <p><span @click="fh()"><img src="@/assets/images/bai.png" alt=""></span>消息列表</p>
     </div>
      <main>
-        <div class="box" v-for="(item,index) in data" :key="index">
-          <div class="top">{{item.time}}</div>
+           <div class="top"><hoursTip/><span>{{this.time}}</span></div>
+        <div class="box" v-for="(item,index) in list" :key="index">
           <div class="bottom">
              <div class="bot-top">
-                 <div class="act">{{item.let}}</div> <b>你收到一条系统{{item.let}}消息</b> <span>{{item.day}}</span>
+                 <div class="act" v-if="item.notifyType==='1'">维修</div>
+                 <div class="act" v-else-if="item.notifyType==='2'">支付</div>
+                 <div class="act" v-else-if="item.notifyType==='3'">验收</div>
+                 <div class="act" v-else-if="item.notifyType==='4'">评价</div>
+                  <b>{{item.title}}</b> <span>{{item.createTime}}</span>
              </div>
-             <div class="bot-bottom">
+             <div class="bot-bottom" @click="details(item)">
                <ul class="left">
-                 <li>发单时间:{{item.stat}}</li>
-                 <li v-if="item.let==='派单'">发单人:{{item.mame}}</li>
-                 <li v-if="item.let==='评价'">评价人:{{item.mame}}</li>
-                 <li v-if="item.let==='维修'">接单人:{{item.mame}}</li>
+                 <li>{{item.content}}</li>
+                 <li class="clas" v-show="item.state==='0'? true:false">未读</li>
+                   <li class="claa" v-show="item.state==='1'? true:false">已读</li>
                </ul>
-               <div class="right">
+               <div class="right" >
                    详情 <img src="@/assets/images/messagejiantou.png" alt="">
                </div>
              </div>
@@ -28,22 +31,16 @@
 </template>
 
 <script>
-import baseest from "../../components/estimate.vue";
+import hoursTip from "../../components/hoursTip.vue"
 export default {
   components: {
   },
-  methods: {
-    fh() {
-      this.$router.go(-1);
-    },
-    me(){
-
-    }
-    
-  },
-  data() {
-    return {
-        data:[
+   data() {
+        return {
+            cust:"",
+            list:"",
+            time:"",
+            data:[
           {
             time:"上午11:18",
             let:"派单",
@@ -64,8 +61,44 @@ export default {
             mame:"刘强"
           }
         ]
-    };
+        }
+    },
+    created() {
+      
+    },
+  methods: {
+      fh(){
+          this.$router.go(-1)
+      }, 
+      // 获取时间
+      times(){
+         var aData = new Date()
+       this.time =aData.getHours() + ":" + aData.getMinutes()
+      //  console.log(this.time) //2019-8-20 
+      },
+      // 详请
+      details(item){
+        // console.log(item)
+        this.$router.push("/details")
+       this.$bus.$emit("details",{
+         announceId:item.announceId,
+         announceUserId:this.cust
+       })
+      }
   },
+ 
+  mounted() {
+      console.log(this.$route.query.cust)
+      this.cust=this.$route.query.cust
+       this.$api.get(`/notifyAnnounceUser/userId/${this.cust}`,{
+       },res=>{
+           console.log(res)
+           this.list=res.data.resultValue.items
+           console.log(this.list)
+           this.times()
+       })
+  },
+  
 };
 </script>
 
@@ -101,14 +134,20 @@ export default {
 }
 main{
   padding: 0 13px;
-  .box{
-    margin-top: 8px;
-    .top{
+   .top{
       text-align: center;
       font-size: 9px;
       color:#989b9d;
-      margin: 10px 0;
+      margin: 10px auto;
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: center;
+      span{
+        margin-top: 1px;
+      }
     }
+  .box{
+    margin-top: 8px;
     .bottom{
       height: 100px;
       border-radius:8px;
@@ -125,7 +164,7 @@ main{
           height: 15px;
           line-height: 18px;
           border-radius: 6px 0 6px 0;
-          background:#ff364a;
+             background: #87CEFA;
           float: left;
         }
         .act1{
@@ -163,9 +202,23 @@ main{
         font-size: 12px;
         padding: 10px 0; 
         .left{
+          width: 85%;
           float: left;
           li{
+            margin-top: 10px;
             line-height: 20px;
+           overflow : hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 1;
+          -webkit-box-orient: vertical;
+          
+          }
+          .clas{
+            color: #7ac6f4;
+          }
+          .claa{
+           color: #c5c5c5;
           }
         }
         .right{

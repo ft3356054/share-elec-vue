@@ -41,6 +41,12 @@ VueAMap.initAMapApiLoader({
   v: '1.4.4',
   uiVersion: '1.0' // ui版本
 })
+// 生成二维码
+import qrcode from 'vue-qrcode-directive'
+Vue.use(qrcode)
+// vue-bus
+import VueBus from 'vue-bus';
+Vue.use(VueBus);
 
 Vue.config.productionTip = false
 

@@ -1,10 +1,7 @@
 <template>
   <div class="warp">
     <div class="head">
-      <p>
-        <span @click="fh()"><img src="@/assets/images/bai.png" alt=""/></span
-        >订单详情
-      </p>
+      <p><span @click="fh()"><img src="@/assets/images/bai.png" alt=""></span>订单详情</p>
     </div>
     <div class="top">
       <h4>
@@ -16,7 +13,7 @@
           <div class="left">订单编号</div>
           <span>{{ demo.a }}</span>
         </li>
-         <li>
+        <li>
           <div class="left">接单人</div>
           <span>{{ demo.b }}</span>
         </li>
@@ -33,7 +30,7 @@
           <span>{{ demo.e }}</span>
         </li>
         <li>
-          <div class="left">上门费</div>
+          <div class="left">维修价格</div>
           <span class="momy">{{ demo.f }}</span>
         </li>
         <li>
@@ -45,58 +42,51 @@
           <span class="zt">{{ demo.h }}</span>
         </li>
       </ul>
-      <h4 class="hzh">故障图片</h4>
+      <h4 class="hzh">合同</h4>
       <div class="gz" style="margin-bottom:5px">
         <img src="@/assets/images/gztp.png" alt="" />
       </div>
       
     </div>
-     <div class="btt">
-        <button @click="tocomplaint()">催单</button>
-      </div>
   </div>
 </template>
 
 <script>
 export default {
-  components: {},
-  methods: {
-    //   返回上一层
-    fh() {
-      this.$router.go(-1);
-    },
-    // 催单
-    tocomplaint() {
-      this.$router.push("/");
-    },
-  
+  components: {
   },
   data() {
     return {
       value: 3,
       fileList: [],
-      data: [
-        "订单编号",
-        "接单人",
-        "标题",
-        "内容说明",
-        "地址",
-        "上门费",
-        "接单时间",
-        "状态",
-      ],
+      announceId:"",
+      announceUserId:"",
       demo: {
         a: "202011121447",
         b: "刘青",
         c: "插座跳闸",
-        d: "机房配电箱10kv开关烧坏，开关需要更换。",
+        d: "机房配电箱10kv开关烧坏，导致整个办公楼停电，无法办公",
         e: "天津市东丽区国网客服中心",
         f: "￥150.00",
         g: "2020/11/09 16:51",
-        h: "待现场勘查",
+        h: "待维修",
       },
     };
   },
+  created() {
+      this.$bus.$on("details",data=>{
+          console.log("1",data)
+      })
+  },
+  mounted() {
+     
+  },
+  methods: {
+    fh() {
+      this.$router.go(-1);
+    },
+  },
+  
 };
 </script>
 
@@ -196,26 +186,5 @@ export default {
     }
   }
 }
-.btt {
-  width: 100%;
-  height: 80px;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  justify-content: center;
-  margin-top: 7px;
-  button {
-    margin-left: 10px;
-    width: 85px;
-    height: 37px;
-   background: -webkit-linear-gradient(#83ccfa,#7bcbf7,#6ec1f5,#61bbf3,#57b6f0);
-    border-radius: 20px;
-    border: none;
-    outline: none;
-    color: #fff;
-    font-size: 16px;
-    // font-weight: bold;
-  }
-}
+
 </style>
