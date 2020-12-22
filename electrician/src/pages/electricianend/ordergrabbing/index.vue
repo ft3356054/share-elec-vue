@@ -51,7 +51,16 @@ export default {
       ]
     }
   },
+  mounted(){
+      this.getlist()
+  },
   methods: {
+      getlist(){
+          var params="2256"
+            this.$axios.post("/orderElectrician/saveOrderCustomer?electricianId", {params}) .then(res => {
+                console.log(res);
+                });
+      },
     goback () {
       this.$router.go(-1)
     },

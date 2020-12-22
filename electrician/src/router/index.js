@@ -163,6 +163,12 @@ const routes = [
       name: 'Authentication',
       component: () => import('@/pages/electricianend/authentication')
     },
+     // 电工认证
+     {
+      path: '/companyselection',
+      name: 'Companyselection',
+      component: () => import('@/pages/electricianend/authentication/companyselection')
+    },
     // 消息中心
     {
       path: '/messages',
