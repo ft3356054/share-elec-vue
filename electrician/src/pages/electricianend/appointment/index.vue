@@ -41,7 +41,16 @@ export default {
       phone: 13739865412
     }
   },
+  mounted(){
+    this.getlist()
+  },
   methods: {
+    getlist(){
+          var params="321"
+            this.$axios.post("/orderElectrician/orderDetails/22?electricianId", {params}) .then(res => {
+                console.log(res);
+            });
+      },
     goback () {
       this.$router.go(-1)
     },

@@ -119,20 +119,17 @@ export default {
   },
   methods: {
     getlist(){
-       this.$api.get('notifyAnnounceUser/userId/customer002',{
-
-       },response=>{
-           console.log(response)
-       })
+        var params={
+                 "pageIndex":"1",
+                "pageSize":10,
+                "filter":['orderElectricianType=9'],
+                "electricianId":"2256"
+           
+        }
+      this.$axios.get("/orderElectrician/queryMore", {params}).then(res => {
+          console.log(res);
+        });
      },
-    scroll () {
-      this.animate = true
-      setTimeout(() => {
-        this.messages.push(this.messages[0])
-        this.messages.shift()
-        this.animate = false
-      }, 2000)
-    },
     gordergrabbing () {
       this.$router.push('/ordergrabbing')
     },
