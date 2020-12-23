@@ -105,7 +105,7 @@ export default {
 <style lang="scss" scoped>
 .warp {
   width: 100%;
-  height: 100%;
+  // height: 100%;
   margin: 0 auto;
   position: relative;
   background: #f3f8fe;

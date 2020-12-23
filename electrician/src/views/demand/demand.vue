@@ -131,7 +131,9 @@ export default {
       currentDate: new Date(),
       dataTime: "",
       registeredNumber:"",
-      baseVoltageData:[]
+      baseVoltageData:[],
+      files:[],
+      fd:{}
     };
   },
   created() {
@@ -240,16 +242,46 @@ export default {
                       customerDescriveIcon:this.customerDescriveIcon  //图片
                   }
              console.log(items)    
-    this.$axios.post(
-                "/orderCustomer/save",{items,myFile}).then(res=>{
-                   console.log(res.data);
-                })
-              
-      console.log(this.customerName);
-       console.log(this.sele)
-       console.log(this.selected)
-       console.log(this.voltage)
-       console.log(this.customerDescrive)
+        // this.$api.post(
+        //         `/orderCustomer/save`,
+        //         {"items":`
+        //         {customerId:${this.customerId},  
+        //         customerName:${this.customerName},
+        //          customerPhonenumber:${this.customerPhonenumber}, 
+        //           customerDescriveTitle:${this.customerEvaluateTitle}, 
+        //           customerDescrive:${this.customerDescrive},  
+        //           orderTypeId:${this.selected},   
+        //           voltage:${this.voltage}, 
+        //           identityId:${this.sele},  
+        //           registeredNumber:${this.registeredNumber}, 
+        //           provinceId:"1",
+        //           customerAddress:${this.customerAddress}, 
+        //           appointmentTime:${this.appointmentTime}, 
+        //         }`,"myFile":this.fd},{headers: {'Content-Type': 'multipart/form-data'}},
+        //         (res) => {
+        //           console.log(res.data);
+        //         }
+        //       );       
+        console.log(this.fd.get("myFile"))
+           this.$axios.post(
+                `/customerInfo/testjson`,this.fd,{"items":`
+                {customerId:${this.customerId},  
+                customerName:${this.customerName},
+                 customerPhonenumber:${this.customerPhonenumber}, 
+                  customerDescriveTitle:${this.customerEvaluateTitle}, 
+                  customerDescrive:${this.customerDescrive},  
+                  orderTypeId:${this.selected},   
+                  voltage:${this.voltage}, 
+                  identityId:${this.sele},  
+                  registeredNumber:${this.registeredNumber}, 
+                  provinceId:"1",
+                  customerAddress:${this.customerAddress}, 
+                  appointmentTime:${this.appointmentTime}, 
+                }`,"myFile":this.fd},{headers: {'Content-Type': 'multipart/form-data'}},
+                (res) => {
+                  console.log(res);
+                }
+              );   
     },
     // 用户信息
     custtom(){
@@ -267,9 +299,12 @@ export default {
     },
     //  图片上传
     onRead(file) {
-          　　console.log(file);//file文件如下图
-            this.customerDescriveIcon=file.file.name
-            console.log(this.customerDescriveIcon)
+          this.files.push(file)  // files是一个数组
+          let fd = new FormData()
+            fd.append('myFile', file.file)
+             this.fd=fd
+            // this.customerDescriveIcon=file.file
+            // console.log(this.customerDescriveIcon)
     },
   },
   mounted() {

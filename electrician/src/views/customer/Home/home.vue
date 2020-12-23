@@ -63,7 +63,7 @@
                        <p>{{ item.createTime }}</p>
                     </dt>
                     <dd>
-                        <button>取消</button> <button class="zf" @click="zf(item.orderId)">支付</button>
+                        <button @click="cancel">取消</button> <button class="zf" @click="zf(item.orderId)">支付</button>
                     </dd>
                 </dl>
             </div>
@@ -267,7 +267,8 @@ export default {
       toPay:[],
       toAccepted:[],
       toEvaluated:[],
-      cust:"customer002"
+      cust:"customer002",
+      orderId:""
     };
   },
   mounted() {
@@ -326,10 +327,14 @@ export default {
     estimate(){
       this.$router.push('/estimate')
     },
+    // 取消
+    cancel(){
+           
+    },
     getGunlist(){
       this.$api.get('/notifyAnnounceUser/userId/customer002',{
        },res=>{
-           console.log(res)
+          //  console.log(res)
            this.messages.push({
              name:res.data.resultValue.items[0].content
            })
@@ -338,13 +343,14 @@ export default {
     getlist(){
        this.$api.get(`/orderCustomer/queryAllToBegin?params={"pageIndex":1,"pageSize":20,"filter":"customerId=${this.cust}"}`,{
        },res=>{
-         console.log(res)
+        //  console.log(res)
          res.data.resultValue.items.forEach(item => {
+           this.orderId=item.orderId
            this.price=item.orderStatus
           //  console.log(this.price)
            if(item.orderStatus==="0" ||item.orderStatus==="23" ){
               this.toPay.push(item)
-                console.log(this.toPay)
+                // console.log(this.toPay)
                 if(item.electricianPrice===""){
                     this.price=true
                 }
@@ -361,7 +367,7 @@ export default {
     getContent(){
           this.$api.get(`/notifyAnnounceUser/notReadNum/${this.cust}`,{
                 },res=>{
-                  console.log(res)
+                  // console.log(res)
                     this.content=res.data.resultValue
                       // console.log(this.content)
                 })
