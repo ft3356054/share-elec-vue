@@ -38,8 +38,21 @@
 </template>
 
 <script>
+import { Toast } from 'vant';
 export default {
   components: {
+  },
+  data() {
+    return {
+      fileList: [],
+      rSelect:[],
+      message:"",
+      data:[],
+       files:{},
+      fd:{},
+      orderId:"",
+      set:null
+    };
   },
   methods: {
     fh() {
@@ -58,42 +71,51 @@ export default {
     },
     // 图片上传
       blues (file) {
-      console.log(file)
-      // console.log(this.fileList)
-      // if (this.fileList.length === 0) {
-      //   console.log(this.fileList)
-      // }
+       this.files=file.file  
+      // console.log(this.files)
     },
     // 提交
     submit(){
-        console.log(this.message)
-        console.log(this.rSelect)
-         this.$api.post('/orderComplaint/save{"orderId":"2020113016481399b534d5707d4b11bdbb0c979e800a6c","complaintDetail":"服务态度差"}',{},res=>{
-           console.log(res.data.resultValue.items)
-      
-         })
+          var fd = new FormData()
+         if(this.files===null || this.files===""){
+             fd.append("myFile","")
+         }else{
+           fd.append('myFile',this.files)
+         }
+             this.fd=fd
+        this.rSelect.push(this.message)
+         this.fd.append("items",
+             `{"orderId":"${this.orderId}",  
+                "complaintDetail":"${this.rSelect}",
+                 "fileName":"complaintPicture", 
+                }`)   
+        this.$axios.post(
+                `/orderComplaint/save`,
+                this.fd,{headers: {'Content-Type': 'multipart/form-data'}},
+                Toast.success('投诉成功'),
+              );   
+             this.set=setTimeout(()=>{
+                    this.$router.push("./customer")  
+              },1000)  
     }
   },
   mounted() {
+    this.orderId=this.$route.query.orderId
     this.$api.get('/baseLabel/?params={"pageIndex":1,"pageSize":20,"filter":"labelId=complaint"}',{},res=>{
-      console.log(res.data.resultValue.items)
+      // console.log(res.data.resultValue.items)
        res.data.resultValue.items.forEach(item => {
          this.data.push(item.labelName)
        })
     })
    
   },
+  destroyed() {
+      clearInterval(this.set)
+  },
   component:{
     
   },
-  data() {
-    return {
-      fileList: [],
-      rSelect:[],
-      message:"",
-      data:[]
-    };
-  },
+  
 };
 </script>
 

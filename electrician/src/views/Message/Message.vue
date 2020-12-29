@@ -4,8 +4,9 @@
       <p><span @click="fh()"><img src="@/assets/images/bai.png" alt=""></span>消息列表</p>
     </div>
      <main>
-           <div class="top"><hoursTip/><span>{{this.time}}</span></div>
+           
         <div class="box" v-for="(item,index) in list" :key="index">
+          <div class="top"><hoursTip/><span>{{item.createTime}}</span></div>
           <div class="bottom">
              <div class="bot-top">
                  <div class="act" v-if="item.notifyType==='1'">维修</div>
@@ -32,6 +33,7 @@
 
 <script>
 import hoursTip from "../../components/hoursTip.vue"
+import Utils from "../../libs/utils.js"
 export default {
   components: {
   },
@@ -60,7 +62,7 @@ export default {
             stat:"2020/11/07 11:15:20",
             mame:"刘强"
           }
-        ]
+        ],
         }
     },
     created() {
@@ -94,6 +96,7 @@ export default {
        },res=>{
            console.log(res)
            this.list=res.data.resultValue.items
+          //  this.list.sort(Utils.compare())
            console.log(this.list)
            this.times()
        })
@@ -105,10 +108,12 @@ export default {
 <style lang="scss" scoped>
 .warp {
   width: 100%;
-  // height: 100%;
+  height: 100%;
   margin: 0 auto;
   position: relative;
   background: #f3f8fe;
+  display: flex;
+  flex-direction: column;
 }
 .head{
     width: 100%;
@@ -133,7 +138,9 @@ export default {
     }
 }
 main{
+  flex: 1;
   padding: 0 13px;
+   background: #f3f8fe;
    .top{
       text-align: center;
       font-size: 9px;
@@ -205,7 +212,7 @@ main{
           width: 85%;
           float: left;
           li{
-            margin-top: 10px;
+            margin: 5px 0; 
             line-height: 20px;
            overflow : hidden;
           text-overflow: ellipsis;

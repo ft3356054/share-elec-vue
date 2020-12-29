@@ -105,35 +105,38 @@
 </template>
 
 <script>
+import { Toast } from 'vant';
 export default {
   data() {
     return {
       show: false,
       err: "&#160",
-      selected: "",
-      sele: "",
+      selected: "",  //类型ID 
+      sele: "",  //身份ID
       imgs: require("@/assets/images/addpeople.png"),
       fileList: [],
       selectList:[],
       idendata:[],
-      customerId: "",
-      customerName: "",
-      customerPhonenumber: "",
-      customerEvaluateTitle: "",
-      customerDescrive: "",
-      voltage: "",
-      customerAddress: "",
-      appointmentTime: "",
-      customerDescriveIcon: [],
-      provinceId:"",
+      customerId: "",  //用户
+      customerName: "",   //联系人
+      customerPhonenumber: "",  //手机号
+      customerEvaluateTitle: "", //标题
+      customerDescrive: "",  //详情内容
+      voltage: "",  //  电压
+      customerAddress: "", //地址
+      appointmentTime: "",  //预约时间
+      provinceId:"", //省份ID
       minDate: new Date(2020, 0, 1),
       maxDate: new Date(2025, 10, 1),
       currentDate: new Date(),
       dataTime: "",
-      registeredNumber:"",
+      registeredNumber:"",  //户号
       baseVoltageData:[],
-      files:[],
-      fd:{}
+      files:{},
+      fd:{},
+      addressLongitude:172.125447, //坐标
+      addressLatitude:95.265478,  //坐标
+      set:"",
     };
   },
   created() {
@@ -221,67 +224,37 @@ export default {
               );
     },
     submit() {    //提交
-    let items=""
-    let myFile=""
-     items={
-                      customerId:this.customerId, //用户
-                  customerName:this.customerName,    //联系人
-                  customerPhonenumber:this.customerPhonenumber,  //手机号
-                  customerDescriveTitle:this.customerEvaluateTitle,  //标题
-                  customerDescrive:this.customerDescrive,  //详情内容
-                  orderTypeId:this.selected,   //类型ID 
-                  voltage:this.voltage,  //  电压
-                  identityId:this.sele,   //身份ID
-                  registeredNumber:this.registeredNumber, //户号
-                  provinceId:"1",   //省份
-                  customerAddress:this.customerAddress, //地址
-                  appointmentTime:this.appointmentTime, //预约时间
-                  },
-     
-            myFile={
-                      customerDescriveIcon:this.customerDescriveIcon  //图片
-                  }
-             console.log(items)    
-        // this.$api.post(
-        //         `/orderCustomer/save`,
-        //         {"items":`
-        //         {customerId:${this.customerId},  
-        //         customerName:${this.customerName},
-        //          customerPhonenumber:${this.customerPhonenumber}, 
-        //           customerDescriveTitle:${this.customerEvaluateTitle}, 
-        //           customerDescrive:${this.customerDescrive},  
-        //           orderTypeId:${this.selected},   
-        //           voltage:${this.voltage}, 
-        //           identityId:${this.sele},  
-        //           registeredNumber:${this.registeredNumber}, 
-        //           provinceId:"1",
-        //           customerAddress:${this.customerAddress}, 
-        //           appointmentTime:${this.appointmentTime}, 
-        //         }`,"myFile":this.fd},{headers: {'Content-Type': 'multipart/form-data'}},
-        //         (res) => {
-        //           console.log(res.data);
-        //         }
-        //       );       
-        console.log(this.fd.get("myFile"))
-           this.$axios.post(
-                `/customerInfo/testjson`,this.fd,{"items":`
-                {customerId:${this.customerId},  
-                customerName:${this.customerName},
-                 customerPhonenumber:${this.customerPhonenumber}, 
-                  customerDescriveTitle:${this.customerEvaluateTitle}, 
-                  customerDescrive:${this.customerDescrive},  
-                  orderTypeId:${this.selected},   
-                  voltage:${this.voltage}, 
-                  identityId:${this.sele},  
-                  registeredNumber:${this.registeredNumber}, 
-                  provinceId:"1",
-                  customerAddress:${this.customerAddress}, 
-                  appointmentTime:${this.appointmentTime}, 
-                }`,"myFile":this.fd},{headers: {'Content-Type': 'multipart/form-data'}},
-                (res) => {
-                  console.log(res);
-                }
+            var fd = new FormData()
+              if(this.files===null || this.files===""){
+                  fd.append("myFile","")
+              }else{
+                fd.append('myFile',this.files)
+              }
+             this.fd=fd
+             this.fd.append("items",
+             `{"customerId":"${this.customerId}",  
+                "customerName":"${this.customerName}",
+                 "customerPhonenumber":"${this.customerPhonenumber}", 
+                  "customerDescriveTitle":"${this.customerEvaluateTitle}", 
+                  "customerDescrive":"${this.customerDescrive}",  
+                  "orderTypeId":"${this.selected}",   
+                  "voltage":"${this.voltage}", 
+                  "identityId":"${this.sele}",  
+                  "registeredNumber":"${this.registeredNumber}", 
+                  "provinceId":"1",
+                  "customerAddress":"${this.customerAddress}", 
+                  "appointmentTime":"${this.appointmentTime}", 
+                  "addressLongitude":"${this.addressLongitude}",
+                  "addressLatitude":"${this.addressLatitude}"
+                }`)
+        this.$axios.post(
+                `/orderCustomer/save`,
+                this.fd,{headers: {'Content-Type': 'multipart/form-data'}},
+                Toast.success('发单成功'),
               );   
+          this.set=setTimeout(()=>{
+                    this.$router.push("./customer")  
+              },1000)     
     },
     // 用户信息
     custtom(){
@@ -299,18 +272,17 @@ export default {
     },
     //  图片上传
     onRead(file) {
-          this.files.push(file)  // files是一个数组
-          let fd = new FormData()
-            fd.append('myFile', file.file)
-             this.fd=fd
-            // this.customerDescriveIcon=file.file
-            // console.log(this.customerDescriveIcon)
+           this.files=file.file  
+      // console.log(this.files)
     },
   },
   mounted() {
     this.customerId = this.$route.query.cust;
     console.log(this.customerId);
      this.custtom()  //获取个人信息
+  },
+    destroyed() {
+      clearInterval(this.set)
   },
 };
 </script>

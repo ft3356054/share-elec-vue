@@ -51,10 +51,10 @@
     <div class="contentbox">
         <div class="content" v-show="num==0" v-for="(item,index) in toPay" :key="index">
             <div class="typebox">
-                <p><span>类别</span><span>{{item.customerEvaluateTitle}}</span></p>
+                <p><span>类别</span><span>{{item.customerDescriveTitle}}</span></p>
                 <p></p>
-                <p v-if="price==='0'? true : false ">上门费 {{item.customerPrice }}</p>
-                <p v-else>维修费 {{item.customerPrice }}</p>
+                <p v-if="item.orderStatus=='0'">上门费 {{item.customerPrice }}</p>
+                <p v-else>维修费 {{item.electricianPrice }}</p>
             </div>
             <div class="addressbox">
                 <dl>
@@ -63,14 +63,14 @@
                        <p>{{ item.createTime }}</p>
                     </dt>
                     <dd>
-                        <button @click="cancel">取消</button> <button class="zf" @click="zf(item.orderId)">支付</button>
+                        <button @click="cancel(item.orderId)">取消</button> <button class="zf" @click="zf(item.orderId)">支付</button>
                     </dd>
                 </dl>
             </div>
         </div>
         <div class="content" v-show="num==1" v-for="(item,index) in toAccepted" :key="'in'+index">
             <div class="typebox">
-                <p><span>类别</span><span>{{item.customerEvaluateTitle}}</span></p>
+                <p><span>类别</span><span>{{item.customerDescriveTitle}}</span></p>
                 <p></p>
                 <p>{{item.finishTime}}</p>
             </div>
@@ -80,18 +80,21 @@
                         <p>{{ item.customerDescrive }}</p>
                        <p>电工完工的情况描述</p>
                     </dt>
-                    <dd>
-                      <button @click="complaint">投诉</button>  <button class="zf" @click="yanshou">验收通过</button>
+                    <dd v-if="orderComplaintId===null? true: false" >
+                       <button @click="complaint">投诉</button> <button class="zf" @click="yanshou(item.orderId)">验收通过</button>
+                    </dd>
+                     <dd v-else>
+                       <button class="zf" @click="yanshou">验收通过</button>
                     </dd>
                 </dl>
             </div>
         </div>
         <div class="content" v-show="num==2" v-for="(item,index) in toEvaluated" :key="'info2'+index">
             <div class="typebox">
-                <p><span>类别</span><span>{{item.customerEvaluateTitle}}</span></p>
-                <p></p>
-                 <p v-if="price=='0'? true : false ">上门费 {{item.customerPrice }}</p>
-                <p v-else>维修费 {{item.customerPrice }}</p>
+                <p><span>类别</span><span>{{item.customerDescriveTitle}}</span></p>
+                <p>{{item.orderStatus}}</p>
+                 <p v-if="item.orderStatus=='0'">上门费 {{item.customerPrice }}</p>
+                <p v-else>维修费 {{item.electricianPrice }}</p>
             </div>
             <div class="addressbox">
                 <dl>
@@ -111,13 +114,14 @@
 </template>
 
 <script>
+import { Toast } from 'vant';
 export default {
   name: "Home",
   components: {},
   data() {
     return {
        num: 0,
-       price:"",
+       orderComplaintId:"",
       navlist: [
         {
           img: require("@/assets/images/woyaofadan.png"),
@@ -267,13 +271,18 @@ export default {
       toPay:[],
       toAccepted:[],
       toEvaluated:[],
-      cust:"customer002",
-      orderId:""
+      cust:"customer001",
+      orderId:"",
+      items:{},
     };
+  },
+  inject:['reload'],
+  created() {
+      
   },
   mounted() {
     this.getContent(),  //获取未读消息数量
-    this.getGunlist(),   // 获取滚动数据
+    this.getGunlist()   // 获取滚动数据
     this.getlist()   //获取订单数据
   },
   methods: {
@@ -316,20 +325,64 @@ export default {
       })
     },
     // 验收通过
-    yanshou(){
-        this.$router.push('/')
+    yanshou(orderId){
+      this.orderId=orderId
+      this.orderId=orderId
+         var fd = new FormData()
+         this.items=fd
+      this.items.append("items",
+             `{"orderId":"${this.orderId}",  
+                "orderStatus":"8",
+                }`)
+           this.$axios.post(
+                `/orderCustomer/save`,
+               this.items,
+                Toast.success('验收通过'),
+                  this.getlist()
+              );   
     },
     // 投诉
     complaint(){
-      this.$router.push('/complaint')
+      this.$router.push({
+        path:"/complaint",
+        query:{
+          orderId:this.orderId
+        }
+      })
     },
     // 评价
     estimate(){
-      this.$router.push('/estimate')
+        this.$router.push({
+        path:"/estimate",
+        query:{
+          orderId:this.orderId
+        }
+      })
     },
     // 取消
-    cancel(){
-           
+    cancel(orderId){ 
+      this.isRouterAlive=false
+      this.$nextTick(()=>{
+         this.isRouterAlive=true
+      })
+      this.orderId=orderId
+         var fd = new FormData()
+         this.items=fd
+      this.items.append("items",
+             `{"orderId":"${this.orderId}",  
+                "orderStatus":"4",
+                }`)
+           this.$axios.post(
+                `/orderCustomer/save`,
+                this.items).then(res=>{
+                  if(res.data.successful==false){
+                     console.log(res.data.resultHint)
+                       Toast.fail(res.data.resultHint)
+                  }else{
+                       Toast.success('取消成功')
+                  } 
+                });
+                 this.reload() 
     },
     getGunlist(){
       this.$api.get('/notifyAnnounceUser/userId/customer002',{
@@ -341,25 +394,21 @@ export default {
        })
     },
     getlist(){
+      
        this.$api.get(`/orderCustomer/queryAllToBegin?params={"pageIndex":1,"pageSize":20,"filter":"customerId=${this.cust}"}`,{
        },res=>{
-        //  console.log(res)
+         console.log(res)
          res.data.resultValue.items.forEach(item => {
            this.orderId=item.orderId
-           this.price=item.orderStatus
-          //  console.log(this.price)
+           this.orderComplaintId=item.orderComplaintId
            if(item.orderStatus==="0" ||item.orderStatus==="23" ){
               this.toPay.push(item)
-                // console.log(this.toPay)
-                if(item.electricianPrice===""){
-                    this.price=true
-                }
-           }else if(item.orderStatus==="24" ){
+           }else if(item.orderStatus==="25" ){
                this.toAccepted.push(item)
-               console.log( "24",this.toAccepted )
+               console.log( "25",this.toAccepted )
            }else if(item.orderStatus==="8" ){
                this.toEvaluated.push(item)
-               console.log( this.toEvaluated)
+               console.log( this.toEvaluated,"8")
            }
          });
        })
@@ -524,6 +573,7 @@ section .contentbox{
     padding: 0 15px;
     box-sizing: border-box;
     overflow: auto;
+    margin-top: 20px;
 }
 section .contentbox::-webkit-scrollbar{
     width: 0;
@@ -531,11 +581,11 @@ section .contentbox::-webkit-scrollbar{
 section .contentbox .content{
     width: 100%;
     height: auto;
-    border-radius: 16px;
+    border-radius: 8px;
     background: #ffffff;
     padding: 15px 12px;
-box-sizing: border-box;
-margin-top: 10px;
+    box-sizing: border-box;
+    margin-bottom: 10px;
 }
 section .contentbox .content .typebox{
 display: flex;

@@ -9,7 +9,7 @@
                <p>￥<span>{{this.list.customerPrice}}</span></p>
            </div>
            <div class="top-bottom">
-             <div class="box">标题 <span>{{this.list.customerEvaluateTitle}}</span></div>
+             <div class="box">标题 <span>{{this.list.customerDescriveTitle}}</span></div>
              <div class="box">订单编号<span class="spa">{{this.list.orderId}}</span></div>
              <div class="box">状态 <span class="spans">{{this.status}}</span></div>
            </div>

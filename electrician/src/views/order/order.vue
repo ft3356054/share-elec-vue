@@ -3,49 +3,85 @@
     <div class="header">
       <div class="mask-input">
         <span @click="fh()"><img src="@/assets/images/bai.png" alt=""></span>
-        <div class="ipt" @click="ipt">
+        <div class="ipt">
           <img src="@/assets/images/serch.png" alt="" />
-          <input type="text" placeholder="搜索我的订单" />
+          <input type="text" placeholder="搜索我的订单" @change="ipt($event)"/>
         </div>
       </div>
     </div>
     <div class="main">
-      <van-tabs
-        v-model="active"
-        line-width="60px"
-        line-color="#52AAE1"
-        title-active-color="#52AAE1"
-        color="#52AAE1"
-      >
-        <van-tab title="全部订单" class="tt">
-          <div class="tabCon">
-            <div
-              class="box"
-              v-for="(item, index) in list"
-              :key="index"
-            >
-              <div class="box-top">
-                <div class="act">类别</div><p> {{ item.name }}</p>
-                <span>{{ item.momey }}</span>
-              </div>
-              <div class="box-bottom">
-                <dl>
-                  <dt>
-                    <p>{{ item.title }}</p>
-                    <p>{{ item.time }}</p>
-                  </dt>
-                  <dd>
-                    <button class="bu1">取消</button>
-                    <button class="bu2">支付</button>
-                  </dd>
-                </dl>
-              </div>
+         <section>
+    <div class="tab-box">
+        <ul>
+           <li v-for="(item,index) in tabs" :key="index" :class="{active:num==index}" @click="nums(index)">{{item}}</li>
+        </ul>
+    </div>
+    <div class="contentbox">
+        <div class="content" v-show="num==0" v-for="(item,index) in list" :key="index">
+            <div class="typebox">
+                <p><span>类别</span><span>{{item.customerDescriveTitle}}</span></p>
+                <p>{{item.orderStatus}}</p>
+                <p v-if="item.orderStatus=='0'">上门费 {{item.customerPrice }}</p>
+                <p v-else-if="item.orderStatus=='23'">维修费 {{item.electricianPrice }}</p>
+                <p v-else-if="item.orderStatus!=='0'|| item.orderStatus!=='23' ">{{item.createTime }}</p>
+                <p v-else-if="item.orderStatus=='4'|| item.orderStatus=='9' ">{{item.finishTime }}</p>
             </div>
-          </div>
-        </van-tab>
-        <van-tab title="进行中订单">内容 2</van-tab>
-        <van-tab title="已完成订单">内容 3</van-tab>
-      </van-tabs>
+            <div class="addressbox">
+                <dl>
+                    <dt>
+                       <p>{{ item.customerDescrive }}</p>
+                       <p>{{ item.createTime }}</p>
+                    </dt>
+                    <dd v-if="item.orderStatus=='4'|| item.orderStatus=='9' ">
+                        <span class="wancan">以完成</span>
+                    </dd>
+                    <dd v-else-if="item.orderStatus=='0' || item.orderStatus=='23'  ">
+                        <button @click="cancel">取消</button> <button class="zf" @click="zf(item.orderId)">支付</button>
+                    </dd>
+                    <dd v-else-if="item.orderStatus!=='4' && item.orderStatus!='9' && item.orderStatus!=='0' && item.orderStatus!=='23'   ">
+                        <span class="jinxing">进行中</span>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <div class="content" v-show="num==1" v-for="(item,index) in haveList" :key="'in'+index">
+            <div class="typebox">
+                <p><span>类别</span><span>{{item.customerDescriveTitle}}</span></p>
+                <p>{{item.orderStatus}}</p>
+                <p>{{item.createTime}}</p>
+            </div>
+            <div class="addressbox">
+                <dl>
+                    <dt>
+                        <p>{{ item.customerDescrive }}</p>
+                       <p>电工完工的情况描述</p>
+                    </dt>
+                     <dd>
+                       <span class="jinxing">进行中</span>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+        <div class="content" v-show="num==2" v-for="(item,index) in loverList" :key="'info2'+index">
+            <div class="typebox">
+                <p><span>类别</span><span>{{item.customerDescriveTitle}}</span></p>
+                <p></p>
+                 <p>{{item.finishTime }}</p>
+            </div>
+            <div class="addressbox">
+                <dl>
+                    <dt>
+                        <p>{{ item.customerDescrive }}</p>
+                       <p>{{ item.voltage }} {{}}</p>
+                    </dt>
+                    <dd>
+                      <span class="wancan">以完成</span>
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</section>
     </div>
   </div>
 </template>
@@ -57,7 +93,11 @@ export default {
   },
   data() {
     return {
+      tabs: ['全部订单', '进行中订单', '已完成订单'],
+      num: 0,
+       staus:"",
       active: 0,
+      value:"",
       list: [
         {
           leb: "类别",
@@ -121,17 +161,60 @@ export default {
           distance: "<5KM",
         },
       ],
+      cust:"customer001",
+      haveList:[],      //进行中
+      loverList:[],   //已完成
+      orderComplaintId:""
     };
+  },
+  mounted() {
+     this.getlist()
   },
   methods: {
     fh(){
       this.$router.go(-1)
     },
-    ipt(){
-      this.$router.push("/search")
-    }
+    nums(index){
+        this.num=index
+       this.shousui()
+    },
+    ipt(e){
+      var that = this;
+       this.value=e.target.value;
+        console.log(this.value);
+        this.shousui()
+    },
+    shousui(index){
+      this.$api.get(`/orderCustomer/searchBox?params={"filter":["customerId=${this.cust}","tagType=${this.num}","searchContent=${this.value}"]}`,{},
+         res=>{
+          //  console.log(res)
+            this.list=res.data.resultValue.items
+            this.haveList=res.data.resultValue.items
+            this.loverList=res.data.resultValue.items
+         })
+    },
+     getlist(){
+       this.$api.get(`/orderCustomer/queryAll?params={"pageIndex":1,"pageSize":20,"filter":"customerId=${this.cust}"}`,{
+       },res=>{
+         console.log(res)
+         this.list=res.data.resultValue.items
+          res.data.resultValue.items.forEach(item => {
+           if(item.orderStatus!="4" || item.orderStatus!="9" ){
+              this.haveList.push(item)
+           }else if(item.orderStatus==="4" ||item.orderStatus==="9"  ){
+               this.loverList.push(item)
+               console.log( this.loverList,"8")
+           }
+         });
+       })
+     },
+      // 取消
+    cancel(){
+           
+    },
+
   },
-};
+}
 </script>
 
 <style lang="scss" scoped>
@@ -141,6 +224,7 @@ export default {
   background: #f3f8fe;
 }
 .header {
+  width: 100%;
   height: 55px;
   background: #87cefa;
   padding: 0 20px;
@@ -181,91 +265,163 @@ export default {
     }
   }
 }
-.box {
-  width: 90%;
-  margin: 0 auto;
-  height: 115px;
-  background: #fff;
-  padding: 0 20px;
-  border-radius: 8px;
- .box-top {
-    margin-top: 10px;
-    height: 37px;
-    border-bottom: 1px solid #e0e0e0;
-    padding-top: 10px;
-    padding-bottom: 8px;
-     .act{
-         margin-top: 5px;
-         margin-right: 6px;
-          width: 25px;
-          font-size: 9px;
-          color: #fff;
-          text-align: center;
-          height: 15px;
-          line-height: 17px;
-          border-radius: 6px 0 6px 0;
-          background:#ff364a;
-          float: left;
-        }
-    p {
-        margin-top: 2px;
-      font-size: 14px;
-      color: #000;
-      float: left;
-    }
-    span {
-      padding-top: 5px;
-      font-size: 10px;
-      color: #999999;
-      float: right;
-    }
-  }
-  .box-bottom {
-     font-weight: bold;
-    dl {
-      width: 100%;
-      height: 70px;
-      // display: flex;
-      // flex-direction: column;
-      // justify-content: space-between;
-      margin-right: 8px;
-      dt {
-        width: 60%;
-        float: left;
-        font-size: 12px;
-        padding-top: 10px;
-        color: #333;
-        p {
-        display: block;
-          line-height: 20px;
-        }
-      }
-      dd {
-        float: left;
-        padding-top: 23px;
-        .bu1 {
-          width: 44px;
-          height: 24px;
-          border-radius: 20px;
-          background: #fff;
-          outline: none;
-          font-size: 12px;
-          color: #666666;
-          border: 1px solid #e0e0e0;
-        }
-        .bu2 {
-          margin-left: 10px;
-          width: 44px;
-          height: 24px;
-          border-radius: 20px;
-          background: #fff;
-          font-size: 12px;
-          border: 1px solid #52aae1;
-          color: #52aae1;
-          outline: none;
-        }
-      }
-    }
-  }
+.main{
+  flex: 1;
+}
+section{
+   display: -webkit-flex; /* Safari */
+       display: flex;
+   flex-direction: column;
+    overflow: auto;
+}
+section::-webkit-scrollbar{
+    width: 0;
+}
+section .tab-box{
+    width: 100%;
+    height: 30px;
+    margin-bottom: 10px;
+}
+section .tab-box ul{
+width: 100%;
+height: 40px;
+line-height: 40px;
+padding-left: 15px;
+color: #828284;
+font-size: 12px;
+background: #fff;
+}
+section .tab-box ul li{
+list-style: none;
+float: left;
+margin-left: 25px;
+}
+
+section .contentbox{
+    width: 100%;
+    height: auto;
+    padding: 0 15px;
+    box-sizing: border-box;
+    overflow: auto;
+    margin-top: 15px;
+    background: #f3f8fe;
+}
+section .contentbox::-webkit-scrollbar{
+    width: 0;
+}
+section .contentbox .content{
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    background: #ffffff;
+    padding: 15px 12px;
+box-sizing: border-box;
+margin-bottom: 10px;
+}
+section .contentbox .content .typebox{
+display: flex;
+border-bottom: 1px solid #f2f2f2;
+}
+section .contentbox .content .typebox p:nth-child(2){
+    flex: 1;
+}
+section .contentbox .content .typebox p:nth-child(1) span:nth-child(1){
+    width: 30px;
+    height: 15px;
+    display: inline-block;
+    background: url(../../assets/images/label.png) no-repeat;
+    color: #ffffff;
+    font-size: 10px;
+    text-align: center;
+    background-size: 100% 100%;
+}
+section .contentbox .content .typebox p:nth-child(1) span:nth-child(2){
+    display: inline-block;
+    font-size: 13px;
+    font-weight: bold;
+    margin-left: 7px;
+}
+section .contentbox .content .typebox p:nth-child(3){
+    line-height: 22px;
+    color: #aeaeae;
+    font-size: 10px;
+}
+section .contentbox .content .addressbox{
+width: 100%;
+height: auto;
+}
+section .contentbox .content .addressbox dl{
+width: 100%;
+height: auto;
+display: flex;
+margin: 0;
+}
+section .contentbox .content .addressbox dt{
+    flex: 1;
+font-size: 11px;
+margin-top: 10px;
+}
+section .contentbox .content .addressbox dt p{
+    padding: 0;
+   margin: 5px 0;
+    display: -webkit-box;
+    font-size: 11px;
+    line-height:14px;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+section .contentbox .content .addressbox dd{
+padding: 0;
+margin: 0;
+text-align: right;
+padding-left: 10px;
+box-sizing: border-box;
+}
+section .contentbox .content .addressbox dd button{
+padding: 0 10px;
+height: 20px;
+border-radius: 20px;
+outline: none;
+border: 0;
+background: #ffffff;
+border: 1px solid #aeaeae;
+margin-top: 20px;
+box-sizing: border-box;
+color: #666666;
+font-size: 10px;
+}
+section .contentbox .content .addressbox dd .zf{
+border-color: #52aae1;
+color: #52aae1;
+}
+.active{
+    color: #54abe1;
+    border-bottom: 3px solid #2293d8;
+box-sizing: border-box;
+font-size: 14px;
+}
+.wancan{
+  display:block;
+  color: #ff4758;
+  margin-top: 15px;
+  font-size: 14px;
+}
+.sp{
+  font-size: 10px;
+   color: #aeaeae;
+   margin-top: 5px;
+}
+.jinxing{
+   display:block;
+  color: #abd6f0;
+  margin-top: 15px;
+  font-size: 14px;
 }
 </style>
+
+
+
+
+
