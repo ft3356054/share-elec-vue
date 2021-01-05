@@ -11,70 +11,70 @@
         <div class="x"></div>
         订单信息
       </h4>
-      <ul class="ipt">
+      <ul class="ipt"  v-for="(item,index) in demo" :key="index">
         <li>
           <div class="left">订单编号</div>
-          <span>{{ demo.a }}</span>
+          <span>{{ item.orderId  }}</span>
         </li>
         <li>
           <div class="left">标题</div>
-          <span>{{ demo.c }}</span>
+          <span>{{ item.customerDescriveTitle }}</span>
         </li>
         <li>
-          <div class="left">联系人</div>
-          <span>{{ demo.b }}</span>
+          <div class="left">接单人</div>
+          <span>{{ item.electricianName }}</span>
         </li>
         <li>
           <div class="left">联系电话</div>
-          <span>{{ demo.q }}</span>
+          <span>{{ item.electricianPrice }}</span>
         </li>
         <li>
-          <div class="left">发单时间</div>
-          <span>{{ demo.g }}</span>
+          <div class="left">接单时间</div>
+          <span>{{ item.acceptTime}}</span>
         </li>
         <li>
           <div class="left">状态</div>
-          <span class="zt">{{ demo.h }}</span>
+          <span class="zt"  v-if="item.orderStatus">以完成</span>
         </li>
         <li>
           <div class="left">完成时间</div>
-          <b>{{ demo.w }}</b>
+          <b>{{ item.finishTime }}</b>
         </li>
         <li>
           <div class="left">上门费</div>
-          <span class="momy">{{ demo.f }}</span>
+          <span class="momy">￥{{ item.customerPrice }}</span>
         </li>
         <li>
          <div class="left">维修费</div>
-          <span class="momy">{{ demo.r }}</span>
+          <span class="momy">￥{{ item.electricianPrice }}</span>
         </li>
         <li>
           <div class="left">探测情况</div>
-          <span style="display:table-row;">{{ demo.t }}
+          <span style="display:table-row;">{{ item.electricianDescrive }}
           </span>
         </li>
         <li>
           <div class="left">施工人员</div>
           <ul style="margin-left:80px">
-              <li v-for="(item,index) in demo.y" :key="index">{{item.name}} {{item.pho}}</li>
+              <li v-for="(item,index) in demo.y" :key="index">{{item.otherElectricianName}}</li>
               </ul>
         </li>
         <li style="padding-bottom:20px">
           <div class="left" >施工内容</div>
-          <span style="display:table-row;">{{ demo.u }} </span>
+          <span style="display:table-row;">{{ item.constructionContent}} </span>
         </li>
       </ul>
     </div>
-     <div class="box">
+     <div class="box" v-for="(item,id) in demo" :key="id+2">
          <h4>合同</h4>
-         <div class="gz">
-        <img src="@/assets/images/gztp.png" alt="" />
+         <div class="gz">   
+        <img :src="item.orderContract" alt="" />
       </div>
       </div>
-      <div class="box" >
+      <div class="box"   v-for="(item,ss) in demo" :key="ss+5">
           <h4>服务报告</h4>
             <div class="gz" style="margin-bottom:60px">
-        <img src="@/assets/images/gztp.png" alt="" />
+        <img :src="item.inspectionReport" alt="" />
       </div>
       </div>
   </div>
@@ -83,41 +83,10 @@
 <script>
 export default {
   components: {},
-  methods: {
-    //   返回上一层
-    fh() {
-      this.$router.go(-1);
-    },
-    // 投诉
-    tocomplaint() {
-      this.$router.push("/complaint");
-    },
-    //  确认验收
-     TipDialog(){
-    this.$dialog.alert({
-      // title:'标题呀',
-      width:"80%",
-      message:'验收成功'
-    }).then(()=>{
-     console.log('点击了确认')
-     this.$router.push("/estimate")
-    })
-   },
-  },
-  data() {
+   data() {
     return {
       value: 3,
       fileList: [],
-      data: [
-        "订单编号",
-        "接单人",
-        "标题",
-        "内容说明",
-        "地址",
-        "上门费",
-        "接单时间",
-        "状态",
-      ],
       demo: {
         a: "202011121447",
         b: "刘青",
@@ -143,8 +112,42 @@ export default {
         }],
         u:"机房主配电箱开关已更换完成，施工时间一个工作日。"
       },
+     orderId:""
     };
   },
+    mounted() {
+    this.orderId=this.$route.query.orderId
+    this.getdemo()
+  },
+  methods: {
+    //   返回上一层
+    fh() {
+      this.$router.go(-1);
+    },
+    // 投诉
+    tocomplaint() {
+      this.$router.push("/complaint");
+    },
+    //  确认验收
+     TipDialog(){
+    this.$dialog.alert({
+      // title:'标题呀',
+      width:"80%",
+      message:'验收成功'
+    }).then(()=>{
+     console.log('点击了确认')
+     this.$router.push("/estimate")
+    })
+   },
+      getdemo(){
+        this.$api.get(`/orderCustomer/OrderDetail/${this.orderId}`,{
+       },res=>{
+           console.log(res.data.resultValue.items)
+           this.demo=res.data.resultValue.items
+       })
+    },
+  },
+ 
 };
 </script>
 
@@ -220,7 +223,7 @@ export default {
         font-weight: normal;
       }
       span {
-        font-weight: 800;
+        // font-weight: 800;
         color: #343434;
       }
       .momy {

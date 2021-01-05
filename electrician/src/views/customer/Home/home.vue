@@ -35,18 +35,20 @@
           :autoplay="3000"
           :show-indicators="false"
         >
-          <van-swipe-item v-for="(item,index) in messages" :key="index">系统消息:  {{item.name}}</van-swipe-item>
+          <van-swipe-item v-for="(item,index) in messages" :key="index" @click="swipe(item.orderId)">
+            系统消息:  {{item.content}}
+          </van-swipe-item>
         </van-swipe>
         <img src="../../../assets/images/messagejiantou.png" alt="">
       </van-notice-bar>
     </nav>
     <section>
     <div class="tab-box">
+        <van-sticky :offset-top="374">
         <ul>
-            <li @click="num=0" :class="{active:num==0}">待支付</li>
-            <li @click="num=1" :class="{active:num==1}">待验收</li>
-            <li @click="num=2" :class="{active:num==2}">待评价</li>
+              <li v-for="(item,index) in tabs" :key="index" :class="{active:num==index}" @click="nums(index)">{{item}}</li>
         </ul>
+        </van-sticky>
     </div>
     <div class="contentbox">
         <div class="content" v-show="num==0" v-for="(item,index) in toPay" :key="index">
@@ -58,12 +60,17 @@
             </div>
             <div class="addressbox">
                 <dl>
-                    <dt>
+                    <dt @click="about(item.orderId,item.orderStatus)">
                        <p>{{ item.customerDescrive }}</p>
                        <p>{{ item.createTime }}</p>
                     </dt>
                     <dd>
                         <button @click="cancel(item.orderId)">取消</button> <button class="zf" @click="zf(item.orderId)">支付</button>
+                         <van-dialog v-model="show" title="" show-cancel-button class="show" 
+                        @confirm="confirm(item.orderId)" @cancel="cancels"
+                        >
+                             <div class="box">确定取消订单吗？取消订单后不能回复</div>
+                          </van-dialog>
                     </dd>
                 </dl>
             </div>
@@ -76,15 +83,15 @@
             </div>
             <div class="addressbox">
                 <dl>
-                    <dt>
+                    <dt @click="about(item.orderId,item.orderStatus)">
                         <p>{{ item.customerDescrive }}</p>
                        <p>电工完工的情况描述</p>
                     </dt>
-                    <dd v-if="orderComplaintId===null? true: false" >
-                       <button @click="complaint">投诉</button> <button class="zf" @click="yanshou(item.orderId)">验收通过</button>
+                    <dd v-if="item.orderComplaintId==null">
+                       <button @click="complaint(item.orderId)">投诉</button> <button class="zf" @click="yanshou(item.orderId)">验收通过</button>
                     </dd>
                      <dd v-else>
-                       <button class="zf" @click="yanshou">验收通过</button>
+                       <button class="zf" @click="yanshou(item.orderId)">验收通过</button>
                     </dd>
                 </dl>
             </div>
@@ -98,12 +105,12 @@
             </div>
             <div class="addressbox">
                 <dl>
-                    <dt>
+                    <dt @click="about(item.orderId,item.orderStatus)">
                         <p>{{ item.customerDescrive }}</p>
                        <p>{{ item.finishTime }}</p>
                     </dt>
                     <dd>
-                        <button class="zf" @click="estimate">评价</button>
+                        <button class="zf" @click="estimate(item.orderId)">评价</button>
                     </dd>
                 </dl>
             </div>
@@ -120,8 +127,8 @@ export default {
   components: {},
   data() {
     return {
-       num: 0,
-       orderComplaintId:"",
+      tabs: ['待支付', '待验收', '待评价'],
+      num: "",
       navlist: [
         {
           img: require("@/assets/images/woyaofadan.png"),
@@ -137,136 +144,11 @@ export default {
         },
       ],
       messages: [
-        { name: "sssssssss更新1" },
-        { name: "2本系统将于sdas " },
         { name: "3阿打算打算打24日凌晨24:00开始停机更新3" },
         { name: "4本系萨达四大晨24:00开始停机更新4" },
       ],
       activeName: "a",
       active: "0",
-      lists: [
-        {
-          leb: "类别",
-          name: "插座跳闸",
-          time: "2020/11/09 13:49",
-          address: "天津市东丽区国网客服中心北方园区",
-          title: "插座跳闸，需要检修下",
-          Voltage: "10v",
-          state: "抢修",
-          distance: "<5KM",
-            mast:"电工完工的情况描述",
-             momey: "上门费 1500",
-        },
-        {
-          leb: "类别",
-          name: "泵房线路安装",
-          time: "2020/11/09 13:49",
-          address: "天津市东丽区能量大厦332号",
-          title: "插座跳闸，需要检修下",
-          Voltage: "10v",
-          state: "抢修",
-          distance: "<5KM",
-          mast:"电工完工的情况描述",
-           momey: "上门费 1500",
-        },
-        {
-          leb: "类别",
-          name: "插座跳闸",
-          time: "2020/11/09 13:49",
-          address: "天津市东丽区国网客服中心北方园区",
-          title: "插座跳闸，需要检修下",
-          Voltage: "10v",
-          state: "抢修",
-          distance: "<5KM",
-            mast:"电工完工的情况描述",
-             momey: "上门费 1500",
-        },
-      ],
-      data: [
-        {
-          leb: "类别",
-          name: "插座跳闸",
-          time: "2020/11/09 13:49",
-          address: "天津市东丽区国网客服中心北方园区",
-          title: "插座跳闸，需要检修下",
-          Voltage: "10v",
-          state: "抢修",
-          distance: "<5KM",
-          momey: "上门费 1500",
-        },
-        {
-          leb: "类别",
-          name: "插座跳闸",
-          time: "2020/11/09 13:49",
-          address: "天津市东丽区国网客服中心北方园区",
-          title: "插座跳闸，需要检修下",
-          Voltage: "10v",
-          state: "抢修",
-          distance: "<5KM",
-          momey: "上门费 1500",
-        },
-        {
-          leb: "类别",
-          name: "泵房线路安装",
-          time: "2020/11/09 13:49",
-          address: "天津市东丽区能量大厦332号",
-          title: "插座跳闸，需要检修下",
-          Voltage: "10v",
-          state: "抢修",
-          distance: "<5KM",
-        },
-        {
-          leb: "类别",
-          name: "插座跳闸",
-          time: "2020/11/09 13:49",
-          address: "天津市东丽区国网客服中心北方园区",
-          title: "插座跳闸，需要检修下",
-          Voltage: "10v",
-          state: "抢修",
-          distance: "<5KM",
-        },{
-          leb: "类别",
-          name: "插座跳闸",
-          time: "2020/11/09 13:49",
-          address: "天津市东丽区国网客服中心北方园区",
-          title: "插座跳闸，需要检修下",
-          Voltage: "10v",
-          state: "抢修",
-          distance: "<5KM",
-          momey: "上门费 1500",
-        },
-        {
-          leb: "类别",
-          name: "插座跳闸",
-          time: "2020/11/09 13:49",
-          address: "天津市东丽区国网客服中心北方园区",
-          title: "插座跳闸，需要检修下",
-          Voltage: "10v",
-          state: "抢修",
-          distance: "<5KM",
-          momey: "上门费 1500",
-        },
-        {
-          leb: "类别",
-          name: "泵房线路安装",
-          time: "2020/11/09 13:49",
-          address: "天津市东丽区能量大厦332号",
-          title: "插座跳闸，需要检修下",
-          Voltage: "10v",
-          state: "抢修",
-          distance: "<5KM",
-        },
-        {
-          leb: "类别",
-          name: "插座跳闸",
-          time: "2020/11/09 13:49",
-          address: "天津市东丽区国网客服中心北方园区",
-          title: "插座跳闸，需要检修下",
-          Voltage: "10v",
-          state: "抢修",
-          distance: "<5KM",
-        },
-      ],
       content:"",
       toPay:[],
       toAccepted:[],
@@ -274,18 +156,19 @@ export default {
       cust:"customer001",
       orderId:"",
       items:{},
+      show:false
     };
   },
   inject:['reload'],
-  created() {
-      
-  },
   mounted() {
     this.getContent(),  //获取未读消息数量
     this.getGunlist()   // 获取滚动数据
     this.getlist()   //获取订单数据
   },
   methods: {
+    nums(index){
+     this.num=index
+    },
     nalist(index) {
       if (index === 0) {
         this.$router.push({
@@ -295,7 +178,12 @@ export default {
           }
         });
       } else if (index === 1) {
-        this.$router.push("/order");
+        this.$router.push({
+          path:"/order",
+          query:{
+             cust:this.cust
+          }
+        });
       } else if (index === 2) {
         this.$router.push("/infrom");
       }
@@ -326,7 +214,12 @@ export default {
     },
     // 验收通过
     yanshou(orderId){
+        this.$dialog.confirm({
+      width:"80%",
+      message:'确定通过验收吗？'
+    }).then(()=>{
       this.orderId=orderId
+      this.items={}
       this.orderId=orderId
          var fd = new FormData()
          this.items=fd
@@ -336,13 +229,25 @@ export default {
                 }`)
            this.$axios.post(
                 `/orderCustomer/save`,
-               this.items,
-                Toast.success('验收通过'),
-                  this.getlist()
-              );   
+               this.items
+              ).then(res=>{
+                if(res.data.successful==false){
+                     console.log(res.data.resultHint)
+                       Toast.fail(res.data.resultHint)
+                  }else{
+                       Toast.success('验收通过')
+                        this.reload() 
+                  } 
+              })  
+      })
+       .catch(() => {
+         // on cancel
+        });         
+     
     },
     // 投诉
-    complaint(){
+    complaint(orderId){
+       this.orderId=orderId
       this.$router.push({
         path:"/complaint",
         query:{
@@ -351,7 +256,8 @@ export default {
       })
     },
     // 评价
-    estimate(){
+    estimate(orderId){
+       this.orderId=orderId
         this.$router.push({
         path:"/estimate",
         query:{
@@ -359,13 +265,17 @@ export default {
         }
       })
     },
-    // 取消
-    cancel(orderId){ 
-      this.isRouterAlive=false
-      this.$nextTick(()=>{
-         this.isRouterAlive=true
-      })
-      this.orderId=orderId
+       // 取消
+    cancel(){
+      this.show=true       
+    },
+    // 点击取消时
+    cancels(){
+     this.show=false
+    },
+    // 点击确认时
+    confirm(orderId){
+        this.orderId=orderId
          var fd = new FormData()
          this.items=fd
       this.items.append("items",
@@ -380,35 +290,32 @@ export default {
                        Toast.fail(res.data.resultHint)
                   }else{
                        Toast.success('取消成功')
+                        this.reload() 
                   } 
                 });
-                 this.reload() 
     },
+    // 获取滚动消息数据
     getGunlist(){
-      this.$api.get('/notifyAnnounceUser/userId/customer002',{
+      this.$api.get(`/notifyAnnounceUser/queryAll?params={"pageIndex":1,"pageSize":5,"filter":["userId=${this.cust}","status=0"]}`,{
        },res=>{
           //  console.log(res)
-           this.messages.push({
-             name:res.data.resultValue.items[0].content
-           })
+           this.messages=res.data.resultValue.items
        })
     },
     getlist(){
-      
        this.$api.get(`/orderCustomer/queryAllToBegin?params={"pageIndex":1,"pageSize":20,"filter":"customerId=${this.cust}"}`,{
        },res=>{
-         console.log(res)
+        //  console.log(res.data)
          res.data.resultValue.items.forEach(item => {
            this.orderId=item.orderId
-           this.orderComplaintId=item.orderComplaintId
            if(item.orderStatus==="0" ||item.orderStatus==="23" ){
               this.toPay.push(item)
            }else if(item.orderStatus==="25" ){
                this.toAccepted.push(item)
-               console.log( "25",this.toAccepted )
+              //  console.log( "25",this.toAccepted )
            }else if(item.orderStatus==="8" ){
                this.toEvaluated.push(item)
-               console.log( this.toEvaluated,"8")
+              //  console.log( this.toEvaluated,"8")
            }
          });
        })
@@ -420,6 +327,42 @@ export default {
                     this.content=res.data.resultValue
                       // console.log(this.content)
                 })
+    },
+    // 系统消息
+    swipe(index){
+      console.log(index)
+    },
+    // 详情
+    about(orderId,orderStatus){
+      this.orderId=orderId
+       switch (orderStatus) {
+        case "8":  //待评价
+          this.$router.push({
+            path:"/complete",
+            query:{
+              orderId:this.orderId
+            }
+          })
+          break;
+        case "25":   //待验收
+          this.$router.push({
+            path:"/accepted",
+            query:{
+              orderId:this.orderId
+            }
+          })
+          break;
+        case "0":  //待支付
+           this.$router.push({
+           path: `/Pay/${this.orderId}`,
+          })
+          break;
+          case "23":  //待维修费
+           this.$router.push({
+           path: `/Pay/${this.orderId}`,
+          })
+          break;
+      }
     }
   },
 };
@@ -432,9 +375,11 @@ export default {
   position: relative;
   background: #f3f8fe;
   display: flex;
-flex-direction: column;
+  flex-direction: column;
 }
-
+/deep/ .notice-swipe .van-swipe{
+  width: 100%;
+}
 header {
   width: 100%;
   height: 215px;
@@ -670,5 +615,24 @@ color: #52aae1;
     border-bottom: 3px solid #2293d8;
 box-sizing: border-box;
 font-size: 14px;
+}
+/deep/ .show{
+  width: 80%;
+   .box{
+   width: 100%;
+    font-size: 13px;
+    height: 80px;
+    text-align: center;
+    line-height: 80px;
+  }
+  button{
+    font-size: 13px;
+  }
+}
+/deep/ .van-overlay{
+  background-color: rgba(0,0,0,.4);
+}
+/deep/ .van-sticky{
+  background: #f3f8fe;
 }
 </style>

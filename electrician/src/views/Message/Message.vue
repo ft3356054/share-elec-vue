@@ -6,7 +6,7 @@
      <main>
            
         <div class="box" v-for="(item,index) in list" :key="index">
-          <div class="top"><hoursTip/><span>{{item.createTime}}</span></div>
+          <div class="top"><hoursTip :time="item.createTime"/></div>
           <div class="bottom">
              <div class="bot-top">
                  <div class="act" v-if="item.notifyType==='1'">维修</div>
@@ -15,7 +15,7 @@
                  <div class="act" v-else-if="item.notifyType==='4'">评价</div>
                   <b>{{item.title}}</b> <span>{{item.createTime}}</span>
              </div>
-             <div class="bot-bottom" @click="details(item)">
+             <div class="bot-bottom" @click="details(item.announceId,item.orderId)">
                <ul class="left">
                  <li>{{item.content}}</li>
                  <li class="clas" v-show="item.state==='0'? true:false">未读</li>
@@ -62,12 +62,18 @@ export default {
             stat:"2020/11/07 11:15:20",
             mame:"刘强"
           }
-        ],
+             ],
+            announceId:"",
+            orderId:""
         }
     },
-    created() {
-      
-    },
+    inject:['reload'],
+      mounted() {
+      console.log(this.$route.query.cust)
+       this.cust=this.$route.query.cust
+       this.getList()
+       this.WebSocketTest()
+  },
   methods: {
       fh(){
           this.$router.go(-1)
@@ -76,32 +82,139 @@ export default {
       times(){
          var aData = new Date()
        this.time =aData.getHours() + ":" + aData.getMinutes()
-      //  console.log(this.time) //2019-8-20 
+       console.log(this.time) //2019-8-20 
       },
       // 详请
-      details(item){
+      details(announceId,orderId){
+       console.log(announceId,orderId)
         // console.log(item)
-        this.$router.push("/details")
-       this.$bus.$emit("details",{
-         announceId:item.announceId,
-         announceUserId:this.cust
-       })
-      }
-  },
- 
-  mounted() {
-      console.log(this.$route.query.cust)
-      this.cust=this.$route.query.cust
-       this.$api.get(`/notifyAnnounceUser/userId/${this.cust}`,{
+      //   this.$router.push("/details")
+      //  this.$bus.$emit("details",{
+      //    announceId:item.announceId,
+      //    announceUserId:this.cust
+      //  })
+          this.dawd(announceId)
+          this.getdetails(orderId)
+          //  this.reload() 
+      },
+      // 点击未读变已读
+      dawd(announceId){
+         this.announceId=announceId
+          this.$axios.get(`/notifyAnnounce/read/?params={"filter":["announceId=${this.announceId}","announceUserId=${this.cust}"]}`,{
        },res=>{
-           console.log(res)
+          //  console.log(res.data)
+       })
+      },
+      // 点击获取详情数据
+      getdetails(orderId){
+        this.orderId=orderId
+        this.$api.get(`/orderCustomer/OrderDetail/${this.orderId}`,{   
+        },res=>{
+          console.log(res.data.resultValue.items[0])
+         let orderStatus=res.data.resultValue.items[0].orderStatus
+        switch (orderStatus) {
+        case "20":   //待预约
+          this.$router.push({
+            path:"/stayMake",
+            query:{
+              orderId:this.orderId
+            }
+          })
+          break;
+        case "23":  //待现场勘查察
+            this.$router.push({
+           path: `/Pay/${this.orderId}`,
+          })
+          break;                
+        default:
+          break;
+      }
+        })
+      },
+      // 获取消息列表
+      getList(){
+          this.$api.get(`/notifyAnnounceUser/queryAll?params={"pageIndex":1,"pageSize":20,"filter":["userId=${this.cust}","status=2"]}`,{
+       },res=>{
+          //  console.log(res)
            this.list=res.data.resultValue.items
           //  this.list.sort(Utils.compare())
-           console.log(this.list)
+          //  console.log(this.list)
            this.times()
        })
+      },
+      WebSocketTest(){
+         if(typeof(WebSocket) === "undefined"){
+                alert("您的浏览器不支持socket")
+            }else{
+                // 实例化socket
+                var uid = "123";
+                this.socket = new WebSocket(this.path+uid)
+                // 监听socket连接
+                this.socket.onopen = this.open
+                // 监听socket错误信息
+                this.socket.onerror = this.error
+                // 监听socket消息
+                this.socket.onmessage = this.getMessage
+                console.log(this.socket)
+            }
+    },
+    open: function () {
+            console.log("socket连接成功")
+        },
+    error: function () {
+        console.log("连接错误")
+    },
+    getMessage: function (msg) {
+        console.log(msg.data)
+    },
+    send: function () {
+        this.socket.send(params)
+    },
+    close: function () {
+        console.log("socket已经关闭")
+    },
+       showtime(time) {
+      let date =
+        typeof time === "number"
+          ? new Date(time)
+          : new Date((time || "").replace(/-/g, "/"));
+      let diff = (new Date().getTime() - date.getTime()) / 1000;
+      let dayDiff = Math.floor(diff / 86400);
+
+      let isValidDate =
+        Object.prototype.toString.call(date) === "[object Date]" &&
+        !isNaN(date.getTime());
+
+      if (!isValidDate) {
+        window.console.error("not a valid date");
+      }
+      const formatDate = function(date) {
+        let today = new Date(date);
+        let year = today.getFullYear();
+        let month = ("0" + (today.getMonth() + 1)).slice(-2);
+        let day = ("0" + today.getDate()).slice(-2);
+        let hour = today.getHours();
+        let minute = today.getMinutes();
+        let second = today.getSeconds();
+        return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+      };
+
+      if (isNaN(dayDiff) || dayDiff < 0 || dayDiff >= 31) {
+        return formatDate(date);
+      }
+      return (
+        (dayDiff === 0 &&
+          ((diff < 60 && "刚刚") ||
+            (diff < 120 && "1分钟前") ||
+            (diff < 3600 && Math.floor(diff / 60) + "分钟前") ||
+            (diff < 7200 && "1小时前") ||
+            (diff < 86400 && Math.floor(diff / 3600) + "小时前"))) ||
+        (dayDiff === 1 && "昨天") ||
+        (dayDiff < 7 && dayDiff + "天前") ||
+        (dayDiff < 31 && Math.ceil(dayDiff / 7) + "周前")
+      );
+    },
   },
-  
 };
 </script>
 
@@ -139,6 +252,7 @@ export default {
 }
 main{
   flex: 1;
+  overflow: auto;
   padding: 0 13px;
    background: #f3f8fe;
    .top{
@@ -154,7 +268,7 @@ main{
       }
     }
   .box{
-    margin-top: 8px;
+    padding-bottom: 10px;
     .bottom{
       height: 100px;
       border-radius:8px;

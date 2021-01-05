@@ -18,7 +18,7 @@
           <span>*</span><b>标题</b>
           <input type="text" v-model="customerEvaluateTitle" />
         </li>
-        <li>
+        <li class="des">
           <span>*</span><b>内容说明</b>
           <textarea
             v-model="customerDescrive"
@@ -167,10 +167,8 @@ export default {
       // this.starttime1 = new Date(this.currentDate).getTime() / 1000
     },
     cancel() {     //时间  点击取消
-      
       this.show = false;
     },
-
     formatter(type, val) {
       if (type === "year") {
         return val + "年";
@@ -201,7 +199,9 @@ export default {
           // console.log(res.data.resultValue);
           this.selectList=res.data.resultValue.items    
         }
+        
       );
+      console.log(this.selected)
     },
     iden(){   //获取身份
         this.$api.get(
@@ -224,7 +224,24 @@ export default {
               );
     },
     submit() {    //提交
-            var fd = new FormData()
+       if(this.customerEvaluateTitle==""|| null){
+             Toast("标题不能为空")
+       }else if(this.customerDescrive=="" || null){
+              Toast("内容说明不能为空")
+       }else if(this.selected=="" || null){
+              Toast("请选择需求类型")
+       }else if(this.voltage=="" || null){
+              Toast("请选择电压")
+       }else if(this.sele=="" || null){
+              Toast("请选择身份")
+       }else if(this.customerAddress=="" || null){
+              Toast("地址不能为空")
+       }else if(this.customerName=="" || null){
+              Toast("联系人不能为空")
+       }else if(this.customerPhonenumber=="" || null){
+              Toast("联系电话不能为空")
+       }else{
+           var fd = new FormData()
               if(this.files===null || this.files===""){
                   fd.append("myFile","")
               }else{
@@ -247,14 +264,19 @@ export default {
                   "addressLongitude":"${this.addressLongitude}",
                   "addressLatitude":"${this.addressLatitude}"
                 }`)
-        this.$axios.post(
-                `/orderCustomer/save`,
-                this.fd,{headers: {'Content-Type': 'multipart/form-data'}},
-                Toast.success('发单成功'),
-              );   
-          this.set=setTimeout(()=>{
-                    this.$router.push("./customer")  
-              },1000)     
+            this.$axios.post(
+                    `/orderCustomer/save`,
+                    this.fd,{headers: {'Content-Type': 'multipart/form-data'}},
+                    Toast.success('发单成功'), 
+                  ).then(res=>{
+                    // console.log(res)
+                    this.set=setTimeout(()=>{
+                          this.$router.push({
+                          path: `/Pay/${res.data.resultValue.items[0].orderId}`,
+                      })  
+                  },1000)    
+                  });  
+       }  
     },
     // 用户信息
     custtom(){
@@ -278,7 +300,6 @@ export default {
   },
   mounted() {
     this.customerId = this.$route.query.cust;
-    console.log(this.customerId);
      this.custtom()  //获取个人信息
   },
     destroyed() {
@@ -319,7 +340,7 @@ export default {
   }
 }
 .bottom {
-  height: 520px;
+  height: 540px;
   background: #f3f8fe;
   position: relative;
 }
@@ -333,8 +354,6 @@ export default {
   margin: 0 auto;
   padding: 15px 15px;
   border-radius: 8px;
-  box-shadow: 0 -6px 3px #b4e0fc;
-  // box-shadow: 0 -10px  1px #93D3fb;
   .ipt {
     span {
       color: red;
@@ -342,8 +361,8 @@ export default {
     }
     li {
       height: 30px;
-      line-height: 20px;
-      margin-bottom: 12px;
+      line-height: 30px;
+      margin-top: 10px;
       b {
         font-size: 12px;
       }
@@ -358,11 +377,10 @@ export default {
         font-size: 12px;
       }
       textarea {
-        // margin-top: 1px;
         float: right;
         width: 185px;
-        height: 40px;
-        line-height: 15px;
+        height: 80px;
+        line-height: 30px;
         border: none;
         border-bottom: 1px solid #ebebeb;
         font-size: 12px;
@@ -463,5 +481,9 @@ export default {
     color: #fff;
     font-size: 16px;
   }
+}
+.des{
+  // background: red;
+  height: 80px !important;
 }
 </style>
