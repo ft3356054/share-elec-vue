@@ -46,19 +46,53 @@ export default {
     return {
       times: '',
       imgs: require('../../../assets/images/addpeople.png'),
-      fileLists: []
+      fileLists: [],
+      files:{},
+      fd:{},
+      orderId:"",
+      electricianId:""
     }
   },
+  mounted(){
+    this.getlist()
+  },
   methods: {
+     getlist(){
+        this.orderId=this.$route.params.orderId
+        this.electricianId=this.$route.params.electricianId
+        this.$api.get("/orderElectrician/orderDetails/"+this.orderId, {"electricianId":this.electricianId}, response => {
+        console.log(response.data);
+        });
+    },
     goback () {
       this.$router.go(-1)
     },
-    Order () {
-      this.$router.push('/electricianend')
-    },
     returnorder () {
       this.$router.push('/returnorder')
-    }
+    },
+    upimgbtn(file){
+      console.log(file)
+      this.files=file.file
+    },
+     Order () {
+      
+      var fd=new FormData()
+         if(this.files===null|| this.files===""){
+             fd.append("myFile","")
+         console.log(fd)
+         }else{
+             fd.append("myFile",this.files)
+            console.log(fd.get("myFile"))
+         }
+         this.fd=fd
+        this.fd.append("items",`{"orderId":"${this.orderId}","method":"验收申请","electricianId":"${this.electricianId}","orderElectricianType":"8","orderStatus":"8"}`)
+        this.$axios.post("/orderElectrician/booking", this.fd, {headers: {'Content-Type': 'multipart/form-data'}}).then(res => {
+            // this.$router.push('/evaluate')
+            this.$router.push({name:'Evaluate',params:{orderId:this.orderId,electricianId:this.electricianId}})
+        }).catch(err => {
+            alert(err)
+        })
+    },
   }
 }
 </script>

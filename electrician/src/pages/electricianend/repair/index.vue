@@ -37,15 +37,32 @@ export default {
   data () {
     return {
       times: '',
-      phone: 13739865412
+      phone: 13739865412,
+      orderId:'',
+      electricianId:''
     }
   },
+  mounted(){
+      this.getlist()
+  },
   methods: {
+    getlist(){
+        this.orderId=this.$route.params.orderId
+        this.electricianId=this.$route.params.electricianId
+        this.$api.get("/orderElectrician/orderDetails/"+this.orderId, {"electricianId":this.electricianId}, response => {
+        console.log(response.data);
+        });
+    },
     goback () {
-      this.$router.push('/')
+      this.$router.push('/electricianend')
     },
     Order () {
-      this.$router.push('/navigation')
+        var params={
+            orderId:this.orderId,
+            electricianId:this.electricianId
+        }
+    //   this.$router.push('/navigation')
+      this.$router.push({name:'Navigation',params:{orderId:params.orderId,electricianId:params.electricianId}})
     }
   }
 }
@@ -57,6 +74,7 @@ width: 100%;
 height: 100%;
 background: #f0f6fd;
 position: relative;
+overflow: auto;
 }
 .contianer .backgroundbox{
     width: 100%;

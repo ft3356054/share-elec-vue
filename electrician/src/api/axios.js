@@ -3,7 +3,7 @@ let http = axios.create({
  baseURL: 'http://localhost:8083',
  withCredentials: false,
  headers: {
-  'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+      'Content-Type':'application/json;charset=UTF-8'
  },
  transformRequest: [function (data) {
   let newData = '';

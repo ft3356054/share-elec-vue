@@ -4,7 +4,7 @@
         <p  @click="goback"><img src="../../../assets/images/jiantou.png" alt=""></p>
         <p>订单详情</p>
     </div>
-    <div class="contentbox">
+    <div class="contentbox" v-for="(item,index) in data" :key="index">
         <div class="content">
             <div>
                 <p class="titles"><span></span>订单信息</p>
@@ -20,11 +20,11 @@
             </div>
              <div>
                 <p class="titles"><span></span>勘察原因</p>
-                <textarea name="" id="" cols="30" rows="5" style="width:100%;background:#f7fbff;border:0;outline:none;font-size:13px;font-weight:bold"></textarea>
+                <textarea v-model="context" name="" id="" cols="30" rows="5" style="width:100%;background:#f7fbff;border:0;outline:none;font-size:13px;font-weight:bold"></textarea>
             </div>
 
         </div>
-    <div class="buttons"><button @click="returnorder">退回</button><button @click="Order">提交</button></div>
+    <div class="buttons"><button @click="returnorder">退回</button><button @click="Order(item)">提交</button></div>
 
     </div>
 </div>
@@ -35,18 +35,72 @@ export default {
   data () {
     return {
       times: '',
-      phone: 13739865412
+      phone: 13739865412,
+      electricianId:"",
+      orderId:"",
+      context:"",
+      data:[]
     }
   },
+  mounted(){
+      this.getdetail()
+      this.orderId=this.$route.params.orderId
+      this.electricianId=this.$route.params.electricianId
+  },
   methods: {
+      getdetail(){
+          var params={
+              orderId:this.$route.params.orderId,
+              electricianId:this.$route.params.electricianId
+          }
+        this.$api.get("/orderElectrician/orderDetails/"+params.orderId, {"electricianId":params.electricianId}, response => {
+            console.log(response.data);
+            this.data=response.data.resultValue.items
+        });
+    },
     goback () {
       this.$router.go(-1)
     },
-    Order () {
-      this.$router.push('/uploadcontract')
+    Order (item) {
+        var fd=new FormData()
+        var params={}
+        params=fd
+      params.append("items",`{
+                "orderId":"${this.orderId}",
+                "orderElectricianType":"22",
+                "method":"现场勘查",
+                "orderStatus":"22",
+                "electricianDescrive":"${this.context}",
+                "electricianId":"${this.electricianId}"
+                }`)
+     
+      this.$axios.post("/orderElectrician/booking", params).then(res => {
+            console.log(res)
+        // this.$router.push('/uploadcontract')
+      this.$router.push({name:'Uploadcontract',params:{orderId:this.orderId,electricianId:this.electricianId}})
+        }).catch(err => {
+            alert(err)
+        })
+
+
     },
     returnorder () {
-      this.$router.push('/returnorder')
+    var params={
+        "orderId":this.orderId,
+        "orderElectricianType":"5",
+        "method":"现场勘查退回订单",
+        "orderStatus":"11",
+        "electricianDescrive":"我修不了，你再找个人儿呗。",
+        "electricianId":this.electricianId
+    }
+    //   this.$axios.post("/orderElectrician/booking", {params}).then(res => {
+    //         console.log(res)
+            //   this.$router.push('/returnorder')
+      this.$router.push({name:'Returnorder',params:{orderId:params.orderId,electricianId:params.electricianId}})
+            
+        // }).catch(err => {
+        //     alert(err)
+        // })
     }
   }
 }
@@ -59,6 +113,7 @@ height: 100%;
 background: #f0f6fd;
 position: relative;
 box-sizing: border-box;
+overflow: auto;
 }
 .contianer .backgroundbox{
     width: 100%;

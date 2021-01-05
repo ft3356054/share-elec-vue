@@ -24,7 +24,7 @@
             <div class="prices">
                 <span>*</span>
                 <span>维修价格</span>
-                <span><input type="text" placeholder="请输入服务内容报价"></span>
+                <span><input type="text" v-model="price" placeholder="请输入服务内容报价"></span>
             </div>
             <div class="uploudimg">
                 <span>*</span>
@@ -32,9 +32,9 @@
                 <span>
                <dl>
                   <dt>
-                    <van-uploader v-model="fileLists" multiple :max-count="1"  :after-read="upimgbtn">
-                      <img :src="imgs" alt="" style="width: 34px;height: 24px;display:block">
-                    </van-uploader>
+                      <van-uploader v-model="fileLists" :after-read="onRead" :max-count="1" >
+                        <img :src="imgs" alt="" style="width: 34px;height: 24px;display:block">
+                      </van-uploader>
                   </dt>
                   <dd>上传图片</dd>
                 </dl>
@@ -53,24 +53,54 @@ export default {
     return {
       times: '',
       imgs: require('../../../assets/images/addpeople.png'),
-      fileLists: []
+      fileLists: [],
+      files:{},
+      fd:{},
+      price:"",
+      orderId:"",
+      electricianId:""
     }
   },
+  mounted(){
+      this.getlist()
+      console.log(this.$route.params)
+  },
   methods: {
+    getlist(){
+        this.orderId=this.$route.params.orderId
+        this.electricianId=this.$route.params.electricianId
+        this.$api.get("/orderElectrician/orderDetails/"+this.orderId, {"electricianId":this.electricianId}, response => {
+        console.log(response.data);
+        });
+    },
     goback () {
       this.$router.go(-1)
-    },
-    Order () {
-      this.$router.push('/personneladd')
     },
     godel () {
       window.location.href = `tel:15541544454`
     },
-    upimgbtn (file) {
-      console.log(file)
-      // this.uptext1 = ''
-      console.log(this.fileLists)
-    }
+    onRead (file) {
+      this.files=file.file  // postData是一个数组
+    },
+     Order () {
+         var fd=new FormData()
+         if(this.files===null|| this.files===""){
+             fd.append("myFile","")
+         console.log(fd)
+         }else{
+             fd.append("myFile",this.files)
+            console.log(fd.get("myFile"))
+         }
+         this.fd=fd
+        this.fd.append("items",`{"orderId":"${this.orderId}","orderElectricianType":"23","method":"上传合同","orderStatus":"23","electricianId":"${this.electricianId}","electricianPrice":"${this.price}"}`)
+        this.$axios.post("/orderElectrician/booking", this.fd, {headers: {'Content-Type': 'multipart/form-data'}}).then(res => {
+            // this.$router.push("/personneladd")
+      this.$router.push({name:'Personneladd',params:{orderId:this.orderId,electricianId:this.electricianId}})
+        }).catch(err => {
+            alert(err)
+        })
+
+    },
   }
 }
 </script>

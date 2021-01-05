@@ -20,8 +20,8 @@
              <div>
                 <p class="add"><span></span><span>人员增加</span><span><img src="../../../assets/images/peopleadd.png" alt=""></span></p>
                 <p style="font-size:13px;color:#9d9d9d;margin-top:5px">请输入人员姓名和手机号，多个人员用逗号分隔</p>
-                <textarea name="" id="" cols="30" rows="5" style="width:100%;margin-top:5px;background:#f7fbff;border:0;outline:none;font-size:13px;font-weight:bold" placeholder="例：刘强 13812345678，杨磊 15584552222"></textarea>
-                <p><button @click="showPopup">保存</button><button>删除</button></p>
+                <textarea v-model="context" @keydown="context=context.replace(/\+/g,'')" name="" id="" cols="30" rows="5" style="width:100%;margin-top:5px;background:#f7fbff;border:0;outline:none;font-size:13px;font-weight:bold" placeholder="例：刘强 13812345678，杨磊 15584552222"></textarea>
+                <p><button @click="showPopup">保存</button><button @click="deletebtn">删除</button></p>
             </div>
         </div>
     <div class="buttons"><button @click="Order">开始施工</button></div>
@@ -33,7 +33,7 @@
             <p>杨磊 138555454545</p>
         </div>
         <div class="btnbox">
-            <button>否</button><button>是</button>
+            <button @click="foubtn">否</button><button @click="preservation">是</button>
         </div>
     </van-popup>
     </div>
@@ -45,15 +45,46 @@ export default {
   data () {
     return {
       times: '',
-      show: false
+      show: false,
+      context:"",
+      orderId:"",
+      electricianId:""
     }
   },
+  mounted(){
+      console.log(this.$route.params)
+      this.getlist()
+  },
   methods: {
+    getlist(){
+        this.orderId=this.$route.params.orderId
+        this.electricianId=this.$route.params.electricianId
+        this.$api.get("/orderElectrician/orderDetails/"+this.orderId, {"electricianId":this.electricianId}, response => {
+        console.log(response.data);
+        });
+    },
     goback () {
       this.$router.go(-1)
     },
     Order () {
-      this.$router.push('/completion')
+         var fd=new FormData()
+        var params={}
+        params=fd
+      params.append("items",`{
+            "orderId":"${this.orderId}",
+            "method":"开始施工",
+            "electricianId":"${this.electricianId}",
+            "orderElectricianType":"3",
+            "orderStatus":"3"
+            }`)
+     
+      this.$axios.post("/orderElectrician/booking", params).then(res => {
+            console.log(res)
+            // this.$router.push('/completion')
+            this.$router.push({name:'Completion',params:{orderId:this.orderId,electricianId:this.electricianId}})
+        }).catch(err => {
+            alert(err)
+        })
     },
     returnorder () {
       this.$router.push('/returnorder')
@@ -61,8 +92,48 @@ export default {
     showPopup () {
       this.show = true
     },
+    deletebtn(){
+    this.context=""
+          var fd=new FormData()
+        var params={}
+        params=fd
+      params.append("items",`{
+              "orderId":"${this.orderId}",
+              "method":"电工人员删除",
+              "electricianId":"${this.electricianId}",
+              "name":"小红",
+              "telephone":"18733243626"
+            }`)
+     
+      this.$axios.post("/orderElectrician/booking", params).then(res => {
+            console.log(res)
+        }).catch(err => {
+            alert(err)
+        })
+    },
     guanbi () {
       this.show = false
+    },
+    foubtn(){
+      this.show = false
+    },
+    preservation(){
+        var fd=new FormData()
+        var params={}
+        params=fd
+      params.append("items",`{
+              "orderId":"24",
+              "method":"电工人员保存",
+              "electricianId":"321",
+              "name":"小红",
+              "telephone":"18733243626"
+            }`)
+     
+      this.$axios.post("/orderElectrician/booking", params).then(res => {
+            console.log(res)
+        }).catch(err => {
+            alert(err)
+        })
     }
   }
 }

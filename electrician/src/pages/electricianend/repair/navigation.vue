@@ -78,7 +78,7 @@ export default {
     }
   },
   mounted () {
-    // this.getLocation()
+    console.log(this.$route.params)
   },
   methods: {
     goback () {
@@ -86,9 +86,16 @@ export default {
     },
     goaddress () {
       document.querySelector('#xianchang').style.background = '#cccccc'
-      this.$router.push('/prospecting')
+      var params={
+            orderId:this.$route.params.orderId,
+            electricianId:this.$route.params.electricianId
+        }
+      // this.$router.push('/prospecting')
+      this.$router.push({name:'Prospecting',params:{orderId:params.orderId,electricianId:params.electricianId}})
+
     },
     getLocation () {
+       
       // let _that = this
       // let geolocation = location.initMap('map-container') // 定位
       // AMap.event.addListener(geolocation, 'complete', result => {

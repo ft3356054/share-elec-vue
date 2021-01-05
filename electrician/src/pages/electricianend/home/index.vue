@@ -41,40 +41,42 @@
         </ul>
     </div>
     <div class="contentbox">
-        <div class="content" v-show="num==0" v-for="(item,index) in data" :key="index">
+        <div class="content" v-show="num==0" v-for="(item,index) in data" :key="'content'+index" @click="godetail(item)">
             <div class="typebox">
-                <p><span>类别</span><span>{{item.types}}</span></p>
+                <p><span>类别</span><span>{{item.orderTypeId}}</span></p>
                 <p></p>
-                <p>{{item.times}}</p>
+                <p>{{item.createTime}}</p>
             </div>
             <div class="addressbox">
                 <dl>
                     <dt>
-                        <p>{{item.name}}</p>
-                        <p>{{item.progess}}</p>
-                        <p>{{item.address}}</p>
+                        <p>{{item.customerAddress}}</p>
+                        <p>{{item.customerDescrive}}</p>
+                        <p>{{item.voltage}} 抢修 {{item.distance}}</p>
                     </dt>
                     <dd>
-                        <button>取消</button> <button class="jiedan" @click="jiedan">接单</button>
+                        <p v-show="item.orderStatus==='8'" style="color:red">待评价</p>
+                        <p v-show="item.orderStatus==='21'" style="color:red">待现场勘察</p>
+                        <p v-show="item.orderStatus==='1'" style="line-height:0"><button @click="quxiao(item)">取消</button> <button class="jiedan" @click="jiedan(item)">接单</button></p>
                     </dd>
                 </dl>
             </div>
         </div>
-        <div class="content" v-show="num==1">
+        <div class="content context" v-show="num==1" v-for="(item,index1) in datas" :key="'context'+index1">
             <div class="typebox">
-                <p><span>类别</span><span>泵房线路安装</span></p>
+                <p><span>类别</span><span>{{item.orderTypeId}}</span></p>
                 <p></p>
-                <p>2020/11/09 13:49</p>
+                <p>{{item.createTime}}</p>
             </div>
             <div class="addressbox">
                 <dl>
                     <dt>
-                        <p>天津市东丽区国网客服中心北方园区</p>
-                        <p>插座跳闸，需要检修下</p>
-                        <p>10kv 抢修  5km </p>
+                        <p>{{item.customerAddress}}</p>
+                        <p>{{item.customerDescrive}}</p>
+                        <p>{{item.voltage}} 抢修 {{item.distance}}</p>
                     </dt>
                     <dd>
-                        <!-- <button>取消</button> <button class="jiedan" @click="jiedan">接单</button> -->
+                        <p v-show="item.orderStatus==='8'" style="color:red">待评价</p>
                     </dd>
                 </dl>
             </div>
@@ -91,50 +93,69 @@ export default {
     return {
       num: 0,
       animate: false,
-      data: [
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'}
-      ],
+      data: [],
+      datas:[],
       messages: [
         {name: '本系统将于24日凌晨24:00开始停机更新1'},
         {name: '本系统将于24日凌晨24:00开始停机更新2'},
         {name: '本系统将于24日凌晨24:00开始停机更新3'},
         {name: '本系统将于24日凌晨24:00开始停机更新4'}
-      ]
+      ],
+      electricianId:"321"
     }
   },
   created () {
     setInterval(this.scroll, 3000)
   },
   mounted(){
-        this.getlist()
+        this.gettodo(),
+        this.getevaluate()
   },
   methods: {
-    getlist(){
+    //   待办
+    gettodo(){
         var params={
-                 "pageIndex":"1",
-                "pageSize":10,
-                "filter":['orderElectricianType=9'],
-                "electricianId":"2256"
-           
+            "pageIndex":1,"pageSize":10,"filter":["orderElectricianType=9"]
         }
-      this.$axios.get("/orderElectrician/queryMore", {params}).then(res => {
-          console.log(res);
+        this.$api.get("/orderElectrician/queryMore", {params,electricianId:this.electricianId}, response => {
+            this.data=response.data.resultValue.items
+            });
+     },
+    //  待评价
+     getevaluate(){
+        var params={
+            "pageIndex":1,"pageSize":10,"filter":["orderElectricianType=8"]
+        }
+        this.$api.get("/orderElectrician/queryWaitToDo", {params,electricianId:this.electricianId}, response => {
+            this.datas=response.data.resultValue.items
         });
+     },
+     quxiao(item){
+         var params={
+             orderID:item.orderId,
+             electricianId:this.electricianId
+         }
+        // 报orderElectricianId为必填项
+        this.$axios.get("/orderElectrician/esc", {params}).then(res => {
+            console.log(res)
+        }).catch(err => {
+            alert(err)
+        })
+
+     },
+     godetail(item){
+         console.log(item)
+         if(item.orderStatus==="8"){
+      this.$router.push({name:'Evaluate',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }else if(item.orderStatus==="21"){
+      this.$router.push({name:'Prospecting',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }
      },
     gordergrabbing () {
       this.$router.push('/ordergrabbing')
     },
-    jiedan () {
-      this.$router.push('/ordergrabbingdetail/detail')
+    jiedan (item) {
+      this.$router.push({name:'Ordergrabbingdetail',params:{orderId:item.orderId,electricianId:this.electricianId}})
     },
     gomyorderabbing () {
       this.$router.push('/myorderabbing')
@@ -337,6 +358,11 @@ margin: 0;
 text-align: right;
 padding-left: 10px;
 box-sizing: border-box;
+
+}
+section .contentbox .content .addressbox dd p{
+line-height: 60px;
+font-size: 15px;
 }
 section .contentbox .content .addressbox dd button{
 width: 50px;

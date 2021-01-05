@@ -7,9 +7,10 @@
         </div>
         <div class="tabbox">
           <ul>
-            <li @click="num=0" :class="{active:num==0}">全部订单</li>
+            <li v-for="(item,index) in tabs" :key="index" :class="{active:num==index}" @click="nums(index)">{{item}}</li>
+            <!-- <li @click="num=0" :class="{active:num==0}">全部订单</li>
             <li @click="num=1" :class="{active:num==1}">进行中订单</li>
-            <li @click="num=2" :class="{active:num==2}">已完成订单</li>
+            <li @click="num=2" :class="{active:num==2}">已完成订单</li> -->
           </ul>
         </div>
       </header>
@@ -78,6 +79,7 @@
 </template>
 
 <script>
+import qs from "qs"
 export default {
   data () {
     return {
@@ -103,8 +105,13 @@ export default {
         {types: '泵房坏掉', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区1已完成', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km', status: '1'},
         {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区2已完成', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km', status: '1'}
       ],
-      search: ''
+      search: '',
+      electricianId:"321"
     }
+  },
+  mounted(){
+    this.getAll(),
+    this.getcancel()
   },
   methods: {
     goback () {
@@ -113,10 +120,58 @@ export default {
     gocomlete (item) {
       console.log(item)
       this.$router.push('/statusfile/completed')
-      // this.$router.push('/statusfile/cancelled')
     },
-    nums (index) {
+    getAll(){
+      var params={
+            "pageIndex":1,
+            "pageSize":20,
+            "filter":["electricianId=321"],
+            "sorter":"DESC=createTime",
+          }
+        this.$api.get("/orderElectrician/",{params}, res => {
+            // this.data=response.data.resultValue.items
+            console.log(res)
+            });
+        // this.$axios.get("/orderElectrician/",{params}).then(res => {
+        //   console.log(res);
+        // });
+    },
+    getcancel(){
+      this.$axios.get("/orderElectrician/queryAllHaveEsc/"+this.electricianId) .then(res => {
+          console.log(res);
+        });
+    },
+    nums(index) {
       this.num = index
+      console.log(this.num)
+        var params={
+          "pageIndex":1,
+          "pageSize":20,
+          "filter":"electricianId=321",
+          "sorter":"DESC=createTime"
+          }
+      if(this.num===0){
+        this.$axios.get("/orderElectrician", {params}) .then(res => {
+          console.log(res);
+        });
+        console.log("全部订单")
+      }else if(this.num===1){
+        console.log("进行中订单")
+        var params={
+          electricianId:this.electricianId
+        }
+        this.$axios.get("/orderElectrician/queryAllDoing", {params}) .then(res => {
+          console.log(res);
+        });
+      }else{
+        var params={
+          electricianId:this.electricianId
+        }
+         this.$axios.get("/orderElectrician/queryAllHaveDone", {params}) .then(res => {
+          console.log(res);
+        });
+        console.log("已完成订单")
+      }
     },
     godetail (item) {
       // eslint-disable-next-line eqeqeq

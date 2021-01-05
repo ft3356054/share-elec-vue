@@ -27,18 +27,21 @@
         <div class="yuyuetime">
             <span>*</span><span>预约时间</span><span><input type="datetime-local" name="" id="" v-model="times"></span>
         </div>
-    <div class="buttons"><button>取消</button><button @click="Order">预约</button></div>
+    <div class="buttons" @click="cancelbtn"><button>取消</button><button @click="Order">预约</button></div>
 
     </div>
 </div>
 </template>
 
 <script>
+import myVue from '../../../views/My/my.vue'
 export default {
   data () {
     return {
       times: '',
-      phone: 13739865412
+      phone: 13739865412,
+      orderId:"",
+      electricianId:''
     }
   },
   mounted(){
@@ -46,9 +49,10 @@ export default {
   },
   methods: {
     getlist(){
-          var params="321"
-            this.$axios.post("/orderElectrician/orderDetails/22?electricianId", {params}) .then(res => {
-                console.log(res);
+            this.orderId=this.$route.params.orderId
+            this.electricianId=this.$route.params.electricianId
+            this.$api.get("/orderElectrician/orderDetails/"+this.orderId, {"electricianId":this.electricianId}, response => {
+            console.log(response.data);
             });
       },
     goback () {
@@ -56,14 +60,27 @@ export default {
     },
     Order () {
       var times = this.times.split('T').join(' ')
-      if (times === '') {
-        alert('请输入完整时间')
-      } else {
-        alert('成功')
-        this.$router.push('/repair')
-      }
-    //   alert('抢单成功')
-    //   this.$router.push(`/`)
+      var fd=new FormData()
+      var params={}
+      params=fd
+      params.append("items",`{
+        "orderId":"${this.orderId}",
+        "orderElectricianType":"21",
+        "electricianId":"${this.electricianId}",
+        "method":"预约",
+        "orderStatus":"20",
+        "appointmentTime":"${times}"
+        }`)
+     
+      this.$axios.post("/orderElectrician/booking", params).then(res => {
+            console.log(res)
+        this.$router.push({name:'Repair',params:{orderId:this.orderId,electricianId:this.electricianId}})
+        }).catch(err => {
+            alert(err)
+        })
+    },
+    cancelbtn(){
+        this.$router.push({name:'Cancel',params:{orderId:this.orderId,electricianId:this.electricianId}})
     },
     godel () {
       window.location.href = `tel:15541544454`
@@ -78,6 +95,7 @@ width: 100%;
 height: 100%;
 background: #f0f6fd;
 position: relative;
+overflow: auto;
 }
 .contianer .backgroundbox{
     width: 100%;
@@ -240,14 +258,6 @@ color: #ffffff;
 font-size: 15px;
 font-weight: bold;
 }
-@media (max-width: 375px) {
-  .contentbox{
-    width: 100%;
-    height: 710px;
-    padding: 0 15px;
-    box-sizing: border-box;
-    overflow: auto;
-}
-}
+
 
 </style>>

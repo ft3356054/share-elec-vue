@@ -4,14 +4,14 @@
         <p @click="goback"><img src="../../../assets/images/jiantou.png" alt=""></p>
         <p>个人信息</p>
     </div>
-    <div class="userbox">
+    <div class="userbox" v-for="(item,index) in userdata" :key="index">
         <div class="imgbox">
             <dl>
                 <dt><img src="../../../assets/images/information.png" alt=""></dt>
                 <dd>
                     <div>
-                        <p>刘强</p>
-                        <p>159****040</p>
+                        <p>{{item.electricianName}}</p>
+                        <p>{{item.electricianPhonenumber}}</p>
                     </div>
                     <div>
                      <span>电工</span>
@@ -22,8 +22,8 @@
         <div class="information">
             <p><span>实名认证</span><span>否</span></p>
             <p><span>电工认证</span><span @click="gorenzheng"  style="color:#87cefa">高级电工></span></p>
-            <p><span>签约公司</span><span>否</span></p>
-            <p><span>服务状态</span><span @click="statebtn" style="color:#87cefa">{{this.morenmessaage}}></span></p>
+            <p><span>签约公司</span><span>{{item.companyName}}</span></p>
+            <p><span>服务状态</span><span @click="statebtn" style="color:#87cefa">{{morenmessaage}}</span></p>
         </div>
     <div class="btnbox"><button>退出登录</button></div>
     </div>
@@ -48,6 +48,7 @@
 </template>
 
 <script>
+import qs from 'qs'
 export default {
   data () {
     return {
@@ -65,16 +66,34 @@ export default {
       img01: require('../../../assets/images/Receivingorders.png'),
       img02: require('../../../assets/images/rest.png'),
       jdimgs: require('../../../assets/images/Receivingorderss.png'),
-      xximgs: require('../../../assets/images/rest.png')
+      xximgs: require('../../../assets/images/rest.png'),
+      userdata:[],
+      status1:""
     }
   },
   mounted () {
     document.getElementsByClassName('popup')[0].style.display = 'none'
-    this.tab()
+    this.getuserinfo()
   },
   methods: {
+    getuserinfo(){
+      var params="321"
+      var _this=this
+      this.$axios.get("/orderElectrician/queryElectricianInfo/"+params).then(res => {
+          _this.userdata.push(res.data.resultValue.items[0])
+          _this.status1=res.data.resultValue.items[0].electricianStatus
+          if(_this.status1=='1'){
+            _this.status=true
+            this.morenmessaage = "接单中"
+          }else{
+            _this.status=false
+            this.morenmessaage = "休息中"
+          }
+          this.tab()
+        });
+    },
     goback () {
-      this.$router.go(-1)
+      this.$router.push('electricianend')
     },
     statebtn () {
       document.getElementsByClassName('popup')[0].style.display = 'block'
@@ -88,28 +107,36 @@ export default {
         this.morenxx = this.xiuxi
         this.jdimgs = this.img1
         this.xximgs = this.img02
-        this.morenmessaage = this.morenjd
+        this.morenmessaage = "接单中"
       } else {
         this.morenjd = this.message1
         this.morenxx = this.xiuxi1
         this.jdimgs = this.img01
         this.xximgs = this.img2
-        this.morenmessaage = this.morenxx
+        this.morenmessaage = "休息中"
       }
     },
     stylebtn1 () {
+      var params={
+        statu:"接单中"
+      }
+      params=qs.stringify(params)
+       this.$axios.post("/electricianInfo/changeStatus/321", params,{headers: {'Content-Type': 'application/x-www-form-urlencoded'}}) .then(res => {
+        });
       if (this.status === false) {
         this.status = true
         this.status1 = false
       } else {
-        this.status = true
-        this.status1 = false
+        this.status = false
+        this.status1 = true
       }
       this.tab()
-
-      // console.log(this.status)
     },
     stylebtn2 () {
+      var params={statu:"休息中"}
+     params=qs.stringify(params)
+       this.$axios.post("/electricianInfo/changeStatus/321", params,{headers: {'Content-Type': 'application/x-www-form-urlencoded'}}) .then(res => {
+        });
       if (this.status1 === false) {
         this.status1 = true
         this.status = false

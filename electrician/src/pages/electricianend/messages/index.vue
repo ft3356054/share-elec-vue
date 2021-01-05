@@ -48,10 +48,23 @@ export default {
   },
   mounted () {
       this.WebSocketTest()
+      this.message()
   },
   methods: {
     goback () {
       this.$router.go(-1)
+    },
+    message(){
+            var params={
+                "pageIndex":1,
+                "pageSize":20,
+                "filter":["userId=321","status=2"]
+                }
+        this.$axios.get("/notifyAnnounceUser/queryAll?",{params}).then(res => {
+            console.log(res)
+        }).catch(err => {
+            alert(err)
+        })
     },
     WebSocketTest(){
          if(typeof(WebSocket) === "undefined"){
@@ -59,7 +72,6 @@ export default {
             }else{
                 // 实例化socket
                 var uid = "123";
-                console.log(this.path)
                 this.socket = new WebSocket(this.path+uid)
                 // 监听socket连接
                 this.socket.onopen = this.open
@@ -73,18 +85,18 @@ export default {
     open: function () {
             console.log("socket连接成功")
         },
-        error: function () {
-            console.log("连接错误")
-        },
-        getMessage: function (msg) {
-            console.log(msg.data)
-        },
-        send: function () {
-            this.socket.send(params)
-        },
-        close: function () {
-            console.log("socket已经关闭")
-        }
+    error: function () {
+        console.log("连接错误")
+    },
+    getMessage: function (msg) {
+        console.log(msg.data)
+    },
+    send: function () {
+        this.socket.send(params)
+    },
+    close: function () {
+        console.log("socket已经关闭")
+    }
   },
   destroyed(){
       this.socket.onclose = this.close

@@ -87,9 +87,10 @@ font-weight: bold;
     top: 85px;
     left: 0;
     width: 100%;
-    height: 640px;
+    height: auto;
     padding: 0 15px;
     box-sizing: border-box;
+    padding-bottom: 15px;
     overflow: auto;
 }
 .contentbox::-webkit-scrollbar{

@@ -4,7 +4,7 @@
          <p  @click="goback"><img src="../../../assets/images/jiantou.png" alt=""></p>
         <p>订单详情</p>
     </div>
-    <div class="contentbox">
+    <div class="contentbox" v-for="(item,index) in data" :key="index">
         <div class="content">
             <div>
                 <p class="titles"><span></span>基本信息</p>
@@ -23,25 +23,48 @@
                 <p class="pswidth"><span>发单时间</span><span>2020/11/03 16:10</span></p>
             </div>
         </div>
-    <div class="buttons"><button @click="Order">立即抢单</button></div>
+            <div class="buttons"><button @click="Order(item)">立即抢单</button></div>
     </div>
 </div>
 </template>
 
 <script>
+import { Toast } from 'vant'
 export default {
   data () {
     return {
-
+        orderId:"",
+        electricianId:"",
+        data:[]
     }
   },
+  mounted(){
+    this.getlist()
+  },
   methods: {
+      getlist(){
+            this.orderId=this.$route.params.orderId
+            this.electricianId=this.$route.params.electricianId
+            this.$api.get("/orderElectrician/orderDetails/"+this.orderId, {"electricianId":this.electricianId}, response => {
+                console.log(response.data);
+                this.data=response.data.resultValue.items
+            });
+      },
     goback () {
       this.$router.go(-1)
     },
-    Order () {
-    Toast.success('成功文案');
-      this.$router.push(`/appointment`)
+     Order (item) {
+         console.log(item)
+      var params={
+          "orderId":item.orderId,
+          "electricianId":this.electricianId
+      }
+        this.$axios.get("/orderElectrician/qiangdanrecept", {params}) .then(res => {
+            if(res.successful){
+                Toast.success('抢单成功')
+            }
+            this.$router.push({name:'Appointment',params:{orderId:item.orderId,electricianId:this.electricianId}})
+    });
     }
   }
 }

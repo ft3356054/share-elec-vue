@@ -6,15 +6,12 @@
                 <p>公司选择</p>
             </div>
              <div class="topinput">
-                <p><input type="text" placeholder="输入公司进行搜索"></p>
-                <p><button>搜索</button></p>
+                <p><input type="text" placeholder="输入公司进行搜索" v-model="searchtext"></p>
+                <p><button @click="serchbtn">搜索</button></p>
             </div>
         </div>
         <div class="content">
-            <p>天津是东丽区公司1</p>
-            <p>天津是东丽区公司2</p>
-            <p>天津是东丽区公司3</p>
-            <p>天津是东丽区公司4</p>
+            <p v-for="(item,index) in data" :key="index" @click="gobackbtn(item)">{{item.companyName}}</p>
         </div>
     </div>
 </template>
@@ -24,10 +21,8 @@ export default {
     return {
       uploader: '',
       imgs: require('../../../assets/images/addpeople.png'),
-      fileList: [],
-      fileLists: [],
-      uptext: '上传材料',
-      uptext1: '上传材料'
+      searchtext:'',
+      data:[]
     }
   },
   mounted () {
@@ -37,29 +32,14 @@ export default {
     goback () {
       this.$router.go(-1)
     },
-    afterRead (file) {
-      // 此时可以自行将文件上传至服务器
-      console.log(file)
-      this.imgs = file.content
-      console.log(this.imgs)
+    serchbtn(){
+      var params=this.searchtext
+      this.$axios.get("/electricianSubCompanyInfo/findCompany?companyName="+encodeURI(params)).then(res => {
+          this.data=res.data.resultValue.resultValue
+        });
     },
-    imgbtn () {
-      var inputDOM = this.$refs.inputer
-      console.log(inputDOM.files)
-    },
-    blues (file) {
-      console.log(file)
-      // this.uptext = ''
-      console.log(this.fileList)
-      if (this.fileList.length === 0) {
-        // this.uptext = '上传材料'
-        console.log(this.fileList)
-      }
-    },
-    upimgbtn (file) {
-      console.log(file)
-      // this.uptext1 = ''
-      console.log(this.fileLists)
+    gobackbtn(item){
+      this.$router.push({name:'Authentication',params:{companyName:item.companyName}})
     }
   }
 }

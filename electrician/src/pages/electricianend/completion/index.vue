@@ -20,7 +20,7 @@
             </div>
              <div>
                 <p class="context"><span>*</span>施工内容</p>
-                <textarea name="" id="" cols="30" rows="5" style="width:100%;background:#f7fbff;border:0;outline:none;font-size:13px;font-weight:bold"></textarea>
+                <textarea v-model="context" name="" id="" cols="30" rows="5" style="width:100%;background:#f7fbff;border:0;outline:none;font-size:13px;font-weight:bold"></textarea>
             </div>
 
         </div>
@@ -35,15 +35,48 @@ export default {
   data () {
     return {
       times: '',
-      phone: 13739865412
+      phone: 13739865412,
+      context:"",
+      orderId:"",
+      electricianId:""
     }
   },
+  mounted(){
+      this.getlist()
+      console.log(this.$route.params)
+  },
   methods: {
+      getlist(){
+        this.orderId=this.$route.params.orderId
+        this.electricianId=this.$route.params.electricianId
+        this.$api.get("/orderElectrician/orderDetails/"+this.orderId, {"electricianId":this.electricianId}, response => {
+        console.log(response.data);
+        });
+    },
     goback () {
       this.$router.go(-1)
     },
     Order () {
-      this.$router.push('/servicereport')
+         var fd=new FormData()
+        var params={}
+        params=fd
+      params.append("items",`{
+            "orderId":"${this.orderId}",
+            "method":"施工完成",
+            "electricianId":"${this.electricianId}",
+            "orderElectricianType":"24",
+            "orderStatus":"24",
+            "constructionContent":"${this.context}"
+            }`)
+     
+      this.$axios.post("/orderElectrician/booking", params).then(res => {
+            console.log(res)
+            this.$router.push({name:'Servicereport',params:{orderId:this.orderId,electricianId:this.electricianId}})
+
+        }).catch(err => {
+            alert(err)
+        })
+      
     },
     returnorder () {
       this.$router.push('/returnorder')

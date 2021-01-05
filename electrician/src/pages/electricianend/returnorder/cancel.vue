@@ -2,12 +2,12 @@
 <div class="contianer">
     <div class="backgroundbox">
         <p  @click="goback"><img src="../../../assets/images/jiantou.png" alt=""></p>
-        <p>退回订单</p>
+        <p>取消订单</p>
     </div>
     <div class="contentbox">
         <div class="content">
             <div>
-                <p style="font-weight:bold">退回原因:</p>
+                <p style="font-weight:bold">取消原因:</p>
                 <textarea v-model="returncontext" name="" id="" cols="30" rows="10"></textarea>
             </div>
         </div>
@@ -43,7 +43,7 @@ export default {
          params.append("items",`{
                 "orderId":"${this.orderId}",
                 "orderElectricianType":"5",
-                "method":"现场勘查退回订单",
+                "method":"取消订单",
                 "orderStatus":"11",
                 "electricianDescrive":"${this.returncontext}",
                 "electricianId":"${this.electricianId}"

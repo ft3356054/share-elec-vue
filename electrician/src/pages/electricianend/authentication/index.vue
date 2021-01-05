@@ -8,7 +8,7 @@
           <div class="context">
             <div class="topbox" @click="choosebtn">
               <p>所属公司</p>
-              <p>天津市东丽区1公司</p>
+              <p>{{companyName}}</p>
               <p><img src="../../../assets/images/textjiantou.png" alt=""></p>
             </div>
 
@@ -21,7 +21,7 @@
                   <dt> <van-uploader v-model="fileList" multiple :max-count="1"  :after-read="blues">
                     <img :src="imgs" alt="" style="width: 34px;height: 24px;display:block">
                     </van-uploader></dt>
-                  <dd>{{uptext}}</dd>
+                  <dd>上传材料</dd>
                 </dl>
               </div>
 
@@ -33,12 +33,12 @@
                       <img :src="imgs" alt="" style="width: 34px;height: 24px;display:block">
                     </van-uploader>
                   </dt>
-                  <dd>{{uptext1}}</dd>
+                  <dd>上传材料</dd>
                 </dl>
               </div>
 
             </div>
-            <div class="examine"><button>提交审核</button></div>
+            <div class="examine"><button @click="order">提交审核</button></div>
           </div>
         </div>
     </div>
@@ -51,43 +51,50 @@ export default {
       imgs: require('../../../assets/images/addpeople.png'),
       fileList: [],
       fileLists: [],
-      uptext: '上传材料',
-      uptext1: '上传材料'
+      files:{},
+      fd:{},
+      companyName:"",
+      electricianId:"321"
     }
   },
   mounted () {
+    console.log(this.$route.params)
+        this.companyName=this.$route.params.companyName
 
   },
   methods: {
     goback () {
-      this.$router.go(-1)
+      this.$router.push('userinformation')
     },
     choosebtn(){
       this.$router.push("/companyselection")
     },
-    afterRead (file) {
-      // 此时可以自行将文件上传至服务器
-      console.log(file)
-      this.imgs = file.content
-      console.log(this.imgs)
-    },
-    imgbtn () {
-      var inputDOM = this.$refs.inputer
-      console.log(inputDOM.files)
-    },
     blues (file) {
       console.log(file)
-      // this.uptext = ''
-      console.log(this.fileList)
-      if (this.fileList.length === 0) {
-        // this.uptext = '上传材料'
-        console.log(this.fileList)
-      }
+      this.files=file.file
     },
     upimgbtn (file) {
       console.log(file)
-      // this.uptext1 = ''
-      console.log(this.fileLists)
+      this.fd=file.file
+    },
+    order(){
+      var fd=new FormData()
+      if(this.files===null||this.files===""){
+        fd.append("myFile","")
+        fd.append("file2","")
+      }else{
+        fd.append("myFile",this.files)
+        fd.append("file2",this.fd)
+      }
+      this.files=fd
+      this.files.append("items",`{"electricianId":${this.electricianId}}`)
+       this.$axios.post("/orderAuditElectrician/certification", this.files, {headers: {'Content-Type': 'multipart/form-data'}}).then(res => {
+           console.log(res)
+        }).catch(err => {
+            alert(err)
+        })
+
+
     }
   }
 }

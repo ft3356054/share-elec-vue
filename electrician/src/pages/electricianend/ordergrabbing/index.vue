@@ -7,19 +7,19 @@
     <div class="contentbox">
         <div class="content" v-for="(item,index) in data" :key="index">
             <div class="typebox">
-                <p><span>类别</span><span>{{item.types}}</span></p>
+                <p><span>类别</span><span>插座跳闸</span></p>
                 <p></p>
-                <p>{{item.times}}</p>
+                <p>{{item.createTime}}</p>
             </div>
             <div class="addressbox">
                 <dl>
                     <dt>
-                        <p>{{item.name}}</p>
-                        <p>{{item.progess}}</p>
-                        <p>{{item.address}}</p>
+                        <p>{{item.customerAddress}}</p>
+                        <p>{{item.customerDescrive}}</p>
+                        <p>{{item.voltage}} 抢修 {{item.distance}}</p>
                     </dt>
                     <dd>
-                        <button class="jiedan" @click="godetail">抢单</button>
+                        <button class="jiedan" @click="godetail(item)">抢单</button>
                     </dd>
                 </dl>
             </div>
@@ -30,25 +30,13 @@
 </template>
 
 <script>
+import { Toast } from 'vant'
 export default {
   data () {
     return {
       num: 0,
-      data: [
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'}
-      ]
+      data: [],
+      electricianId:'321'
     }
   },
   mounted(){
@@ -56,17 +44,24 @@ export default {
   },
   methods: {
       getlist(){
-          var params="2256"
-            this.$axios.post("/orderElectrician/saveOrderCustomer?electricianId", {params}) .then(res => {
-                console.log(res);
-                });
+            this.$axios.post("/orderElectrician/queryAllOrder/"+this.electricianId) .then(res => {
+                    this.data=res.data.resultValue
+            });
       },
     goback () {
       this.$router.go(-1)
     },
-    godetail () {
-      alert('抢单成功')
-      this.$router.push('/appointment')
+    godetail (item) {
+      var params={
+          "orderId":item.orderId,
+          "electricianId":this.electricianId
+      }
+        this.$axios.get("/orderElectrician/qiangdanrecept", {params}) .then(res => {
+            if(res.successful){
+                Toast.success('抢单成功')
+            }
+            this.$router.push({name:'Appointment',params:{orderId:params.orderId,electricianId:this.electricianId}})
+    });
     }
   }
 }
