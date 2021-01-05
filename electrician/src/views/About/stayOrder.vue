@@ -11,89 +11,112 @@
         <div class="x"></div>
         订单信息
       </h4>
-      <ul class="ipt">
+      <ul class="ipt" v-for="(item,index) in demo" :key="index">
         <li>
           <div class="left">订单编号</div>
-          <span>{{ demo.a }}</span>
+          <span>{{ item.orderId  }}</span>
         </li>
         <li>
           <div class="left">标题</div>
-          <span>{{ demo.c }}</span>
+          <span>{{ item.customerDescriveTitle }}</span>
         </li>
         <li>
           <div class="left">内容说明</div>
-          <b style="display:table-row">{{ demo.d }}</b>
+          <b style="display:table-row">{{ item.customerDescrive  }}</b>
         </li>
         <li>
           <div class="left">地址</div>
-          <span>{{ demo.e }}</span>
+          <span>{{item.customerAddress}}</span>
         </li>
         <li>
           <div class="left">上门费</div>
-          <span class="momy">{{ demo.f }}</span>
+          <span class="momy">￥{{ item.customerPrice }}</span>
         </li>
         <li>
-          <div class="left">接单时间</div>
-          <span>{{ demo.g }}</span>
+          <div class="left">发单时间</div>
+          <span>{{ item.createTime  }}</span>
         </li>
         <li>
           <div class="left">状态</div>
-          <span class="zt">{{ demo.h }}</span>
+          <span class="zt" v-if="item.orderStatus">待接单</span>
         </li>
       </ul>
       <h4 class="hzh">故障图片</h4>
-      <div class="gz" style="margin-bottom:5px">
-        <img src="@/assets/images/gztp.png" alt="" />
+      <div class="gz" style="margin-bottom:5px" v-for="(item,index) in demo" :key="index+2">
+        <img :src="item.customerDescriveIcon" alt="" />
       </div>
-      
+       <van-dialog v-model="show" title="" show-cancel-button class="show" 
+             @confirm="confirm()" @cancel="cancels"
+            >
+           <div class="box">确定取消订单吗？取消订单后不能回复</div>
+               </van-dialog>
     </div>
      <div class="btt">
-        <button @click="tocomplaint()">取消订单</button>
+        <button @click="cancel()">取消订单</button>
       </div>
   </div>
+  
 </template>
 
 <script>
-import baseest from "../../components/estimate.vue";
+import { Toast } from 'vant';
 export default {
   components: {},
+   data() {
+    return {
+      value: 3,
+      fileList: [],
+      demo: {},
+      orderId:"",
+      show:false
+    };
+  },
+   mounted() {
+    this.orderId=this.$route.query.orderId
+    this.getdemo()
+  },
   methods: {
     //   返回上一层
     fh() {
       this.$router.go(-1);
     },
     // 取消订单
-    tocomplaint() {
-      this.$router.push("/customer");
+    cancel(){
+      this.show=true       
     },
-  
+    // 点击取消时
+    cancels(){
+     this.show=false
+    },
+    // 点击确认时
+    confirm(){
+         var fd = new FormData()
+         this.items=fd
+      this.items.append("items",
+             `{"orderId":"${this.orderId}",  
+                "orderStatus":"4",
+                }`)
+           this.$axios.post(
+                `/orderCustomer/save`,
+                this.items).then(res=>{
+                  if(res.data.successful==false){
+                     console.log(res.data.resultHint)
+                       Toast.fail(res.data.resultHint)
+                  }else{
+                       Toast.success('取消成功')
+                       this.$router.push("/customer")
+                  } 
+                });
+    },
+     getdemo(){
+        this.$api.get(`/orderCustomer/OrderDetail/${this.orderId}`,{
+       },res=>{
+           console.log(res.data.resultValue.items)
+           this.demo=res.data.resultValue.items
+       })
+    },
   },
-  data() {
-    return {
-      value: 3,
-      fileList: [],
-      data: [
-        "订单编号",
-        "接单人",
-        "标题",
-        "内容说明",
-        "地址",
-        "上门费",
-        "接单时间",
-        "状态",
-      ],
-      demo: {
-        a: "202011121447",
-        b: "刘青",
-        c: "插座跳闸",
-        d: "机房配电箱10kv开关烧坏，开关需要更换。",
-        e: "天津市东丽区国网客服中心",
-        f: "￥150.00",
-        g: "2020/11/09 16:51",
-        h: "待接单",
-      },
-    };
-  },
+ 
 };
 </script>
 
@@ -168,7 +191,7 @@ export default {
         font-weight: normal;
       }
       span {
-        font-weight: 800;
+        // font-weight: 800;
         color: #343434;
       }
       .momy {
@@ -218,6 +241,19 @@ export default {
     background: none;
     color: #6b6c6c;
     border: 1px solid #c0c2c4;
+  }
+}
+/deep/ .show{
+  width: 80%;
+   .box{
+   width: 100%;
+    font-size: 13px;
+    height: 80px;
+    text-align: center;
+    line-height: 80px;
+  }
+ /deep/ button{
+    font-size: 13px;
   }
 }
 </style>

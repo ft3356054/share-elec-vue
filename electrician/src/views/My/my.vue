@@ -6,14 +6,17 @@
      <div class="head-top">
          <img src="@/assets/images/information.png" alt="">
          <dl>
-             <dt>刘强</dt>
-             <dd>159****0140</dd>
+             <dt>{{this.list.customerName}}</dt>
+             <dd>{{this.list.customerPhonenumber}}</dd>
          </dl>
          <div class="dian">用户</div>
      </div>
      <div class="head-bottom">
-           <div class="box">实名认证<span>否</span></div>
-           <div class="box">常用户号<span>173693002</span></div>
+           <div class="box" >实名认证
+               <span v-if="block==='0' ? true : false ">是</span>
+               <span v-else>否</span>
+               </div>
+           <div class="box">常用户号<span>{{this.list.registeredNumber}}</span></div>
      </div>
      <button>退出登录</button>
     </div>
@@ -21,10 +24,27 @@
 
 <script>
 export default {
+    data() {
+        return {
+            cust:"",
+            list:"",
+            block:"0"
+        }
+    },
   methods: {
       fh(){
           this.$router.go(-1)
       }
+  },
+  mounted() {
+      console.log(this.$route.query.cust)
+      this.cust=this.$route.query.cust
+       this.$api.get(`/customerInfo/${this.cust}`,{
+       },res=>{
+           console.log(res.data.resultValue.items[0])
+           this.list=res.data.resultValue.items[0]
+           this.block=res.data.resultValue.items[0].realNameAuth
+       })
   },
 }
 </script>

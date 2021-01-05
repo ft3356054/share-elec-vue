@@ -37,9 +37,24 @@
 
 <script>
 import baseest from "../../components/estimate.vue"
+import { Toast } from 'vant';
 export default {
   components: {
   
+  },
+    data() {
+    return {
+      value:3,
+      fileList: [],
+      rSelect:[],
+      score:5,
+      message:"",
+      data: [],
+      orderId:"",
+        files:{},
+      fd:{},
+      set:null
+    };
   },
   methods: {
     fh() {
@@ -47,8 +62,6 @@ export default {
     },
      // 点击ul
     topli(item,index){
-      console.log(index ,item)
-       console.log(this.rSelect.indexOf(item));
      if (this.rSelect.indexOf(item) !== -1) {
       this.rSelect.splice(this.rSelect.indexOf(item), 1); //取消
      } else {
@@ -58,11 +71,8 @@ export default {
     },
      // 图片上传
       blues (file) {
-      console.log(file)
-      console.log(this.fileList)
-      // if (this.fileList.length === 0) {
-      //   console.log(this.fileList)
-      // }
+        this.files=file.file
+      // console.log(this.files)
     },
     // 获取评价星数
     getscore(data){
@@ -70,20 +80,43 @@ export default {
     },
     // 提交
     submit(){
-        console.log(this.message)
-        console.log(this.rSelect)
-        console.log(this.score)
+           var fd = new FormData()
+         if(this.files===null || this.files===""){
+             fd.append("myFile","")
+         }else{
+           fd.append('myFile',this.files)
+         }
+             this.fd=fd
+         this.rSelect.push(this.message)
+         this.fd.append("items",
+             `{"orderId":"${this.orderId}",  
+                "customerEvaluate":"${this.rSelect}",
+                 "fileName":"complaintPicture",
+                 "orderStatus":"9", 
+                 "customerGrade":"${this.score}"
+                }`)
+        this.$axios.post(
+                `/orderCustomer/save`,
+                this.fd,{headers: {'Content-Type': 'multipart/form-data'}},
+                Toast.success('评价成功'),
+              );   
+              this.set=setTimeout(()=>{
+                    this.$router.push("./customer")  
+              },1000)  
     }
   },
-  data() {
-    return {
-      value:3,
-      fileList: [],
-      rSelect:[],
-      score:5,
-      message:"",
-      data: ["服务态度好", "不错", "非常专业", "懂得多", "准备很充分","按时到达"],
-    };
+    mounted() {
+       this.orderId=this.$route.query.orderId
+    this.$api.get('/baseLabel/?params={"pageIndex":1,"pageSize":20,"filter":"labelId=evaluate"}',{},res=>{
+      console.log(res.data.resultValue.items)
+       res.data.resultValue.items.forEach(item => {
+         this.data.push(item.labelName)
+       })
+    })
+   
+  },
+  destroyed() {
+      clearInterval(this.set)
   },
 };
 </script>

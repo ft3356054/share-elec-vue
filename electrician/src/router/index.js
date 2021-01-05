@@ -8,11 +8,11 @@ const routes = [
   //用户端
   {
     path: '/customer',
-    name: 'Home',
+    name: 'home',
     component: () => import("../views/customer/Home/home.vue"),
   },
   {
-    path: '/Pay', //支付
+    path: '/Pay/:orderId', //支付
     name: 'Pay',
     component: () => import('../views/Payment/Pay.vue'),
   },
@@ -30,9 +30,9 @@ const routes = [
     component: () => import('../views/Payment/Paymentf.vue')
   },
   {
-    path: '/about',
-    name: 'About',
-    component: () => import('../views/About.vue')
+    path: '/details', //消息详情
+    name: 'details',
+    component: () => import("../views/About/details.vue")
   }, {
     path: "/Infrom", //搜索资讯
     name: "Infrom",

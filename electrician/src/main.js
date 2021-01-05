@@ -8,6 +8,9 @@ Vue.prototype.$api = Api;
 import Vant from 'vant';
 import 'vant/lib/index.css';
 Vue.use(Vant);
+import { Toast } from 'vant';
+// 将所有 Toast 的展示时长设置为 2000 毫秒
+Toast.setDefaultOptions({ duration: 1000 });
 // 加载全局样式
 import './assets/common.scss'
 // rem适配
@@ -41,6 +44,12 @@ VueAMap.initAMapApiLoader({
   v: '1.4.4',
   uiVersion: '1.0' // ui版本
 })
+// 生成二维码
+import qrcode from 'vue-qrcode-directive'
+Vue.use(qrcode)
+// vue-bus
+import VueBus from 'vue-bus';
+Vue.use(VueBus);
 
 Vue.config.productionTip = false
 

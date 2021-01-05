@@ -3,7 +3,7 @@
     <div class="head">
       <p>
         <span @click="fh()"><img src="@/assets/images/bai.png" alt=""/></span
-        >服务评价
+        >服务投诉
       </p>
     </div>
     <div class="top">
@@ -38,8 +38,21 @@
 </template>
 
 <script>
+import { Toast } from 'vant';
 export default {
   components: {
+  },
+  data() {
+    return {
+      fileList: [],
+      rSelect:[],
+      message:"",
+      data:[],
+       files:{},
+      fd:{},
+      orderId:"",
+      set:null
+    };
   },
   methods: {
     fh() {
@@ -47,8 +60,8 @@ export default {
     },
     // 点击ul
     topli(item,index){
-      console.log(index ,item)
-       console.log(this.rSelect.indexOf(item));
+      // console.log(index ,item)
+      //  console.log(this.rSelect.indexOf(item));
      if (this.rSelect.indexOf(item) !== -1) {
       this.rSelect.splice(this.rSelect.indexOf(item), 1); //取消
      } else {
@@ -58,32 +71,51 @@ export default {
     },
     // 图片上传
       blues (file) {
-      console.log(file)
-      // console.log(this.fileList)
-      // if (this.fileList.length === 0) {
-      //   console.log(this.fileList)
-      // }
+       this.files=file.file  
+      // console.log(this.files)
     },
     // 提交
     submit(){
-        console.log(this.message)
-        console.log(this.rSelect)
+          var fd = new FormData()
+         if(this.files===null || this.files===""){
+             fd.append("myFile","")
+         }else{
+           fd.append('myFile',this.files)
+         }
+             this.fd=fd
+        this.rSelect.push(this.message)
+         this.fd.append("items",
+             `{"orderId":"${this.orderId}",  
+                "complaintDetail":"${this.rSelect}",
+                 "fileName":"complaintPicture", 
+                }`)   
+        this.$axios.post(
+                `/orderComplaint/save`,
+                this.fd,{headers: {'Content-Type': 'multipart/form-data'}},
+                Toast.success('投诉成功'),
+              );   
+             this.set=setTimeout(()=>{
+                    this.$router.push("./customer")  
+              },1000)  
     }
   },
   mounted() {
-    console.log(this)
+    this.orderId=this.$route.query.orderId
+    this.$api.get('/baseLabel/?params={"pageIndex":1,"pageSize":20,"filter":"labelId=complaint"}',{},res=>{
+      // console.log(res.data.resultValue.items)
+       res.data.resultValue.items.forEach(item => {
+         this.data.push(item.labelName)
+       })
+    })
+   
+  },
+  destroyed() {
+      clearInterval(this.set)
   },
   component:{
     
   },
-  data() {
-    return {
-      fileList: [],
-      rSelect:[],
-      message:"",
-      data: ["没修好，设备损坏", "乱收费", "没修好", "服务态度差", "迟到"],
-    };
-  },
+  
 };
 </script>
 
@@ -153,9 +185,9 @@ export default {
     margin-top: 20px;
     li {
       // width: 25%;
-      padding: 0 12px;
+      padding: 0 10px;
       text-align: center;
-      margin-left: 9px;
+      margin-left: 5px;
       margin-top: 12px;
       height: 28px;
       line-height: 28px;
@@ -167,7 +199,7 @@ export default {
       font-weight: bold;
     }
     .active {
-      margin-left: 12px;
+      margin-left: 5px;
       background: #87cefa;
       color: #fff;
     }

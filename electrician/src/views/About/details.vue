@@ -8,97 +8,85 @@
         <div class="x"></div>
         订单信息
       </h4>
-      <ul class="ipt" v-for="(item,index) in demo" :key="index">
+      <ul class="ipt">
         <li>
           <div class="left">订单编号</div>
-          <span>{{ item.orderId }}</span>
+          <span>{{ demo.a }}</span>
         </li>
         <li>
           <div class="left">接单人</div>
-          <span>{{ item.electricianName }}</span>
+          <span>{{ demo.b }}</span>
         </li>
         <li>
           <div class="left">标题</div>
-          <span>{{ item.customerDescriveTitle  }}</span>
+          <span>{{ demo.c }}</span>
         </li>
         <li>
           <div class="left">内容说明</div>
-          <b style="display:table-row">{{  item.customerDescrive }}</b>
+          <b style="display:table-row">{{ demo.d }}</b>
         </li>
         <li>
           <div class="left">地址</div>
-          <span>{{ item.customerAddress }}</span>
+          <span>{{ demo.e }}</span>
         </li>
         <li>
           <div class="left">维修价格</div>
-          <span class="momy">￥{{ item.electricianPrice }}</span>
+          <span class="momy">{{ demo.f }}</span>
         </li>
         <li>
           <div class="left">到达现场时间</div>
-          <span>{{item.updateTime }}</span>
+          <span>{{ demo.g }}</span>
         </li>
         <li>
           <div class="left">状态</div>
-          <span class="zt" v-if="item.orderStatus">待维修</span>
+          <span class="zt">{{ demo.h }}</span>
         </li>
       </ul>
       <h4 class="hzh">合同</h4>
-      <div class="gz" style="margin-bottom:5px" v-for="(item,id) in demo" :key="id+2">
-          <img :src="item.orderContract" alt="" />
+      <div class="gz" style="margin-bottom:5px">
+        <img src="@/assets/images/gztp.png" alt="" />
       </div>
       
     </div>
-     <div class="btt"><button @click="tocomplaint">催单</button> <button @click="tous">投诉</button></div>
   </div>
 </template>
 
 <script>
-import { Toast } from 'vant';
 export default {
-    data() {
+  components: {
+  },
+  data() {
     return {
       value: 3,
       fileList: [],
-       demo: {},
-       orderId:""
+      announceId:"",
+      announceUserId:"",
+      demo: {
+        a: "202011121447",
+        b: "刘青",
+        c: "插座跳闸",
+        d: "机房配电箱10kv开关烧坏，导致整个办公楼停电，无法办公",
+        e: "天津市东丽区国网客服中心",
+        f: "￥150.00",
+        g: "2020/11/09 16:51",
+        h: "待维修",
+      },
     };
   },
-   mounted() {
-    this.orderId=this.$route.query.orderId
-    this.getdemo()
+  created() {
+      this.$bus.$on("details",data=>{
+          console.log("1",data)
+      })
+  },
+  mounted() {
+     
   },
   methods: {
     fh() {
       this.$router.go(-1);
     },
-    getdemo(){
-        this.$api.get(`/orderCustomer/OrderDetail/${this.orderId}`,{
-       },res=>{
-           console.log(res.data.resultValue.items)
-           this.demo=res.data.resultValue.items
-       })
-    },
-    // 催单
-     tocomplaint() {
-      this.$api.get(`/notifyAnnounce/hasten/${this.orderId}`,{        
-      },res=>{
-           console.log(res.data.successful)
-           if(res.data.successful==true){
-                  Toast.success('催单成功')
-           }
-      })
-    },
-    // 投诉
-     tous(){
-        this.$router.push({
-        path:"/complaint",
-        query:{
-          orderId:this.orderId
-        }
-      })
-    }
   },
-
+  
 };
 </script>
 
@@ -198,32 +186,5 @@ export default {
     }
   }
 }
-.btt {
-  width: 100%;
-  height: 80px;
-  float: left;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  justify-content: center;
-  // margin-top: 50px;
-  button {
-    margin-left: 10px;
-    width: 85px;
-    height: 37px;
-   background: -webkit-linear-gradient(#83ccfa,#7bcbf7,#6ec1f5,#61bbf3,#57b6f0);
-    border-radius: 20px;
-    border: none;
-    outline: none;
-    color: #fff;
-    font-size: 16px;
-    // font-weight: bold;
-  }
-  :nth-child(1){
-    background: none;
-    color: #6b6c6c;
-    border: 1px solid #c0c2c4;
-  }
-}
+
 </style>
