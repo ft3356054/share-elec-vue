@@ -60,11 +60,17 @@ export default {
                 "pageSize":20,
                 "filter":["userId=321","status=2"]
                 }
-        this.$axios.get("/notifyAnnounceUser/queryAll?",{params}).then(res => {
+        this.$axios.get("/notifyAnnounceUser/queryAll",{params}).then(res => {
             console.log(res)
         }).catch(err => {
             alert(err)
         })
+        // var params={
+        //     "pageIndex":1,"pageSize":10,"filter":["orderElectricianType=9"]
+        // }
+        // this.$api.get("/orderElectrician/queryMore", {params,electricianId:this.electricianId}, response => {
+        //     this.data=response.data.resultValue.items
+        //     });
     },
     WebSocketTest(){
          if(typeof(WebSocket) === "undefined"){
