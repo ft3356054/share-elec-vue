@@ -67,14 +67,18 @@
     </div>
      <div class="box" v-for="(item,id) in demo" :key="id+2">
          <h4>合同</h4>
-         <div class="gz">   
+         <div class="gz" @click="img">   
         <img :src="item.orderContract" alt="" />
+         <van-image-preview v-model="show" :images="[item.orderContract]" >
+       </van-image-preview>
       </div>
       </div>
       <div class="box"   v-for="(item,ss) in demo" :key="ss+5">
           <h4>服务报告</h4>
-            <div class="gz" style="margin-bottom:60px">
+            <div class="gz" style="margin-bottom:60px" @click="imgs">
         <img :src="item.inspectionReport" alt="" />
+         <van-image-preview v-model="shows" :images="[item.inspectionReport]" >
+       </van-image-preview>
       </div>
       </div>
   </div>
@@ -112,7 +116,9 @@ export default {
         }],
         u:"机房主配电箱开关已更换完成，施工时间一个工作日。"
       },
-     orderId:""
+     orderId:"",
+     show:false,
+     shows:false
     };
   },
     mounted() {
@@ -123,6 +129,13 @@ export default {
     //   返回上一层
     fh() {
       this.$router.go(-1);
+    },
+     // 点击图片显示
+    img(){
+     this.show=true
+    },
+    imgs(){
+      this.shows=true
     },
     // 投诉
     tocomplaint() {
@@ -207,6 +220,7 @@ export default {
     // height: 235px;
     padding: 0 20px;
     font-size: 12px;
+    padding-bottom: 20px;
     li {
       line-height: 25px;
       .left {

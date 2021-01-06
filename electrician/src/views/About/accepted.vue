@@ -42,8 +42,10 @@
         </li>
       </ul>
       <h4 class="hzh">服务报告</h4>
-      <div class="gz" style="margin-bottom:5px" v-for="(item,index) in demo" :key="index+2">
+      <div class="gz" style="margin-bottom:5px" v-for="(item,index) in demo" :key="index+2" @click="img">
         <img :src="item.inspectionReport" alt="" />
+           <van-image-preview v-model="show" :images="[item.inspectionReport]" >
+       </van-image-preview>
       </div>
       
     </div>
@@ -62,7 +64,8 @@ export default {
       value: 3,
       fileList: [],
       demo: {},
-      orderId:""
+      orderId:"",
+      show:false
     };
   },
    mounted() {
@@ -73,6 +76,10 @@ export default {
     //   返回上一层
     fh() {
       this.$router.go(-1);
+    },
+    // 点击图片显示
+    img(){
+     this.show=true
     },
     // 投诉
     tocomplaint() {

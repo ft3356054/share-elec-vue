@@ -22,7 +22,7 @@
         <div class="content" v-show="num==0" v-for="(item,index) in list" :key="index">
             <div class="typebox">
                 <p><span>类别</span><span>{{item.customerDescriveTitle}}</span></p>
-                <p></p>
+                <p>{{item.orderStatus}}</p>
                 <p v-if="item.orderStatus=='0'">上门费 {{item.customerPrice }}</p>
                 <p v-else-if="item.orderStatus=='23'">维修费 {{item.electricianPrice }}</p>
                 <p v-else-if="item.orderStatus!=='0'|| item.orderStatus!=='23' ">{{item.createTime }}</p>
@@ -44,7 +44,6 @@
                               <p>{{ item.customerAddress }}</p>
                               <p>{{ item.createTime }}</p>
                       </div>
-                       
                     </dt>
                     <dd v-if="item.orderStatus=='4'|| item.orderStatus=='9' || item.orderStatus=='8'">
                         <span class="wancan">以完成</span>
@@ -169,7 +168,7 @@ export default {
     return {
       tabs: ['全部订单', '进行中订单', '已完成订单'],
       num: 0,
-       staus:"",
+      staus:"",
       active: 0,
       value:"",
       list: [
@@ -248,6 +247,7 @@ export default {
   mounted() {
     this.cust = this.$route.query.cust;
      this.getlist()
+      console.log(this.num)
   },
   methods: {
     fh(){
@@ -255,6 +255,7 @@ export default {
     },
     nums(index){
         this.num=index
+        console.log(this.num)
        this.shousui()
     },
     ipt(e){
@@ -321,6 +322,9 @@ export default {
        this.$api.get(`/orderCustomer/queryAll?params={"pageIndex":1,"pageSize":20,"filter":"customerId=${this.cust}"}`,{
        },res=>{
          console.log(res)
+        //  this.list=res.data.resultValue.items.sort((a,b)=>{
+        //    return  Date(a.createTime).getTime()-Date(b.createTime).getTime()
+        //  })
          this.list=res.data.resultValue.items
           res.data.resultValue.items.forEach(item => {
            if(item.orderStatus=="4" || item.orderStatus=="9" || item.orderStatus=="8" ){
@@ -373,7 +377,7 @@ export default {
          this.items=fd
       this.items.append("items",
              `{"orderId":"${this.orderId}",  
-                "orderStatus":"22",
+                "orderStatus":"26",
                 }`)
           this.$axios.post("/orderCustomer/save",this.items).then(res=>{
             if(res.data.successful==false){

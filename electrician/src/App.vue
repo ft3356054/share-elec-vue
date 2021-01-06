@@ -51,14 +51,14 @@ export default {
     },
     getMessage: function (msg) {   //content
 //         console.log(msg)
-//         let obj=msg.data
-//         console.log(obj)
-//         this.messages=JSON.parse(JSON.stringify(obj))
-     
-        console.log(this.messages)
+        let obj=JSON.parse(msg.data) 
+        // console.log(obj.content)
+        this.messages=obj.content
+        // console.log(this.messages)
           this.$dialog.alert({
               width:"80%",
               message: this.messages,
+              closeOnClickOverlay:true
             });
     },
     send: function () {

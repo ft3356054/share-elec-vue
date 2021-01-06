@@ -43,8 +43,10 @@
         </li>
       </ul>
       <h4 class="hzh">故障图片</h4>
-      <div class="gz" style="margin-bottom:5px"  v-for="(item,index) in demo" :key="index+2">
+      <div class="gz" style="margin-bottom:5px"  v-for="(item,index) in demo" :key="index+2" @click="imgs">
         <img :src="item.customerDescriveIcon" alt="" />
+         <van-image-preview v-model="shows" :images="[item.customerDescriveIcon]" >
+       </van-image-preview>
       </div>
       
     </div>
@@ -66,7 +68,8 @@ export default {
       fileList: [],
       demo: {},
       orderId:"",
-      show:false
+      show:false,
+      shows:false
     };
   },
   mounted() {
@@ -76,6 +79,10 @@ export default {
   methods: {
     fh() {
       this.$router.go(-1);
+    },
+      // 点击图片显示
+    imgs(){
+     this.shows=true
     },
     getdemo(){
         this.$api.get(`/orderCustomer/OrderDetail/${this.orderId}`,{

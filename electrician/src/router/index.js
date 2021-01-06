@@ -50,6 +50,14 @@ const routes = [
     name: 'My',
     component: () => import('../views/My/my.vue')
   }, {
+    path: '/autation', //电工认证
+    name: 'autation',
+    component: () => import('../views/My/autation.vue')
+  }, {
+    path: '/autCom', //电工认证 搜索公司
+    name: 'autCom',
+    component: () => import('../views/My/autCom.vue')
+  }, {
     path: '/complaint', //投诉
     name: 'complaint',
     component: () => import('../views/complaint/complaint.vue')
