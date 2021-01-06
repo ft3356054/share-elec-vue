@@ -64,12 +64,20 @@
                        <p>{{ item.customerDescrive }}</p>
                        <p>{{ item.createTime }}</p>
                     </dt>
-                    <dd>
+                    <dd v-if="item.orderStatus=='0'">
                         <button @click="cancel(item.orderId)">取消</button> <button class="zf" @click="zf(item.orderId)">支付</button>
                          <van-dialog v-model="show" title="" show-cancel-button class="show" 
                         @confirm="confirm(item.orderId)" @cancel="cancels"
                         >
                              <div class="box">确定取消订单吗？取消订单后不能回复</div>
+                          </van-dialog>
+                    </dd>
+                    <dd v-else>
+                         <button @click="thshow(item.orderId)">退回</button> <button class="zf" @click="zf(item.orderId)">支付</button>
+                         <van-dialog v-model="ths" title="" show-cancel-button class="show" 
+                        @confirm="th(item.orderId)" @cancel="cancels"
+                        >
+                             <div class="box">确定退回订单吗？退回订单后不能回复</div>
                           </van-dialog>
                     </dd>
                 </dl>
@@ -156,7 +164,8 @@ export default {
       cust:"customer001",
       orderId:"",
       items:{},
-      show:false
+      show:false,
+      ths:false
     };
   },
   inject:['reload'],
@@ -272,6 +281,7 @@ export default {
     // 点击取消时
     cancels(){
      this.show=false
+     this.ths=false
     },
     // 点击确认时
     confirm(orderId){
@@ -294,8 +304,30 @@ export default {
                   } 
                 });
     },
+    // 点击退回
+    thshow(){
+      this.ths=true
+    },
+      //   退回
+     th(orderId){
+         this.orderId=orderId
+         var fd = new FormData()
+         this.items=fd
+      this.items.append("items",
+             `{"orderId":"${this.orderId}",  
+                "orderStatus":"22",
+                }`)
+          this.$axios.post("/orderCustomer/save",this.items).then(res=>{
+            if(res.data.successful==false){
+                     console.log(res.data.resultHint)
+                       Toast.fail(res.data.resultHint)
+                  }else{
+                       Toast.success('退回成功')
+                  } 
+          })   
+     },
     // 获取滚动消息数据
-    getGunlist(){
+    getGunlist(orderId){
       this.$api.get(`/notifyAnnounceUser/queryAll?params={"pageIndex":1,"pageSize":5,"filter":["userId=${this.cust}","status=0"]}`,{
        },res=>{
           //  console.log(res)
@@ -630,7 +662,7 @@ font-size: 14px;
   }
 }
 /deep/ .van-overlay{
-  background-color: rgba(0,0,0,.4);
+  background-color: rgba(0,0,0,.3);
 }
 /deep/ .van-sticky{
   background: #f3f8fe;

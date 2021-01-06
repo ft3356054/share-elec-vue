@@ -21,7 +21,7 @@
         },
         methods: {
             getMycount () {
-                console.log(this.time)
+                // console.log(this.time)
                 let self = this;
                 let date = new Date();
                 // console.log(date)
@@ -80,7 +80,7 @@
              let self = this;
              var aData =new Date()
              self.time1 =aData.getHours() + ":" + aData.getMinutes()
-             console.log(this.time) //2019-8-20 
+            //  console.log(this.time) //2019-8-20 
            },
 
         }

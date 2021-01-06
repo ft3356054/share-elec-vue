@@ -16,7 +16,7 @@
       <ul class="ipt">
         <li>
           <span>*</span><b>标题</b>
-          <input type="text" v-model="customerEvaluateTitle" />
+          <input type="text" v-model="customerEvaluateTitle" placeholder="请输入标题" />
         </li>
         <li class="des">
           <span>*</span><b>内容说明</b>
@@ -39,7 +39,7 @@
             <option  v-for="(item,index) in baseVoltageData" :key="index" v-bind:value="item.voltage">{{item.voltage}}</option>
           </select>
         </li>
-        <li><span v-html="err"></span><b>用电户号</b> <input type="text" v-model="registeredNumber" /></li>
+        <li><span v-html="err"></span><b>用电户号</b> <input type="text" v-model="registeredNumber" placeholder="请输入户号" /></li>
         <li>
           <span>*</span><b>选择身份</b     
           ><select v-model="sele">
@@ -53,6 +53,7 @@
             type="text"
             v-model="customerAddress"
             style="padding-right: 7%"
+            placeholder="请输入地址"
           />
           <img src="@/assets/images/position.png" alt="" />
         </li>

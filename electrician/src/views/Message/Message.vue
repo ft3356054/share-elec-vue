@@ -42,37 +42,16 @@ export default {
             cust:"",
             list:"",
             time:"",
-            data:[
-          {
-            time:"上午11:18",
-            let:"派单",
-            day:"2020/11/09",
-            stat:"2020/11/07 11:15:20",
-            mame:"刘强"
-          },{
-            time:"上午12:18",
-            let:"评价",
-            day:"2020/11/09",
-            stat:"2020/11/07 11:15:20",
-            mame:"刘强"
-          },{
-            time:"上午13:18",
-            let:"维修",
-            day:"2020/11/09",
-            stat:"2020/11/07 11:15:20",
-            mame:"刘强"
-          }
-             ],
             announceId:"",
-            orderId:""
+            orderId:"",
+            socket:'',
         }
     },
     inject:['reload'],
       mounted() {
-      console.log(this.$route.query.cust)
+      // console.log(this.$route.query.cust)
        this.cust=this.$route.query.cust
        this.getList()
-       this.WebSocketTest()
   },
   methods: {
       fh(){
@@ -142,37 +121,7 @@ export default {
            this.times()
        })
       },
-      WebSocketTest(){
-         if(typeof(WebSocket) === "undefined"){
-                alert("您的浏览器不支持socket")
-            }else{
-                // 实例化socket
-                var uid = "123";
-                this.socket = new WebSocket(this.path+uid)
-                // 监听socket连接
-                this.socket.onopen = this.open
-                // 监听socket错误信息
-                this.socket.onerror = this.error
-                // 监听socket消息
-                this.socket.onmessage = this.getMessage
-                console.log(this.socket)
-            }
-    },
-    open: function () {
-            console.log("socket连接成功")
-        },
-    error: function () {
-        console.log("连接错误")
-    },
-    getMessage: function (msg) {
-        console.log(msg.data)
-    },
-    send: function () {
-        this.socket.send(params)
-    },
-    close: function () {
-        console.log("socket已经关闭")
-    },
+   
        showtime(time) {
       let date =
         typeof time === "number"

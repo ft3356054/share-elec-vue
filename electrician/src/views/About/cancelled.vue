@@ -48,7 +48,7 @@
       
     </div>
      <div class="btt">
-        <button @click="cancel()">取消订单</button>
+        <button @click="cancel()">返回</button>
       </div>
   </div>
 </template>

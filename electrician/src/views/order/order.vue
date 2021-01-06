@@ -22,7 +22,7 @@
         <div class="content" v-show="num==0" v-for="(item,index) in list" :key="index">
             <div class="typebox">
                 <p><span>类别</span><span>{{item.customerDescriveTitle}}</span></p>
-                <p>{{item.orderStatus}}</p>
+                <p></p>
                 <p v-if="item.orderStatus=='0'">上门费 {{item.customerPrice }}</p>
                 <p v-else-if="item.orderStatus=='23'">维修费 {{item.electricianPrice }}</p>
                 <p v-else-if="item.orderStatus!=='0'|| item.orderStatus!=='23' ">{{item.createTime }}</p>
@@ -31,19 +31,42 @@
             <div class="addressbox">
                 <dl>
                     <dt @click="about(item.orderId,item.orderStatus)">
-                       <p>{{ item.customerDescrive }}</p>
-                       <p>{{ item.createTime }}</p>
+                       <div v-if="item.orderStatus!=='0'&&item.orderStatus!='23'">
+                        <p>{{ item.customerAddress }}</p>
+                        <p>{{ item.customerDescrive }}</p>
+                        <p v-show="item.orderTypeId=='0'">{{ item.voltage }} 故障抢修</p>
+                        <p v-show="item.orderTypeId=='1'">{{ item.voltage }} 检修</p>
+                        <p v-show="item.orderTypeId=='2'">{{ item.voltage }} 巡视</p>
+                        <p v-show="item.orderTypeId=='3'">{{ item.voltage }} 试验</p>
+                        <p v-show="item.orderTypeId=='4'">{{ item.voltage }} 其他</p>
+                      </div>
+                      <div v-else-if="item.orderStatus=='0' || item.orderStatus=='23'  ">
+                              <p>{{ item.customerAddress }}</p>
+                              <p>{{ item.createTime }}</p>
+                      </div>
+                       
                     </dt>
                     <dd v-if="item.orderStatus=='4'|| item.orderStatus=='9' || item.orderStatus=='8'">
                         <span class="wancan">以完成</span>
                     </dd>
-                    <dd v-else-if="item.orderStatus=='0' || item.orderStatus=='23'  ">
+                    <dd v-else-if="item.orderStatus=='0'">
                         <button @click="cancel">取消</button> <button class="zf" @click="zf(item.orderId)">支付</button>
                         <van-dialog v-model="show" title="" show-cancel-button class="show" 
                         @confirm="confirm(item.orderId)" @cancel="cancels"
                         >
                              <div class="box">确定取消订单吗？取消订单后不能回复</div>
                           </van-dialog>
+                    </dd>
+                    <dd v-else-if="item.orderStatus=='23'">
+                         <button @click="thshow(item.orderId)">退回</button> <button class="zf" @click="zf(item.orderId)">支付</button>
+                         <van-dialog v-model="ths" title="" show-cancel-button class="show" 
+                        @confirm="th(item.orderId)" @cancel="cancels"
+                        >
+                             <div class="box">确定退回订单吗？退回订单后不能回复</div>
+                          </van-dialog>
+                    </dd>
+                    <dd v-else-if="item.orderStatus=='25'">
+                         <button @click="complaint(item.orderId)">投诉</button> <button class="zf" @click="yanshou(item.orderId)">验收</button>
                     </dd>
                     <dd v-else-if="item.orderStatus!=='4' && item.orderStatus!='9' && item.orderStatus!=='0' && item.orderStatus!=='23'   ">
                         <span class="jinxing">进行中</span>
@@ -54,7 +77,7 @@
         <div class="content" v-show="num==1" v-for="(item,index) in haveList" :key="'in'+index">
             <div class="typebox">
                 <p><span>类别</span><span>{{item.customerDescriveTitle}}</span></p>
-                <p>{{item.orderStatus}}</p>
+                <p></p>
                 <p v-if="item.orderStatus=='0'">上门费 {{item.customerPrice }}</p>
                 <p v-else-if="item.orderStatus=='23'">维修费 {{item.electricianPrice }}</p>
                 <p v-else-if="item.orderStatus!=='0'|| item.orderStatus!=='23' ">{{item.createTime }}</p>
@@ -63,19 +86,41 @@
             <div class="addressbox" >
                 <dl>
                     <dt @click="about(item.orderId,item.orderStatus)">
+                        <div v-if="item.orderStatus!=='0'&&item.orderStatus!='23'">
+                        <p>{{ item.customerAddress }}</p>
                         <p>{{ item.customerDescrive }}</p>
-                       <p>电工完工的情况描述</p>
+                        <p v-show="item.orderTypeId=='0'">{{ item.voltage }} 故障抢修</p>
+                        <p v-show="item.orderTypeId=='1'">{{ item.voltage }} 检修</p>
+                        <p v-show="item.orderTypeId=='2'">{{ item.voltage }} 巡视</p>
+                        <p v-show="item.orderTypeId=='3'">{{ item.voltage }} 试验</p>
+                        <p v-show="item.orderTypeId=='4'">{{ item.voltage }} 其他</p>
+                      </div>
+                      <div v-else-if="item.orderStatus=='0' || item.orderStatus=='23'  ">
+                              <p>{{ item.customerAddress }}</p>
+                              <p>{{ item.createTime }}</p>
+                      </div>
                     </dt>
                        <dd v-if="item.orderStatus=='4'|| item.orderStatus=='9' || item.orderStatus=='8'">
                         <span class="wancan">以完成</span>
                     </dd>
-                    <dd v-else-if="item.orderStatus=='0' || item.orderStatus=='23'  ">
+                    <dd v-else-if="item.orderStatus=='0'">
                         <button @click="cancel">取消</button> <button class="zf" @click="zf(item.orderId)">支付</button>
                         <van-dialog v-model="show" title="" show-cancel-button class="show" 
                         @confirm="confirm(item.orderId)" @cancel="cancels"
                         >
                              <div class="box">确定取消订单吗？取消订单后不能回复</div>
                           </van-dialog>
+                    </dd>
+                    <dd v-else-if="item.orderStatus=='23'">
+                         <button @click="thshow(item.orderId)">退回</button> <button class="zf" @click="zf(item.orderId)">支付</button>
+                         <van-dialog v-model="ths" title="" show-cancel-button class="show" 
+                        @confirm="th(item.orderId)" @cancel="cancels"
+                        >
+                             <div class="box">确定退回订单吗？退回订单后不能回复</div>
+                          </van-dialog>
+                    </dd>
+                     <dd v-else-if="item.orderStatus=='25'">
+                         <button @click="complaint(item.orderId)">投诉</button> <button class="zf" @click="yanshou(item.orderId)">验收</button>
                     </dd>
                     <dd v-else-if="item.orderStatus!=='4' && item.orderStatus!='9' && item.orderStatus!=='0' && item.orderStatus!=='23'   ">
                         <span class="jinxing">进行中</span>
@@ -86,14 +131,21 @@
         <div class="content" v-show="num==2" v-for="(item,index) in loverList" :key="'info2'+index">
             <div class="typebox">
                 <p><span>类别</span><span>{{item.customerDescriveTitle}}</span></p>
-                <p>{{item.orderStatus}}</p>
+                <p></p>
                  <p>{{item.finishTime }}</p>
             </div>
             <div class="addressbox">
                 <dl>
                     <dt @click="about(item.orderId,item.orderStatus)">
+                      <div v-if="item.orderStatus!='0'|| item.orderStatus!='23'">
+                        <p>{{ item.customerAddress }}</p>
                         <p>{{ item.customerDescrive }}</p>
-                       <p>{{ item.voltage }}</p>
+                        <p v-show="item.orderTypeId=='0'">{{ item.voltage }} 故障抢修</p>
+                        <p v-show="item.orderTypeId=='1'">{{ item.voltage }} 检修</p>
+                        <p v-show="item.orderTypeId=='2'">{{ item.voltage }} 巡视</p>
+                        <p v-show="item.orderTypeId=='3'">{{ item.voltage }} 试验</p>
+                        <p v-show="item.orderTypeId=='4'">{{ item.voltage }} 其他</p>
+                      </div>
                     </dt>
                     <dd>
                       <span class="wancan">以完成</span>
@@ -189,6 +241,7 @@ export default {
       orderComplaintId:"",
       orderId:"",
        show: false,
+       ths:false
     };
   },
    inject:['reload'],
@@ -210,6 +263,49 @@ export default {
         console.log(this.value);
         this.shousui()
     },
+      // 验收通过
+    yanshou(orderId){
+        this.$dialog.confirm({
+      width:"80%",
+      message:'确定通过验收吗？'
+    }).then(()=>{
+      this.orderId=orderId
+      this.items={}
+      this.orderId=orderId
+         var fd = new FormData()
+         this.items=fd
+      this.items.append("items",
+             `{"orderId":"${this.orderId}",  
+                "orderStatus":"8",
+                }`)
+           this.$axios.post(
+                `/orderCustomer/save`,
+               this.items
+              ).then(res=>{
+                if(res.data.successful==false){
+                     console.log(res.data.resultHint)
+                       Toast.fail(res.data.resultHint)
+                  }else{
+                       Toast.success('验收通过')
+                        this.reload() 
+                  } 
+              })  
+      })
+       .catch(() => {
+         // on cancel
+        });         
+     
+    },
+    // 投诉
+    complaint(orderId){
+       this.orderId=orderId
+      this.$router.push({
+        path:"/complaint",
+        query:{
+          orderId:this.orderId
+        }
+      })
+    },
     // 搜索
     shousui(index){
       this.$api.get(`/orderCustomer/searchBox?params={"filter":["customerId=${this.cust}","tagType=${this.num}","searchContent=${this.value}"]}`,{},
@@ -229,7 +325,7 @@ export default {
           res.data.resultValue.items.forEach(item => {
            if(item.orderStatus=="4" || item.orderStatus=="9" || item.orderStatus=="8" ){
                this.loverList.push(item)
-               console.log( this.loverList,"8")
+              //  console.log( this.loverList,"8")
            }else  if(item.orderStatus!=="4"|| item.orderStatus!=="9" || item.orderStatus!=="8" ){
               this.haveList.push(item)
            }
@@ -243,6 +339,7 @@ export default {
     // 点击取消时
     cancels(){
      this.show=false
+     this.ths=false
     },
     // 点击确认时
     confirm(orderId){
@@ -265,6 +362,28 @@ export default {
                   } 
                 });
     },
+    // 点击退回
+    thshow(){
+      this.ths=true
+    },
+      //   退回
+     th(orderId){
+         this.orderId=orderId
+         var fd = new FormData()
+         this.items=fd
+      this.items.append("items",
+             `{"orderId":"${this.orderId}",  
+                "orderStatus":"22",
+                }`)
+          this.$axios.post("/orderCustomer/save",this.items).then(res=>{
+            if(res.data.successful==false){
+                     console.log(res.data.resultHint)
+                       Toast.fail(res.data.resultHint)
+                  }else{
+                       Toast.success('退回成功')
+                  } 
+          })   
+     },
     // 支付
     zf (orderId) {
       // this.$router.push({
@@ -567,7 +686,7 @@ font-size: 14px;
 .wancan{
   display:block;
   color: #ff4758;
-  margin-top: 15px;
+  margin-top: 50%;
   font-size: 14px;
 }
 .sp{
@@ -578,7 +697,7 @@ font-size: 14px;
 .jinxing{
    display:block;
   color: #abd6f0;
-  margin-top: 15px;
+   margin-top: 50%;
   font-size: 14px;
 }
 /deep/ .show{
