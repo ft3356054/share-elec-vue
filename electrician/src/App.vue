@@ -50,7 +50,8 @@ export default {
         console.log("连接错误")
     },
     getMessage: function (msg) {   //content
-//         console.log(msg)
+        var msg1=JSON.parse(msg.data)
+        console.log(msg1.content)
 //         let obj=msg.data
 //         console.log(obj)
 //         this.messages=JSON.parse(JSON.stringify(obj))
