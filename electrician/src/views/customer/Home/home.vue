@@ -34,6 +34,7 @@
           class="notice-swipe"
           :autoplay="3000"
           :show-indicators="false"
+          :width="360"
         >
           <van-swipe-item v-for="(item,index) in messages" :key="index" @click="swipe(item.orderId)">
             系统消息:  {{item.content}}
@@ -315,7 +316,7 @@ export default {
          this.items=fd
       this.items.append("items",
              `{"orderId":"${this.orderId}",  
-                "orderStatus":"22",
+                "orderStatus":"26",
                 }`)
           this.$axios.post("/orderCustomer/save",this.items).then(res=>{
             if(res.data.successful==false){
@@ -452,7 +453,7 @@ header {
   }
 }
 nav {
-  width: 90%;
+  width: 94%;
   margin: 0 auto;
   height: 142px;
   background: #fff;
@@ -494,21 +495,27 @@ nav {
          height: 34px;
          padding-right: 10px;
            overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+        text-overflow: ellipsis;
+         white-space: nowrap;
+         position: relative;
+         width: 100%;
          img{
            position: absolute;
-           right: 0;
+           right: 0%;
            top: 30%;
            width: 6px;
          }
  }
+ 
   /deep/ .notice-swipe {
     height: 32px;
     line-height: 32px;
     font-size: 10px;
      color: #2991e2;
   }
+   /deep/ .notice-swipe>.van-swipe{
+     width: 100%;
+   }
  /deep/ .van-swipe-item{
     width: 95%;
     overflow: hidden;

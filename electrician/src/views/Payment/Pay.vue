@@ -18,7 +18,8 @@
            </div>
              <div class="bt">
               <button v-if="item.orderStatus=='0'" @click="cancel">取消订单</button>
-              <button v-else @click="th">退回</button>
+              <button v-else @click="thshow">退回</button>
+              
               <button @click="pay()">支付</button>
               </div>
                <van-dialog v-model="show" title="" show-cancel-button class="show" 
@@ -27,7 +28,11 @@
                              <div class="box">确定取消订单吗？取消订单后不能回复</div>
                           </van-dialog>
          </div>
-    
+           <van-dialog v-model="ths" title="" show-cancel-button class="show" 
+                        @confirm="th(item.orderId)" @cancel="cancels"
+                        >
+                             <div class="box">确定退回订单吗？退回订单后不能回复</div>
+                          </van-dialog>
    </div>
 </template>
 
@@ -40,7 +45,8 @@ export default {
             status:"",
             orderId:"",
             show:false,
-            items:{}
+            items:{},
+            ths:false
         }
     },
     mounted() {
@@ -75,13 +81,16 @@ export default {
     cancels(){
      this.show=false
     },
+     thshow(){
+      this.ths=true
+    },
      //   退回
      th(){
          var fd = new FormData()
          this.items=fd
       this.items.append("items",
              `{"orderId":"${this.orderId}",  
-                "orderStatus":"22",
+                "orderStatus":"26",
                 }`)
           this.$axios.post("/orderCustomer/save",this.items).then(res=>{
             if(res.data.successful==false){

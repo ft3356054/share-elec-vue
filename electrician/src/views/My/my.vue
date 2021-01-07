@@ -15,14 +15,21 @@
            <div class="box" >实名认证
                <span v-if="block==='0' ? true : false ">是</span>
                <span v-else>否</span>
-               </div>
-           <div class="box">常用户号<span>{{this.list.registeredNumber}}</span></div>
+            </div>
+               <div class="box">电工认证
+                   <span @click="gorenzheng" style="color:#87cefa" v-if="this.list.auditStatus=='0'">未认证</span>
+                   <span @click="gorenzheng" style="color:#87cefa" v-else-if="this.list.auditStatus=='1'">待审核</span>
+                   <span @click="gorenzheng" style="color:#87cefa" v-else-if="this.list.auditStatus=='2'">已审核</span>
+                </div>
+            <!-- <div class="box">电工认证<span @click="gorenzheng"  style="color:#87cefa">高级电工></span></div> -->
+            <div class="box">常用户号<span>{{this.list.registeredNumber}}</span></div>
      </div>
-     <button>退出登录</button>
+     <!-- <button>退出登录</button> -->
     </div>
 </template>
 
 <script>
+import { Toast } from 'vant';
 export default {
     data() {
         return {
@@ -34,7 +41,18 @@ export default {
   methods: {
       fh(){
           this.$router.go(-1)
-      }
+      },
+    //   电工认证
+       gorenzheng () {
+           if(this.list.auditStatus=="0"){
+             this.$router.push('/autation')
+           }else if(this.list.auditStatus=="1"){
+               Toast('正在审核中，请稍等');
+           }else if(this.list.auditStatus=="2"){
+                 Toast('已审核');
+           }
+      
+    }
   },
   mounted() {
       console.log(this.$route.query.cust)
@@ -63,7 +81,6 @@ export default {
     height: 140px;
     background: #87CEFA;
     text-align: center;
-    border-radius:0 0 20% 20%;
     p{
         position: relative;
         display: block;
@@ -87,12 +104,10 @@ export default {
     height: 112px;
     // line-height: 112px;
     background: #fff;
-    top: 12%;
+    top: 14.5%;
     left: 3%;
     margin: 0 auto;
     border-radius: 8px;
-    box-shadow: 0 -6px  3px #B4E0FC ;
-    // box-shadow: 0 -10px  1px #93D3fb;
     img{
         width:50px;
         height: 50px;
@@ -127,7 +142,7 @@ export default {
 }
 .head-bottom{
      width: 94%;
-     height: 150px;
+     height: auto;
      background: #fff;
      margin: 70px auto;
      margin-bottom: 0;
@@ -143,7 +158,7 @@ export default {
         float: right;
     }
 }
-.box:nth-child(2){
+.box:nth-child(3){
     border: none;
 }
 button{

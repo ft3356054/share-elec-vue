@@ -112,7 +112,7 @@ export default {
       },
       // 获取消息列表
       getList(){
-          this.$api.get(`/notifyAnnounceUser/queryAll?params={"pageIndex":1,"pageSize":20,"filter":["userId=${this.cust}","status=2"]}`,{
+          this.$api.get(`/notifyAnnounceUser/queryAll?params={"pageIndex":1,"pageSize":10,"filter":["userId=${this.cust}","status=2"]}`,{
        },res=>{
           //  console.log(res)
            this.list=res.data.resultValue.items

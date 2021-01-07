@@ -43,8 +43,10 @@
         </li>
       </ul>
       <h4 class="hzh">合同</h4>
-      <div class="gz" style="margin-bottom:5px" v-for="(item,id) in demo" :key="id+2">
+      <div class="gz" style="margin-bottom:5px" v-for="(item,id) in demo" :key="id+2" @click="imgs">
           <img :src="item.orderContract" alt="" />
+            <van-image-preview v-model="shows" :images="[item.orderContract]" >
+       </van-image-preview>
       </div>
       
     </div>
@@ -60,7 +62,8 @@ export default {
       value: 3,
       fileList: [],
        demo: {},
-       orderId:""
+       orderId:"",
+       shows:false
     };
   },
    mounted() {
@@ -70,6 +73,10 @@ export default {
   methods: {
     fh() {
       this.$router.go(-1);
+    },
+      // 点击图片显示
+    imgs(){
+     this.shows=true
     },
     getdemo(){
         this.$api.get(`/orderCustomer/OrderDetail/${this.orderId}`,{

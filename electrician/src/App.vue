@@ -50,16 +50,15 @@ export default {
         console.log("连接错误")
     },
     getMessage: function (msg) {   //content
-        var msg1=JSON.parse(msg.data)
-        console.log(msg1.content)
-//         let obj=msg.data
-//         console.log(obj)
-//         this.messages=JSON.parse(JSON.stringify(obj))
-     
-        console.log(this.messages)
+//         console.log(msg)
+        let obj=JSON.parse(msg.data) 
+        // console.log(obj.content)
+        this.messages=obj.content
+        // console.log(this.messages)
           this.$dialog.alert({
               width:"80%",
               message: this.messages,
+              closeOnClickOverlay:true
             });
     },
     send: function () {
