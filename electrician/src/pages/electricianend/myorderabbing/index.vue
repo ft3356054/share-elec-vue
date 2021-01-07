@@ -8,9 +8,6 @@
         <div class="tabbox">
           <ul>
             <li v-for="(item,index) in tabs" :key="index" :class="{active:num==index}" @click="nums(index)">{{item}}</li>
-            <!-- <li @click="num=0" :class="{active:num==0}">全部订单</li>
-            <li @click="num=1" :class="{active:num==1}">进行中订单</li>
-            <li @click="num=2" :class="{active:num==2}">已完成订单</li> -->
           </ul>
         </div>
       </header>
@@ -37,16 +34,16 @@
         </div>
         <div class="content"  v-for="(item1,index) in cancelledList" :key="index" v-show="num==1">
             <div class="typebox">
-                <p><span>类别</span><span>泵房线路安装</span></p>
+                <p><span>类别</span><span>{{item1.orderTypeId}}</span></p>
                 <p></p>
-                <p>2020/11/09 13:49</p>
+                <p>{{item1.createTime}}</p>
             </div>
             <div class="addressbox">
                 <dl>
                     <dt>
-                        <p>{{item1.name}}</p>
-                        <p>{{item1.progess}}</p>
-                        <p>{{item1.address}}</p>
+                         <p>{{item1.customerAddress}}</p>
+                        <p>{{item1.customerDescrive}}</p>
+                        <p>{{item1.voltage}} 抢修 {{item1.distance}}</p>
                     </dt>
                     <dd>
                         <!-- <button>取消</button> <button class="jiedan">接单</button> -->
@@ -94,16 +91,16 @@ export default {
         {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区2已完成', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'}
       ],
       datas: [
-        {types: '泵房坏掉', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区3已取消', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km', status: '3'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区4已取消', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km', status: '3'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区5待评价', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区6待评价', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区7进行中', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区8进行中', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区9', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区0', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        {types: '泵房坏掉', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区1已完成', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km', status: '1'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区2已完成', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km', status: '1'}
+        // {types: '泵房坏掉', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区3已取消', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km', status: '3'},
+        // {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区4已取消', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km', status: '3'},
+        // {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区5待评价', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
+        // {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区6待评价', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
+        // {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区7进行中', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
+        // {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区8进行中', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
+        // {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区9', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
+        // {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区0', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
+        // {types: '泵房坏掉', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区1已完成', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km', status: '1'},
+        // {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区2已完成', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km', status: '1'}
       ],
       search: '',
       electricianId:"321"
@@ -122,19 +119,12 @@ export default {
       this.$router.push('/statusfile/completed')
     },
     getAll(){
-      var params={
-            "pageIndex":1,
-            "pageSize":20,
-            "filter":["electricianId=321"],
-            "sorter":"DESC=createTime",
-          }
-        this.$api.get("/orderElectrician/",{params}, res => {
-            // this.data=response.data.resultValue.items
+        this.$axios.get(`/orderElectrician/?params={"pageIndex":1,"pageSize":20,"filter":"electricianId=${this.electricianId}","sorter":"DESC=createTime"}`).then(res => {
             console.log(res)
-            });
-        // this.$axios.get("/orderElectrician/",{params}).then(res => {
-        //   console.log(res);
-        // });
+            this.datas=res.data.resultValue.items
+        }).catch(err => {
+            alert(err)
+        })
     },
     getcancel(){
       this.$axios.get("/orderElectrician/queryAllHaveEsc/"+this.electricianId) .then(res => {
@@ -143,31 +133,20 @@ export default {
     },
     nums(index) {
       this.num = index
-      console.log(this.num)
-        var params={
-          "pageIndex":1,
-          "pageSize":20,
-          "filter":"electricianId=321",
-          "sorter":"DESC=createTime"
-          }
       if(this.num===0){
-        this.$axios.get("/orderElectrician", {params}) .then(res => {
-          console.log(res);
-        });
-        console.log("全部订单")
+        this.$axios.get(`/orderElectrician/?params={"pageIndex":1,"pageSize":20,"filter":"electricianId=${this.electricianId}","sorter":"DESC=createTime"}`).then(res => {
+            console.log(res)
+        }).catch(err => {
+            alert(err)
+        })
       }else if(this.num===1){
         console.log("进行中订单")
-        var params={
-          electricianId:this.electricianId
-        }
-        this.$axios.get("/orderElectrician/queryAllDoing", {params}) .then(res => {
+        this.$axios.get("/orderElectrician/queryAllDoing/"+this.electricianId) .then(res => {
           console.log(res);
+          this.cancelledList=res.data.resultValue.items
         });
       }else{
-        var params={
-          electricianId:this.electricianId
-        }
-         this.$axios.get("/orderElectrician/queryAllHaveDone", {params}) .then(res => {
+         this.$axios.get(`/orderElectrician/queryAllHaveDone/${this.electricianId}?pageIndex=1&pageSize=10`) .then(res => {
           console.log(res);
         });
         console.log("已完成订单")
@@ -220,8 +199,6 @@ width: 100%;
 height: 80px;
 background: #87cefa;
 display: flex;
-padding-top: 15px;
-box-sizing: border-box;
 }
 .topserch p{
 margin: 0;

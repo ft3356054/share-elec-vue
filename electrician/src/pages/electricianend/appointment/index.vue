@@ -5,29 +5,30 @@
         <p>订单详情</p>
     </div>
     <div class="contentbox">
-        <div class="content">
+        <div class="content" v-for="(item,index) in data" :key="index">
             <div>
                 <p class="titles"><span></span>基本信息</p>
-                <p class="pswidth"><span>订单编号</span><span>2020111310500004</span> </p>
-                <p class="pswidth"><span>发单人</span><span>杨磊</span> </p>
-                <p class="pswidth del"><span>手机号</span> <span>159****8080</span> <span @click="godel"><img src="../../../assets/images/phone.png" alt=""> 拨打电话</span></p>
+                <p class="pswidth"><span>订单编号</span><span>{{item.orderId}}</span> </p>
+                <p class="pswidth"><span>发单人</span><span>{{item.customerName}}</span> </p>
+                <p class="pswidth del"><span>手机号</span> <span>{{item.customerPhonenumber}}</span> <span @click="godel(item)"><img src="../../../assets/images/phone.png" alt=""> 拨打电话</span></p>
             </div>
              <div>
                 <p class="titles"><span></span>订单信息</p>
-                <p class="pswidth"><span>电压类型</span><span>220V</span></p>
+                <p class="pswidth"><span>电压类型</span><span>{{item.voltage}}</span></p>
+
                 <p class="pswidth"><span>需求类型</span><span>检修</span></p>
-                <p class="pswidth"><span>地址</span><span>天津市东丽区国网客服中心</span></p>
+                <p class="pswidth"><span>地址</span><span>{{item.customerAddress}}</span></p>
+                <!-- 上门费不清楚哪个字段 -->
                 <p class="pswidth"><span>上门费</span><span id="money">¥1500</span></p>
-                <p class="pswidth"><span>状态</span><span>待预约</span></p>
-                <p class="pswidth"><span>内容说明</span> <span>变压器故障，变压器故障原因当前未知，请于业主联系</span> </p>
+                <p class="pswidth"><span>状态</span><span v-if="item.orderStatus==='20'">待预约</span></p>
+                <p class="pswidth"><span>内容说明</span> <span>{{item.customerDescrive}}</span> </p>
                 <p class="pswidth"><span>发单时间</span><span>2020/11/03 16:10</span></p>
             </div>
-
         </div>
         <div class="yuyuetime">
             <span>*</span><span>预约时间</span><span><input type="datetime-local" name="" id="" v-model="times"></span>
         </div>
-    <div class="buttons" @click="cancelbtn"><button>取消</button><button @click="Order">预约</button></div>
+        <div class="buttons" @click="cancelbtn"><button>取消</button><button @click="Order">预约</button></div>
 
     </div>
 </div>
@@ -41,7 +42,8 @@ export default {
       times: '',
       phone: 13739865412,
       orderId:"",
-      electricianId:''
+      electricianId:'',
+      data:[]
     }
   },
   mounted(){
@@ -52,7 +54,7 @@ export default {
             this.orderId=this.$route.params.orderId
             this.electricianId=this.$route.params.electricianId
             this.$api.get("/orderElectrician/orderDetails/"+this.orderId, {"electricianId":this.electricianId}, response => {
-            console.log(response.data);
+                this.data=response.data.resultValue.items
             });
       },
     goback () {
@@ -65,7 +67,7 @@ export default {
       params=fd
       params.append("items",`{
         "orderId":"${this.orderId}",
-        "orderElectricianType":"21",
+        "orderElectricianStatus":"21",
         "electricianId":"${this.electricianId}",
         "method":"预约",
         "orderStatus":"20",
@@ -82,8 +84,8 @@ export default {
     cancelbtn(){
         this.$router.push({name:'Cancel',params:{orderId:this.orderId,electricianId:this.electricianId}})
     },
-    godel () {
-      window.location.href = `tel:15541544454`
+    godel (item) {
+      window.location.href = `tel:${item.customerPhonenumber}`
     }
   }
 }
@@ -104,7 +106,7 @@ overflow: auto;
     border-bottom-right-radius: 20%;
     border-bottom-left-radius: 20%;
 display: flex;
-padding-top: 42px;
+padding-top: 10px;
     box-sizing: border-box;
 }
 .contianer .backgroundbox p{
@@ -124,7 +126,7 @@ font-weight: bold;
 }
 .contentbox{
   position: absolute;
-    top: 85px;
+    top: 35px;
     left: 0;
     width: 100%;
     height: auto;

@@ -6,14 +6,14 @@
     </div>
     <div class="contentbox">
         <div class="content">
-            <div>
+            <div v-for="(item,index) in data" :key="index">
                 <p class="titles"><span></span>订单信息</p>
-                <p class="pswidth"><span>订单编号</span><span>2202323232323</span></p>
+                <p class="pswidth"><span>订单编号</span><span>{{item.orderId}}</span></p>
                 <p class="pswidth"><span>标题</span><span>插座跳闸</span></p>
-                <p class="pswidth"><span>联系人</span><span>杨磊</span></p>
-                <p class="pswidth"><span>联系电话</span><span>155****4545</span></p>
-                <p class="pswidth"><span>发单时间</span><span>2020/11/03 16:10</span></p>
-                <p class="pswidth"><span>状态</span><span>带现场勘察</span></p>
+                <p class="pswidth"><span>联系人</span><span>{{item.customerName}}</span></p>
+                <p class="pswidth"><span>联系电话</span><span>{{item.customerPhonenumber}}</span></p>
+                <p class="pswidth"><span>发单时间</span><span>{{item.createTime}}</span></p>
+                <p class="pswidth"><span>状态</span><span v-if="item.orderStatus==='31'">施工中</span></p>
                 <p class="pswidth"><span>维修价格</span><span id="money">¥1500</span></p>
                 <p class="pswidth"><span>勘察情况</span> <span>变压器故障，变压器故障原因当前未知，请于业主联系</span> </p>
             </div>
@@ -48,7 +48,8 @@ export default {
       show: false,
       context:"",
       orderId:"",
-      electricianId:""
+      electricianId:"",
+      data:[]
     }
   },
   mounted(){
@@ -60,7 +61,7 @@ export default {
         this.orderId=this.$route.params.orderId
         this.electricianId=this.$route.params.electricianId
         this.$api.get("/orderElectrician/orderDetails/"+this.orderId, {"electricianId":this.electricianId}, response => {
-        console.log(response.data);
+            this.data=response.data.resultValue.items
         });
     },
     goback () {
@@ -71,16 +72,13 @@ export default {
         var params={}
         params=fd
       params.append("items",`{
-            "orderId":"${this.orderId}",
-            "method":"开始施工",
-            "electricianId":"${this.electricianId}",
-            "orderElectricianType":"3",
-            "orderStatus":"3"
-            }`)
-     
+          "orderId":"${this.orderId}",
+          "method":"开始施工",
+          "electricianId":"${this.electricianId}",
+          "orderElectricianStatus":"3",
+          "orderStatus":"3",
+          "remark_str1":[{tom:"12345678913"},{cat:"12345678912"}]}`)
       this.$axios.post("/orderElectrician/booking", params).then(res => {
-            console.log(res)
-            // this.$router.push('/completion')
             this.$router.push({name:'Completion',params:{orderId:this.orderId,electricianId:this.electricianId}})
         }).catch(err => {
             alert(err)
@@ -155,7 +153,7 @@ overflow: auto;
     border-bottom-right-radius: 20%;
     border-bottom-left-radius: 20%;
 display: flex;
-padding-top: 42px;
+padding-top: 10px;
     box-sizing: border-box;
 }
 .contianer .backgroundbox p{
@@ -175,7 +173,7 @@ font-weight: bold;
 }
 .contentbox{
     position: absolute;
-    top: 85px;
+    top: 35px;
     left: 0;
     width: 100%;
     height: auto;

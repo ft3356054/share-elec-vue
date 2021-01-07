@@ -37,7 +37,7 @@ export default {
     let vm = this
     return {
       zoom: 16,
-      center: ['117.45989', '39.178392'],
+      center: ['39.17','117.15'],
       lng: '',
       lat: '',
       radius: 100,
@@ -74,30 +74,51 @@ export default {
               })
             }
           }
-        }]
+        }],
+        orderId:"",
+        electricianId:""
     }
   },
   mounted () {
     console.log(this.$route.params)
+    this.orderId=this.$route.params.orderId
+    this.electricianId=this.$route.params.electricianId,
+    this.getdetail(),
+    this.getLocation()
   },
   methods: {
     goback () {
       this.$router.go(-1)
     },
+    getdetail(){
+        this.$api.get("/orderElectrician/orderDetails/"+this.orderId, {"electricianId":this.electricianId}, response => {
+            this.center.splice(0,1,response.data.resultValue.items[0].addressLatitude)
+            this.center.splice(1,2,response.data.resultValue.items[0].addressLongitude)
+        });
+    },
     goaddress () {
       document.querySelector('#xianchang').style.background = '#cccccc'
-      var params={
-            orderId:this.$route.params.orderId,
-            electricianId:this.$route.params.electricianId
-        }
-      // this.$router.push('/prospecting')
-      this.$router.push({name:'Prospecting',params:{orderId:params.orderId,electricianId:params.electricianId}})
-
+        var fd=new FormData()
+        var params={}
+        params=fd
+      params.append("items",`{
+                "orderId":"${this.orderId}",
+                "orderElectricianStatus":"22",
+                "method":"22",
+                "orderStatus":"22",
+                "electricianId":"${this.electricianId}"
+                }`)
+      this.$axios.post("/orderElectrician/booking", params).then(res => {
+          this.$router.push({name:'Prospecting',params:{orderId:this.orderId,electricianId:this.electricianId}})
+        }).catch(err => {
+            alert(err)
+        })
     },
     getLocation () {
        
-      // let _that = this
-      // let geolocation = location.initMap('map-container') // 定位
+      let _that = this
+      let geolocation = location.initMap('map-container') // 定位
+      console.log(geolocation)
       // AMap.event.addListener(geolocation, 'complete', result => {
       //   console.log(result)
       // })

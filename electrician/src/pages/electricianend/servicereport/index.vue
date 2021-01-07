@@ -85,9 +85,8 @@ export default {
             console.log(fd.get("myFile"))
          }
          this.fd=fd
-        this.fd.append("items",`{"orderId":"${this.orderId}","method":"验收申请","electricianId":"${this.electricianId}","orderElectricianType":"8","orderStatus":"8"}`)
+        this.fd.append("items",`{"orderId":"${this.orderId}","method":"验收申请","electricianId":"${this.electricianId}","orderElectricianStatus":"8","orderStatus":"8"}`)
         this.$axios.post("/orderElectrician/booking", this.fd, {headers: {'Content-Type': 'multipart/form-data'}}).then(res => {
-            // this.$router.push('/evaluate')
             this.$router.push({name:'Evaluate',params:{orderId:this.orderId,electricianId:this.electricianId}})
         }).catch(err => {
             alert(err)
@@ -116,7 +115,7 @@ overflow: auto;
     border-bottom-right-radius: 20%;
     border-bottom-left-radius: 20%;
 display: flex;
-padding-top: 42px;
+padding-top: 10px;
     box-sizing: border-box;
 }
 .contianer .backgroundbox p{
@@ -136,7 +135,7 @@ font-weight: bold;
 }
 .contentbox{
     position: absolute;
-    top: 85px;
+    top: 35px;
     left: 0;
     width: 100%;
     height: auto;

@@ -57,10 +57,13 @@ export default {
           "electricianId":this.electricianId
       }
         this.$axios.get("/orderElectrician/qiangdanrecept", {params}) .then(res => {
-            if(res.successful){
-                Toast.success('抢单成功')
-            }
+            if(res.data.successful==false){
+                Toast.fail("请先去更改接单状态",3000)
+            }else{
             this.$router.push({name:'Appointment',params:{orderId:params.orderId,electricianId:this.electricianId}})
+
+            }
+            console.log(res.data)
     });
     }
   }
@@ -85,7 +88,7 @@ overflow: auto;
     border-bottom-right-radius: 20%;
     border-bottom-left-radius: 20%;
 display: flex;
-padding-top: 42px;
+padding-top: 10px;
     box-sizing: border-box;
 }
 .contianer .backgroundbox p{
@@ -106,7 +109,7 @@ font-weight: bold;
 }
 .contentbox{
     position: absolute;
-    top: 85px;
+    top: 35px;
     left: 0;
     width: 100%;
     height: auto;

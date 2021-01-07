@@ -6,16 +6,16 @@
     </div>
     <div class="contentbox">
         <div class="content">
-            <div>
+            <div v-for="(item,index) in data" :key=index>
                 <p class="titles"><span></span>订单信息</p>
-                <p class="pswidth"><span>订单编号</span><span>2202323232323</span></p>
+                <p class="pswidth"><span>订单编号</span><span>{{item.orderId}}</span></p>
                 <p class="pswidth"><span>标题</span><span>插座跳闸</span></p>
-                <p class="pswidth"><span>联系人</span><span>杨磊</span></p>
-                <p class="pswidth"><span>联系电话</span><span>155****4545</span></p>
-                <p class="pswidth"><span>发单时间</span><span>2020/11/03 16:10</span></p>
-                <p class="pswidth"><span>状态</span><span>带现场勘察</span></p>
+                <p class="pswidth"><span>联系人</span><span>{{item.customerName}}</span></p>
+                <p class="pswidth"><span>联系电话</span><span>{{item.customerPhonenumber}}</span></p>
+                <p class="pswidth"><span>发单时间</span><span>{{item.createTime}}</span></p>
+                <p class="pswidth"><span>状态</span><span v-if="item.orderStatus==='3'">施工中</span></p>
                 <p class="pswidth"><span>维修价格</span><span id="money">¥1500</span></p>
-                <p class="pswidth"><span>勘察情况</span> <span>变压器故障，变压器故障原因当前未知，请于业主联系</span> </p>
+                <p class="pswidth"><span>勘察情况</span> <span>{{item.customerDescrive}}</span> </p>
                 <p class="pswidth"><span>施工人员</span> <span>刘磊 155454545454</span></p>
             </div>
              <div>
@@ -38,7 +38,8 @@ export default {
       phone: 13739865412,
       context:"",
       orderId:"",
-      electricianId:""
+      electricianId:"",
+      data:[]
     }
   },
   mounted(){
@@ -50,7 +51,8 @@ export default {
         this.orderId=this.$route.params.orderId
         this.electricianId=this.$route.params.electricianId
         this.$api.get("/orderElectrician/orderDetails/"+this.orderId, {"electricianId":this.electricianId}, response => {
-        console.log(response.data);
+            console.log(response.data);
+            this.data=response.data.resultValue.items
         });
     },
     goback () {
@@ -64,7 +66,7 @@ export default {
             "orderId":"${this.orderId}",
             "method":"施工完成",
             "electricianId":"${this.electricianId}",
-            "orderElectricianType":"24",
+            "orderElectricianStatus":"24",
             "orderStatus":"24",
             "constructionContent":"${this.context}"
             }`)
@@ -100,7 +102,7 @@ box-sizing: border-box;
     border-bottom-right-radius: 20%;
     border-bottom-left-radius: 20%;
 display: flex;
-padding-top: 42px;
+padding-top: 10px;
     box-sizing: border-box;
 }
 .contianer .backgroundbox p{
@@ -120,7 +122,7 @@ font-weight: bold;
 }
 .contentbox{
     position: absolute;
-    top: 85px;
+    top: 35px;
     left: 0;
     width: 100%;
     height: auto;

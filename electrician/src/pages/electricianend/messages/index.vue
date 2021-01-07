@@ -7,18 +7,18 @@
         <section>
              <div class="content" v-for="(item,index) in data" :key="index">
             <div class="typebox">
-                <p><span>类别</span><span>{{item.types}}</span></p>
+                <p><span>类别</span><span>{{item.title}}</span></p>
                 <p></p>
-                <p>{{item.times}}</p>
+                <p>{{item.createTime}}</p>
             </div>
             <div class="addressbox">
                 <dl>
                     <dt>
-                        <p>{{item.name}}</p>
-                        <p>{{item.progess}}</p>
+                        <p>{{item.content}}</p>
+                        <!-- <p>{{item.progess}}</p> -->
                     </dt>
                     <dd>
-                        <button class="jiedan">接单 <img src="@/assets/images/messagejiantou.png" alt=""></button>
+                        <button class="jiedan">查看 <img src="@/assets/images/messagejiantou.png" alt=""></button>
                     </dd>
                 </dl>
             </div>
@@ -31,19 +31,20 @@ export default {
   data () {
     return {
       data: [
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下'}
+        // {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下'},
+        // {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下'},
+        // {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下'},
+        // {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下'},
+        // {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下'},
+        // {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下'},
+        // {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下'},
+        // {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下'},
+        // {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下'},
+        // {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区', progess: '插座跳闸，需要检修下'}
       ],
       path:"ws://localhost:8083/websocketserver/",
-      socket:''
+      socket:'',
+      id:"321"
     }
   },
   mounted () {
@@ -60,17 +61,13 @@ export default {
                 "pageSize":20,
                 "filter":["userId=321","status=2"]
                 }
-        this.$axios.get("/notifyAnnounceUser/queryAll",{params}).then(res => {
-            console.log(res)
-        }).catch(err => {
-            alert(err)
-        })
-        // var params={
-        //     "pageIndex":1,"pageSize":10,"filter":["orderElectricianType=9"]
-        // }
-        // this.$api.get("/orderElectrician/queryMore", {params,electricianId:this.electricianId}, response => {
-        //     this.data=response.data.resultValue.items
-        //     });
+            this.$axios.get(`/notifyAnnounceUser/queryAll?params={"pageIndex":1,"pageSize":20,"filter":["userId=${this.id}","status=2"]}`).then(res => {
+                console.log(res)
+                this.data=res.data.resultValue.items
+            }).catch(err => {
+                alert(err)
+            })
+       
     },
     WebSocketTest(){
          if(typeof(WebSocket) === "undefined"){
@@ -203,9 +200,9 @@ line-height: 20px;
 font-size: 12px;
 padding-top: 14px;
 box-sizing: border-box;
+flex: 1;
 }
 .addressbox dl dd{
-    flex: 1;
     text-align: center;
     padding-top: 22px;
     font-size: 12px;

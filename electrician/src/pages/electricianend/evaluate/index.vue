@@ -7,7 +7,7 @@
         </div>
       </header>
       <section>
-            <textarea v-model="context" name="" id="" cols="50" rows="6" placeholder="评价内容"></textarea>
+            <textarea v-model="context" name="" id="" cols="51" rows="6" placeholder="评价内容"></textarea>
 
             <div class="content">
                   <div class="xuxian">
@@ -63,7 +63,7 @@ export default {
             "orderId":"${this.orderId}",
             "method":"评价",
             "electricianId":"${this.electricianId}",
-            "orderElectricianType":"9",
+            "orderElectricianStatus":"9",
             "electricianEvaluate":"${this.context}"}`)
         this.$axios.post("/orderElectrician/booking", this.files, {headers: {'Content-Type': 'multipart/form-data'}}).then(res => {
             this.$router.push("/electricianend")

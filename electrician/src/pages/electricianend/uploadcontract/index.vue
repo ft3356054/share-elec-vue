@@ -6,17 +6,17 @@
     </div>
     <div class="contentbox">
         <div class="content">
-            <div>
+            <div v-for="(item,index) in data" :key="index">
                 <p class="titles"><span></span>基本信息</p>
-                <p class="pswidth"><span>订单编号</span><span>2020111310500004</span> </p>
+                <p class="pswidth"><span>订单编号</span><span>{{item.orderId}}</span> </p>
                 <p class="pswidth"><span>订单来源</span><span>95598</span> </p>
                 <p class="pswidth"><span>标题</span><span>插座跳闸</span> </p>
-                <p class="pswidth"><span>联系人</span><span>杨磊</span> </p>
-                <p class="pswidth del"><span>联系电话</span> <span>159****8080</span></p>
-                <p class="pswidth del"><span>发单时间</span> <span>2020/11/09 16:51</span></p>
-                <p class="pswidth"><span>上门费</span><span id="money">¥1500</span></p>
-                <p class="pswidth"><span>状态</span><span>待预约</span></p>
-                <p class="pswidth"><span>勘察情况</span> <span>机房主配电箱10kv开关烧坏，开关需要更换</span> </p>
+                <p class="pswidth"><span>联系人</span><span>{{item.customerName}}</span> </p>
+                <p class="pswidth del"><span>联系电话</span> <span>{{item.customerPhonenumber}}</span></p>
+                <p class="pswidth del"><span>发单时间</span> <span>{{item.createTime}}</span></p>
+                <p class="pswidth"><span>上门费</span><span id="money">{{item.customerPrice}}</span></p>
+                <p class="pswidth"><span>状态</span><span v-if="item.orderStatus==='23'">待支付</span></p>
+                <p class="pswidth"><span>勘察情况</span> <span>{{item.customerDescrive}}</span> </p>
             </div>
 
         </div>
@@ -58,7 +58,8 @@ export default {
       fd:{},
       price:"",
       orderId:"",
-      electricianId:""
+      electricianId:"",
+      data:[]
     }
   },
   mounted(){
@@ -70,7 +71,8 @@ export default {
         this.orderId=this.$route.params.orderId
         this.electricianId=this.$route.params.electricianId
         this.$api.get("/orderElectrician/orderDetails/"+this.orderId, {"electricianId":this.electricianId}, response => {
-        console.log(response.data);
+            console.log(response.data);
+            this.data=response.data.resultValue.items
         });
     },
     goback () {
@@ -91,10 +93,9 @@ export default {
              fd.append("myFile",this.files)
             console.log(fd.get("myFile"))
          }
-         this.fd=fd
-        this.fd.append("items",`{"orderId":"${this.orderId}","orderElectricianType":"23","method":"上传合同","orderStatus":"23","electricianId":"${this.electricianId}","electricianPrice":"${this.price}"}`)
+        this.fd=fd
+        this.fd.append("items",`{"orderId":"${this.orderId}","orderElectricianStatus":"23","method":"上传合同","orderStatus":"23","electricianId":"${this.electricianId}","electricianPrice":"${this.price}"}`)
         this.$axios.post("/orderElectrician/booking", this.fd, {headers: {'Content-Type': 'multipart/form-data'}}).then(res => {
-            // this.$router.push("/personneladd")
       this.$router.push({name:'Personneladd',params:{orderId:this.orderId,electricianId:this.electricianId}})
         }).catch(err => {
             alert(err)
@@ -121,7 +122,7 @@ overflow: auto;
     border-bottom-right-radius: 20%;
     border-bottom-left-radius: 20%;
 display: flex;
-padding-top: 42px;
+padding-top: 10px;
     box-sizing: border-box;
 }
 .contianer .backgroundbox p{
@@ -141,7 +142,7 @@ font-weight: bold;
 }
 .contentbox{
     position: absolute;
-    top: 85px;
+    top: 35px;
     left: 0;
     width: 100%;
     height: auto;

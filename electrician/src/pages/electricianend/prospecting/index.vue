@@ -8,15 +8,15 @@
         <div class="content">
             <div>
                 <p class="titles"><span></span>订单信息</p>
-                <p class="pswidth"><span>订单编号</span><span>2202323232323</span></p>
+                <p class="pswidth"><span>订单编号</span><span>{{item.orderId}}</span></p>
                 <p class="pswidth"><span>订单来源</span><span>95598</span></p>
                 <p class="pswidth"><span>标题</span><span>插座跳闸</span></p>
-                <p class="pswidth"><span>联系人</span><span>杨磊</span></p>
-                <p class="pswidth"><span>联系电话</span><span>155****4545</span></p>
-                <p class="pswidth"><span>发单时间</span><span>2020/11/03 16:10</span></p>
-                <p class="pswidth"><span>上门费</span><span id="money">¥1500</span></p>
-                <p class="pswidth"><span>状态</span><span>带现场勘察</span></p>
-                <p class="pswidth"><span>内容说明</span> <span>变压器故障，变压器故障原因当前未知，请于业主联系</span> </p>
+                <p class="pswidth"><span>联系人</span><span>{{item.customerName}}</span></p>
+                <p class="pswidth"><span>联系电话</span><span>{{item.customerPhonenumber}}</span></p>
+                <p class="pswidth"><span>发单时间</span><span>{{item.createTime}}</span></p>
+                <p class="pswidth"><span>上门费</span><span id="money" v-if="item.customerPrice===null"></span><span id="money" v-else>¥{{item.customerPrice}}</span></p>
+                <p class="pswidth"><span>状态</span><span v-if="item.orderStatus=='22'">待现场勘察</span></p>
+                <p class="pswidth"><span>内容说明</span> <span>{{item.customerDescrive}}</span> </p>
             </div>
              <div>
                 <p class="titles"><span></span>勘察原因</p>
@@ -67,16 +67,14 @@ export default {
         params=fd
       params.append("items",`{
                 "orderId":"${this.orderId}",
-                "orderElectricianType":"22",
+                "orderElectricianStatus":"23",
                 "method":"现场勘查",
-                "orderStatus":"22",
+                "orderStatus":"23",
                 "electricianDescrive":"${this.context}",
                 "electricianId":"${this.electricianId}"
                 }`)
      
       this.$axios.post("/orderElectrician/booking", params).then(res => {
-            console.log(res)
-        // this.$router.push('/uploadcontract')
       this.$router.push({name:'Uploadcontract',params:{orderId:this.orderId,electricianId:this.electricianId}})
         }).catch(err => {
             alert(err)
@@ -87,7 +85,7 @@ export default {
     returnorder () {
     var params={
         "orderId":this.orderId,
-        "orderElectricianType":"5",
+        "orderElectricianStatus":"5",
         "method":"现场勘查退回订单",
         "orderStatus":"11",
         "electricianDescrive":"我修不了，你再找个人儿呗。",
@@ -122,7 +120,7 @@ overflow: auto;
     border-bottom-right-radius: 20%;
     border-bottom-left-radius: 20%;
 display: flex;
-padding-top: 42px;
+padding-top: 10px;
     box-sizing: border-box;
 }
 .contianer .backgroundbox p{
@@ -142,7 +140,7 @@ font-weight: bold;
 }
 .contentbox{
     position: absolute;
-    top: 85px;
+    top: 35px;
     left: 0;
     width: 100%;
     height: auto;

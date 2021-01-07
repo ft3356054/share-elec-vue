@@ -5,27 +5,27 @@
         <p>订单详情</p>
     </div>
     <div class="contentbox">
-        <div class="content">
+        <div class="content" v-for="(item,index) in data" :key="index">
             <div>
                 <p class="titles"><span></span>基本信息</p>
-                <p class="pswidth"><span>订单编号</span><span>2020111310500004</span> </p>
-                <p class="pswidth"><span>发单人</span><span>杨磊</span> </p>
-                <p class="pswidth del"><span>手机号</span> <span>159****8080</span></p>
+                <p class="pswidth"><span>订单编号</span><span>{{item.orderId}}</span> </p>
+                <p class="pswidth"><span>发单人</span><span>{{item.customerName}}</span> </p>
+                <p class="pswidth del"><span>手机号</span> <span>{{item.customerPhonenumber}}</span></p>
             </div>
              <div>
                 <p class="titles"><span></span>订单信息</p>
-                <p class="pswidth"><span>电压类型</span><span>220V</span></p>
+                <p class="pswidth"><span>电压类型</span><span>{{item.voltage}}</span></p>
                 <p class="pswidth"><span>需求类型</span><span>检修</span></p>
-                <p class="pswidth"><span>地址</span><span>天津市东丽区国网客服中心</span></p>
-                <p class="pswidth"><span>上门费</span><span id="money">¥1500</span></p>
-                <p class="pswidth"><span>状态</span><span>待预约</span></p>
-                <p class="pswidth"><span>内容说明</span> <span>变压器故障，变压器故障原因当前未知，请于业主联系</span> </p>
-                <p class="pswidth"><span>发单时间</span><span>2020/11/03 16:10</span></p>
+                <p class="pswidth"><span>地址</span><span>{{item.customerAddress}}</span></p>
+                <p class="pswidth"><span>上门费</span><span id="money">¥{{item.customerPrice}}</span></p>
+                <p class="pswidth"><span>状态</span><span v-if="item.orderStatus==='21'">待到达现场</span></p>
+                <p class="pswidth"><span>内容说明</span> <span>{{item.customerDescrive}}</span> </p>
+                <p class="pswidth"><span>发单时间</span><span>{{item.createTime}}</span></p>
             </div>
 
         </div>
         <div class="yuyuetime">
-            <p><span>预约时间</span><span>2020/11/03 16:10</span></p>
+            <p><span>预约时间</span><span>{{appointmentTime}}</span></p>
         </div>
     <div class="buttons"><button @click="Order">去维修</button></div>
     </div>
@@ -39,7 +39,9 @@ export default {
       times: '',
       phone: 13739865412,
       orderId:'',
-      electricianId:''
+      electricianId:'',
+      data:[],
+      appointmentTime:""
     }
   },
   mounted(){
@@ -50,7 +52,8 @@ export default {
         this.orderId=this.$route.params.orderId
         this.electricianId=this.$route.params.electricianId
         this.$api.get("/orderElectrician/orderDetails/"+this.orderId, {"electricianId":this.electricianId}, response => {
-        console.log(response.data);
+            this.data=response.data.resultValue.items
+            this.appointmentTime=response.data.resultValue.items[0].appointmentTime
         });
     },
     goback () {
@@ -61,7 +64,6 @@ export default {
             orderId:this.orderId,
             electricianId:this.electricianId
         }
-    //   this.$router.push('/navigation')
       this.$router.push({name:'Navigation',params:{orderId:params.orderId,electricianId:params.electricianId}})
     }
   }
@@ -83,7 +85,7 @@ overflow: auto;
     border-bottom-right-radius: 20%;
     border-bottom-left-radius: 20%;
 display: flex;
-padding-top: 42px;
+padding-top: 10px;
     box-sizing: border-box;
 }
 .contianer .backgroundbox p{
@@ -103,7 +105,7 @@ font-weight: bold;
 }
 .contentbox{
     position: absolute;
-    top: 85px;
+    top: 35px;
     left: 0;
     width: 100%;
     height: auto;
