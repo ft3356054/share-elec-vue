@@ -9,16 +9,16 @@
             <div v-for="(item,index) in data" :key="index">
                 <p class="titles"><span></span>订单信息</p>
                 <p class="pswidth"><span>订单编号</span><span>{{item.orderId}}</span></p>
-                <p class="pswidth"><span>标题</span><span>插座跳闸</span></p>
+                <p class="pswidth"><span>标题</span><span>{{item.customerDescriveTitle}}</span></p>
                 <p class="pswidth"><span>联系人</span><span>{{item.customerName}}</span></p>
                 <p class="pswidth"><span>联系电话</span><span>{{item.customerPhonenumber}}</span></p>
                 <p class="pswidth"><span>发单时间</span><span>{{item.createTime}}</span></p>
-                <p class="pswidth"><span>状态</span><span v-if="item.orderStatus==='31'">施工中</span></p>
-                <p class="pswidth"><span>维修价格</span><span id="money">¥1500</span></p>
-                <p class="pswidth"><span>勘察情况</span> <span>变压器故障，变压器故障原因当前未知，请于业主联系</span> </p>
+                <p class="pswidth"><span>状态</span><span v-if="item.orderStatus==='3'">施工中</span></p>
+                <p class="pswidth"><span>维修价格</span><span id="money">{{item.electricianPrice}}</span></p>
+                <p class="pswidth"><span>勘察情况</span> <span>{{item.electricianDescrive}}</span> </p>
             </div>
              <div>
-                <p class="add"><span></span><span>人员增加</span><span><img src="../../../assets/images/peopleadd.png" alt=""></span></p>
+                <p class="add"><span></span><span>人员增加</span><span @click="addbtn"><img src="../../../assets/images/peopleadd.png" alt=""></span></p>
                 <p style="font-size:13px;color:#9d9d9d;margin-top:5px">请输入人员姓名和手机号，多个人员用逗号分隔</p>
                 <textarea v-model="context" @keydown="context=context.replace(/\+/g,'')" name="" id="" cols="30" rows="5" style="width:100%;margin-top:5px;background:#f7fbff;border:0;outline:none;font-size:13px;font-weight:bold" placeholder="例：刘强 13812345678，杨磊 15584552222"></textarea>
                 <p><button @click="showPopup">保存</button><button @click="deletebtn">删除</button></p>
@@ -65,7 +65,11 @@ export default {
         });
     },
     goback () {
-      this.$router.go(-1)
+     this.$router.push("electricianend")
+    },
+    addbtn(){
+        // this.$router.push("electricianinquiry")
+         this.$router.push({name:'Electricianinquiry',params:{electricianId:this.electricianId}})
     },
     Order () {
          var fd=new FormData()
@@ -75,11 +79,12 @@ export default {
           "orderId":"${this.orderId}",
           "method":"开始施工",
           "electricianId":"${this.electricianId}",
-          "orderElectricianStatus":"3",
-          "orderStatus":"3",
+          "orderElectricianStatus":"31",
+          "orderStatus":"31",
           "remark_str1":[{tom:"12345678913"},{cat:"12345678912"}]}`)
       this.$axios.post("/orderElectrician/booking", params).then(res => {
-            this.$router.push({name:'Completion',params:{orderId:this.orderId,electricianId:this.electricianId}})
+            // this.$router.push({name:'Completion',params:{orderId:this.orderId,electricianId:this.electricianId}})
+            this.$router.push("electricianend")
         }).catch(err => {
             alert(err)
         })

@@ -60,7 +60,7 @@
                         <p>{{item.voltage}} 抢修 {{item.distance}}</p>
                     </dt>
                     <dd>
-                        <p v-show="item.orderStatus==='3'" style="color:red">施工中</p>
+                        <p v-show="item.orderStatus==='3'" style="color:red">人员增加</p>
                         <p v-show="item.orderStatus==='8'" style="color:red">待评价</p>
                         <p v-show="item.orderStatus==='20'" style="color:red">待预约</p>
                         <p v-show="item.orderStatus==='21'" style="color:red">待维修</p>
@@ -68,6 +68,8 @@
                         <p v-show="item.orderStatus==='23'" style="color:red">待支付维修费</p>
                         <p v-show="item.orderStatus==='24'" style="color:red">施工完成</p>
                         <p v-show="item.orderStatus==='25'" style="color:red">待验收</p>
+                        <p v-show="item.orderStatus==='26'" style="color:red">待填写维修费</p>
+                        <p v-show="item.orderStatus==='31'" style="color:red">施工中</p>
                         <p v-show="item.orderStatus==='1'" style="line-height:0"><button @click="quxiao(item)">取消</button> <button class="jiedan" @click="jiedan(item)">接单</button></p>
                     </dd>
                 </dl>
@@ -99,6 +101,7 @@
 </template>
 
 <script>
+import { Toast } from 'vant'
 export default {
   data () {
     return {
@@ -185,7 +188,6 @@ export default {
 
      },
      godetail(item){
-         console.log(item)
          if(item.orderStatus==="8"){
             this.$router.push({name:'Evaluate',params:{orderId:item.orderId,electricianId:this.electricianId}})
          }else if(item.orderStatus==="20"){
@@ -196,8 +198,18 @@ export default {
             this.$router.push({name:'Prospecting',params:{orderId:item.orderId,electricianId:this.electricianId}})
          }else if(item.orderStatus==="23"){
             this.$router.push({name:'Uploadcontract',params:{orderId:item.orderId,electricianId:this.electricianId}})
-         }else if(item.orderStatus==="3"){
+         }else if(item.orderStatus==="24"){
+            this.$router.push({name:'Servicereport',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }else if(item.orderStatus==="25"){
+            //  如果电工上传完待验收 改为只读状态
+            // this.$router.push({name:'Servicereport',params:{orderId:item.orderId,electricianId:this.electricianId}})
+            Toast.fail("待用户验收完成")
+         }else if(item.orderStatus==="26"){
+            this.$router.push({name:'Uploadcontract',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }else if(item.orderStatus==="31"){
             this.$router.push({name:'Completion',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }else if(item.orderStatus==="3"){
+            this.$router.push({name:'Personneladd',params:{orderId:item.orderId,electricianId:this.electricianId}})
          }
      },
      gopingjia(item){

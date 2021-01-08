@@ -13,26 +13,37 @@
       </header>
       <section>
          <div class="contentbox">
-        <div class="content"  v-for="(item,index) in datas"  v-show="num==0" :key="'content'+index" @click="godetail(item)">
-            <div class="typebox">
-                <p><span>类别</span><span>{{item.types}}</span></p>
+        <div class="content"  v-for="(item,index) in searchData"  v-show="num==0" :key="'content'+index" @click="godetail(item)">
+             <div class="typebox">
+                <p><span>类别</span><span>{{item.orderTypeId}}</span></p>
                 <p></p>
-                <p>{{item.times}}</p>
+                <p>{{item.createTime}}</p>
             </div>
             <div class="addressbox">
                 <dl>
                     <dt>
-                        <p>{{item.name}}</p>
-                        <p>{{item.progess}}</p>
-                        <p>{{item.address}}</p>
+                        <p>{{item.customerAddress}}</p>
+                        <p>{{item.customerDescrive}}</p>
+                        <p>{{item.voltage}} 抢修 {{item.distance}}</p>
                     </dt>
                     <dd>
-                        <button>取消</button> <button class="jiedan">接单</button>
+                        <p v-show="item.orderElectricianStatus==='3'" style="color:red">人员增加</p>
+                        <p v-show="item.orderElectricianStatus==='9'" style="color:red">已完成</p>
+                        <p v-show="item.orderElectricianStatus==='8'" style="color:red">待评价</p>
+                        <p v-show="item.orderElectricianStatus==='0'" style="color:red">待预约</p>
+                        <p v-show="item.orderElectricianStatus==='21'" style="color:red">待维修</p>
+                        <p v-show="item.orderElectricianStatus==='22'" style="color:red">待现场勘察</p>
+                        <p v-show="item.orderElectricianStatus==='23'" style="color:red">待支付维修费</p>
+                        <p v-show="item.orderElectricianStatus==='24'" style="color:red">施工完成</p>
+                        <p v-show="item.orderElectricianStatus==='25'" style="color:red">待验收</p>
+                        <p v-show="item.orderElectricianStatus==='26'" style="color:red">待填写维修费</p>
+                        <p v-show="item.orderElectricianStatus==='31'" style="color:red">施工中</p>
+                        <p v-show="item.orderElectricianStatus==='1'" style="line-height:0"><button @click="quxiao(item)">取消</button> <button class="jiedan" @click="jiedan(item)">接单</button></p>
                     </dd>
                 </dl>
             </div>
         </div>
-        <div class="content"  v-for="(item1,index) in cancelledList" :key="index" v-show="num==1">
+        <div class="content"  v-for="(item1,index) in doingData" :key="index" v-show="num==1" @click="godetail1(item)">
             <div class="typebox">
                 <p><span>类别</span><span>{{item1.orderTypeId}}</span></p>
                 <p></p>
@@ -41,17 +52,28 @@
             <div class="addressbox">
                 <dl>
                     <dt>
-                         <p>{{item1.customerAddress}}</p>
+                        <p>{{item1.customerAddress}}</p>
                         <p>{{item1.customerDescrive}}</p>
                         <p>{{item1.voltage}} 抢修 {{item1.distance}}</p>
                     </dt>
                     <dd>
-                        <!-- <button>取消</button> <button class="jiedan">接单</button> -->
+                        <p v-show="item1.orderElectricianStatus==='3'" style="color:red">人员增加</p>
+                        <p v-show="item1.orderElectricianStatus==='9'" style="color:red">已完成</p>
+                        <p v-show="item1.orderElectricianStatus==='8'" style="color:red">待评价</p>
+                        <p v-show="item1.orderElectricianStatus==='0'" style="color:red">待预约</p>
+                        <p v-show="item1.orderElectricianStatus==='21'" style="color:red">待维修</p>
+                        <p v-show="item1.orderElectricianStatus==='22'" style="color:red">待现场勘察</p>
+                        <p v-show="item1.orderElectricianStatus==='23'" style="color:red">待支付维修费</p>
+                        <p v-show="item1.orderElectricianStatus==='24'" style="color:red">施工完成</p>
+                        <p v-show="item1.orderElectricianStatus==='25'" style="color:red">待验收</p>
+                        <p v-show="item1.orderElectricianStatus==='26'" style="color:red">待填写维修费</p>
+                        <p v-show="item1.orderElectricianStatus==='31'" style="color:red">施工中</p>
+                        <p v-show="item1.orderElectricianStatus==='1'" style="line-height:0"><button @click="quxiao(item1)">取消</button> <button class="jiedan" @click="jiedan(item)">接单</button></p>
                     </dd>
                 </dl>
             </div>
         </div>
-         <div class="content context"  v-for="(item2,index) in completedList" :key="'context'+index" @click="gocomlete" v-show="num==2">
+         <div class="content context"  v-for="(item2,index) in calledData" :key="'context'+index" @click="gocomlete(item2)" v-show="num==2">
             <div class="typebox">
                 <p><span>类别</span><span>泵房线路安装</span></p>
                 <p></p>
@@ -60,12 +82,12 @@
              <div class="addressbox">
                 <dl>
                     <dt>
-                        <p>{{item2.name}}</p>
-                        <p>{{item2.progess}}</p>
-                        <p>{{item2.address}}</p>
+                          <p>{{item2.customerAddress}}</p>
+                        <p>{{item2.customerDescrive}}</p>
+                        <p>{{item2.voltage}} 抢修 {{item2.distance}}</p>
                     </dt>
                     <dd>
-                        <!-- <button>取消</button> <button class="jiedan">接单</button> -->
+                        <p style="line-height:70px;font-size:15px;color:orange">已完成</p>
                     </dd>
                 </dl>
             </div>
@@ -82,26 +104,9 @@ export default {
     return {
       tabs: ['全部订单', '进行中订单', '已完成订单'],
       num: 0,
-      cancelledList: [
-        {types: '泵房坏掉', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区7进行中', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区7进行中', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'}
-      ],
-      completedList: [
-        {types: '泵房坏掉', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区1已完成', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区2已完成', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'}
-      ],
-      datas: [
-        // {types: '泵房坏掉', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区3已取消', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km', status: '3'},
-        // {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区4已取消', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km', status: '3'},
-        // {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区5待评价', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        // {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区6待评价', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        // {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区7进行中', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        // {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区8进行中', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        // {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区9', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        // {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区0', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km'},
-        // {types: '泵房坏掉', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区1已完成', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km', status: '1'},
-        // {types: '插座跳闸', times: '2020/11/09 13:49', name: '天津市东丽区国网客服中心北方园区2已完成', progess: '插座跳闸，需要检修下', address: '10kv 抢修 < 5km', status: '1'}
-      ],
+      cancelledList: [],
+      completedList: [],
+      datas: [],
       search: '',
       electricianId:"321"
     }
@@ -116,7 +121,8 @@ export default {
     },
     gocomlete (item) {
       console.log(item)
-      this.$router.push('/statusfile/completed')
+      // this.$router.push('/statusfile/completed')
+      this.$router.push({name:'Completed',params:{orderId:item.orderId,electricianId:this.electricianId}})
     },
     getAll(){
         this.$axios.get(`/orderElectrician/?params={"pageIndex":1,"pageSize":20,"filter":"electricianId=${this.electricianId}","sorter":"DESC=createTime"}`).then(res => {
@@ -148,34 +154,101 @@ export default {
       }else{
          this.$axios.get(`/orderElectrician/queryAllHaveDone/${this.electricianId}?pageIndex=1&pageSize=10`) .then(res => {
           console.log(res);
+          this.completedList=res.data.resultValue.items
         });
         console.log("已完成订单")
       }
     },
-    godetail (item) {
-      // eslint-disable-next-line eqeqeq
-      if (item.status == 3) {
-        this.$router.push('/statusfile/cancelled')
-      // eslint-disable-next-line eqeqeq
-      } else if (item.status == 1) {
-        this.$router.push('/statusfile/completed')
-      } else {
-
-      }
-    }
+     godetail(item){
+         if(item.orderElectricianStatus==="8"){
+            this.$router.push({name:'Evaluate',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }else if(item.orderElectricianStatus==="9"){
+            this.$router.push({name:'Completed',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }else if(item.orderElectricianStatus==="0"){
+            this.$router.push({name:'Appointment',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }else if(item.orderElectricianStatus==="21"){
+            this.$router.push({name:'Repair',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }else if(item.orderElectricianStatus==="22"){
+            this.$router.push({name:'Prospecting',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }else if(item.orderElectricianStatus==="23"){
+            this.$router.push({name:'Uploadcontract',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }else if(item.orderElectricianStatus==="24"){
+            this.$router.push({name:'Servicereport',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }else if(item.orderElectricianStatus==="25"){
+            //  如果电工上传完待验收 改为只读状态
+            // this.$router.push({name:'Servicereport',params:{orderId:item.orderId,electricianId:this.electricianId}})
+            Toast.fail("待用户验收完成")
+         }else if(item.orderElectricianStatus==="26"){
+            this.$router.push({name:'Uploadcontract',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }else if(item.orderElectricianStatus==="31"){
+            this.$router.push({name:'Completion',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }else if(item.orderElectricianStatus==="3"){
+            this.$router.push({name:'Personneladd',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }
+     },
+     godetail1(item){
+         if(item.orderElectricianStatus==="8"){
+            this.$router.push({name:'Evaluate',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }else if(item.orderElectricianStatus==="0"){
+            this.$router.push({name:'Appointment',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }else if(item.orderElectricianStatus==="21"){
+            this.$router.push({name:'Repair',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }else if(item.orderElectricianStatus==="22"){
+            this.$router.push({name:'Prospecting',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }else if(item.orderElectricianStatus==="23"){
+            this.$router.push({name:'Uploadcontract',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }else if(item.orderElectricianStatus==="24"){
+            this.$router.push({name:'Servicereport',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }else if(item.orderElectricianStatus==="25"){
+            //  如果电工上传完待验收 改为只读状态
+            // this.$router.push({name:'Servicereport',params:{orderId:item.orderId,electricianId:this.electricianId}})
+            Toast.fail("待用户验收完成")
+         }else if(item.orderElectricianStatus==="26"){
+            this.$router.push({name:'Uploadcontract',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }else if(item.orderElectricianStatus==="31"){
+            this.$router.push({name:'Completion',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }else if(item.orderElectricianStatus==="3"){
+            this.$router.push({name:'Personneladd',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }
+     },
   },
   computed: {
-    // searchData: function () {
-    //   var serch = this.search
-    //   if (serch) {
-    //     return this.datas.filter(function (product) {
-    //       return Object.keys(product).some(function (key) {
-    //         return String(product[key]).toLowerCase().indexOf(serch) > -1
-    //       })
-    //     })
-    //   }
-    //   return this.datas
-    // }
+    // 全部订单
+    searchData: function () {
+      var serch = this.search
+      if (serch) {
+        return this.datas.filter(function (product) {
+          return Object.keys(product).some(function (key) {
+            return String(product[key]).toLowerCase().indexOf(serch) > -1
+          })
+        })
+      }
+      return this.datas
+    },
+    // 进行中订单
+     doingData: function () {
+      var serch = this.search
+      if (serch) {
+        return this.cancelledList.filter(function (product) {
+          return Object.keys(product).some(function (key) {
+            return String(product[key]).toLowerCase().indexOf(serch) > -1
+          })
+        })
+      }
+      return this.cancelledList
+    },
+    // 已完成
+     calledData: function () {
+      var serch = this.search
+      if (serch) {
+        return this.completedList.filter(function (product) {
+          return Object.keys(product).some(function (key) {
+            return String(product[key]).toLowerCase().indexOf(serch) > -1
+          })
+        })
+      }
+      return this.completedList
+    }
   }
 }
 </script>
@@ -322,6 +395,8 @@ section .contentbox .content .addressbox dd{
 text-align: right;
 padding-left: 10px;
 box-sizing: border-box;
+line-height: 70px;
+font-size: 15px;
 }
 section .contentbox .content .addressbox dd button{
 width: 50px;

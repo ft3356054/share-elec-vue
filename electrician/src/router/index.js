@@ -230,6 +230,12 @@ const routes = [
       name: 'Personneladd',
       component: () => import('@/pages/electricianend/personneladd')
     },
+     // 人员增加
+     {
+      path: '/electricianinquiry',
+      name: 'Electricianinquiry',
+      component: () => import('@/pages/electricianend/personneladd/electricianinquiry')
+    },
     // 完成施工
     {
       path: '/completion',
