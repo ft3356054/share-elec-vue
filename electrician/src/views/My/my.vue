@@ -13,7 +13,7 @@
      </div>
      <div class="head-bottom">
            <div class="box" >实名认证
-               <span v-if="block==='0' ? true : false ">是</span>
+               <span v-if="this.list.realNameAuth=='0'">是</span>
                <span v-else>否</span>
             </div>
                <div class="box">电工认证
@@ -33,35 +33,44 @@ import { Toast } from 'vant';
 export default {
     data() {
         return {
-            cust:"",
+            customerId:"",
             list:"",
-            block:"0"
         }
     },
   methods: {
       fh(){
-          this.$router.go(-1)
+          this.$router.push("/customer")
       },
     //   电工认证
        gorenzheng () {
-           if(this.list.auditStatus=="0"){
-             this.$router.push('/autation')
+           if(this.list.realNameAuth=="1"){
+               Toast("您还没有实名认证，请实名认证")
+           }else{
+                Toast("有实名认整")
+                console.log(this.list.realNameAuth)
+               if(this.list.auditStatus=="0"){
+                    console.log(this.customerId,"a1")
+             this.$router.push({
+                 path:'/autation',
+                 query:{
+                     customerId:this.customerId
+                 }
+             })
            }else if(this.list.auditStatus=="1"){
                Toast('正在审核中，请稍等');
            }else if(this.list.auditStatus=="2"){
                  Toast('已审核');
            }
-      
+           }
     }
   },
   mounted() {
       console.log(this.$route.query.cust)
-      this.cust=this.$route.query.cust
-       this.$api.get(`/customerInfo/${this.cust}`,{
+      this.customerId=this.$route.query.cust
+       this.$api.get(`/customerInfo/${this.customerId}`,{
        },res=>{
-           console.log(res.data.resultValue.items[0])
-           this.list=res.data.resultValue.items[0]
-           this.block=res.data.resultValue.items[0].realNameAuth
+           console.log(res.data)
+           this.list=res.data.resultValue
        })
   },
 }

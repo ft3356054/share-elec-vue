@@ -68,6 +68,7 @@ export default {
        console.log(announceId,orderId)
         // console.log(item)
       //   this.$router.push("/details")
+      // 使用bus
       //  this.$bus.$emit("details",{
       //    announceId:item.announceId,
       //    announceUserId:this.cust

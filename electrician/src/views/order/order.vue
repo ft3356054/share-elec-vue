@@ -489,6 +489,30 @@ export default {
            path: `/Pay/${this.orderId}`,
           })
           break;                
+        case "3":  // 施工中
+          this.$router.push({
+            path:"/details",
+            query:{
+              orderId:this.orderId
+            }
+          })
+          break;
+        case "31":  //施工中
+          this.$router.push({
+            path:"/details",
+            query:{
+              orderId:this.orderId
+            }
+          })
+          break;
+          case "26":  //现场探查完成
+          this.$router.push({
+            path:"/prodemo",
+            query:{
+              orderId:this.orderId
+            }
+          })
+          break;
         default:
           break;
       }
