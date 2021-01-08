@@ -18,7 +18,7 @@
                 <p class="pswidth"><span>勘察情况</span> <span>{{item.electricianDescrive}}</span> </p>
             </div>
              <div>
-                <p class="add"><span></span><span>人员增加</span><span><img src="../../../assets/images/peopleadd.png" alt=""></span></p>
+                <p class="add"><span></span><span>人员增加</span><span @click="addbtn"><img src="../../../assets/images/peopleadd.png" alt=""></span></p>
                 <p style="font-size:13px;color:#9d9d9d;margin-top:5px">请输入人员姓名和手机号，多个人员用逗号分隔</p>
                 <textarea v-model="context" @keydown="context=context.replace(/\+/g,'')" name="" id="" cols="30" rows="5" style="width:100%;margin-top:5px;background:#f7fbff;border:0;outline:none;font-size:13px;font-weight:bold" placeholder="例：刘强 13812345678，杨磊 15584552222"></textarea>
                 <p><button @click="showPopup">保存</button><button @click="deletebtn">删除</button></p>
@@ -66,6 +66,10 @@ export default {
     },
     goback () {
      this.$router.push("electricianend")
+    },
+    addbtn(){
+        // this.$router.push("electricianinquiry")
+         this.$router.push({name:'Electricianinquiry',params:{electricianId:this.electricianId}})
     },
     Order () {
          var fd=new FormData()

@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { Toast } from 'vant'
+import { Toast,Dialog} from 'vant'
 export default {
   data () {
     return {
@@ -52,6 +52,7 @@ export default {
       this.$router.go(-1)
     },
     godetail (item) {
+        
       var params={
           "orderId":item.orderId,
           "electricianId":this.electricianId
@@ -59,10 +60,16 @@ export default {
         this.$axios.get("/orderElectrician/qiangdanrecept", {params}) .then(res => {
             if(res.data.successful==false){
                 Toast.fail(`${res.data.resultHint}`,3000)
+               
             }else{
-            this.$router.push({name:'Appointment',params:{orderId:params.orderId,electricianId:this.electricianId}})
+                Dialog.alert({
+                    message: '抢单成功',
+                    width:'300px',
+                    confirmButtonColor:"#87cefa"
+                }).then(() => {
+                    this.$router.push({name:'Appointment',params:{orderId:params.orderId,electricianId:this.electricianId}})
+                });
             }
-            console.log(res.data)
     });
     }
   }
