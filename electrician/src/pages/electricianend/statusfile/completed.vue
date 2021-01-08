@@ -4,28 +4,28 @@
         <p  @click="goback"><img src="../../../assets/images/jiantou.png" alt=""></p>
         <p>订单详情</p>
     </div>
-    <div class="contentbox">
+    <div class="contentbox" v-for="(item,index) in data" :key="index">
         <div class="content">
             <div>
                 <p class="titles"><span></span>订单信息</p>
-                <p class="pswidth"><span>订单编号</span><span>20201111121554</span></p>
-                <p class="pswidth"><span>标题</span><span>插座跳闸</span></p>
-                <p class="pswidth"><span>联系人</span><span>杨磊</span></p>
-                <p class="pswidth"><span>联系电话</span><span>159****8080</span></p>
-                <p class="pswidth"><span>发单时间</span><span>2020/11/09 16:51</span></p>
+                <p class="pswidth"><span>订单编号</span><span>{{item.orderId}}</span></p>
+                <p class="pswidth"><span>标题</span><span>{{item.customerDescriveTitle}}</span></p>
+                <p class="pswidth"><span>联系人</span><span>{{item.customerName}}</span></p>
+                <p class="pswidth"><span>联系电话</span><span>{{item.customerPhonenumber}}</span></p>
+                <p class="pswidth"><span>发单时间</span><span>{{item.createTime}}</span></p>
                 <p class="pswidth"><span>状态</span><span>已完成</span></p>
-                <p class="pswidth"><span>完成时间</span><span>2020/11/09 16:51</span></p>
-                <p class="pswidth"><span>上门费</span><span id="money">¥150.00</span></p>
-                <p class="pswidth"><span>维修价格</span><span id="money1">¥1500.00</span></p>
-                <p class="pswidth"><span>勘察情况</span> <span>机房主配电箱10kv开关烧坏，开关需要更换</span> </p>
+                <p class="pswidth"><span>完成时间</span><span>{{item.finishTime}}</span></p>
+                <p class="pswidth"><span>上门费</span><span id="money">¥{{item.customerPrice}}</span></p>
+                <p class="pswidth"><span>维修价格</span><span id="money1">¥{{item.electricianPrice}}</span></p>
+                <p class="pswidth"><span>勘察情况</span> <span>{{item.electricianDescrive}}</span> </p>
                 <p class="pswidth"><span>施工人员</span> <span>刘强 13815124614 <br> 刘强 13815124614</span> </p>
-                <p class="pswidth"><span>施工内容</span> <span>机房主配电箱开关已更换完成，施工时间一个工作日</span> </p>
+                <p class="pswidth"><span>施工内容</span> <span>{{item.constructionContent}}</span> </p>
             </div>
         </div>
          <div class="content">
             <div>
                 <p style="font-size: 15px;font-weight: bold;">合同</p>
-                <img src="../../../assets/images/banner.png" alt="" style="width:100%;height:100px;display:block">
+                <img :src="item.orderContract" alt="" style="width:100%;height:100px;display:block">
                 <p  style="font-size: 15px;font-weight: bold;">服务报告</p>
                 <img src="../../../assets/images/banner.png" alt="" style="width:100%;height:100px;display:block">
             </div>
@@ -38,9 +38,25 @@
 export default {
   data () {
     return {
+        orderid:"",
+        electricianId:"",
+        data:[]
     }
   },
+  mounted(){
+      this.getdetail()
+  },
   methods: {
+     getdetail(){
+          var params={
+              orderId:this.$route.params.orderId,
+              electricianId:this.$route.params.electricianId
+          }
+        this.$api.get("/orderElectrician/orderDetails/"+params.orderId, {"electricianId":params.electricianId}, response => {
+            console.log(response.data);
+            this.data=response.data.resultValue.items
+        });
+    },
     goback () {
       this.$router.go(-1)
     }
@@ -56,6 +72,9 @@ background: #f0f6fd;
 position: relative;
 overflow: auto;
 }
+.contianer::-webkit-scrollbar{
+    width: 0;
+}
 .contianer .backgroundbox{
     width: 100%;
     height: 135px;
@@ -63,7 +82,7 @@ overflow: auto;
     border-bottom-right-radius: 20%;
     border-bottom-left-radius: 20%;
 display: flex;
-padding-top: 42px;
+padding-top: 10px;
     box-sizing: border-box;
 }
 .contianer .backgroundbox p{
@@ -84,7 +103,7 @@ font-weight: bold;
 }
 .contentbox{
     position: absolute;
-    top: 85px;
+    top: 35px;
     left: 0;
     width: 100%;
     height: auto;

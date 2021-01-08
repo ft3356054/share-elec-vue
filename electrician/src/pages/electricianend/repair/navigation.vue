@@ -1,8 +1,11 @@
 <template>
     <div class="contianer">
-        <div class="backgroundbox">
-        <p  @click="goback"><img src="../../../assets/images/back.png" alt=""></p>
-        </div>
+         <header>
+          <div class="topserch">
+            <p @click="goback"><img src="../../../assets/images/jiantou.png" alt=""></p>
+            <p>导航去维修</p>
+          </div>
+      </header>
         <div class="content">
             <div class="topaddress">
                <div class="amap-wrapper">
@@ -24,7 +27,6 @@
             </div>
         </div>
         <div class="btnbox">
-          <p>导航去维修</p>
           <button @click="goaddress" id="xianchang">到达现场</button>
         </div>
     </div>
@@ -88,7 +90,7 @@ export default {
   },
   methods: {
     goback () {
-      this.$router.go(-1)
+      this.$router.push('electricianend')
     },
     getdetail(){
         this.$api.get("/orderElectrician/orderDetails/"+this.orderId, {"electricianId":this.electricianId}, response => {
@@ -136,12 +138,26 @@ position: relative;
 padding-bottom: 20px;
 box-sizing: border-box;
 }
-.contianer .backgroundbox{
-    padding: 0;
-    margin: 0;
-    position: absolute;
-    top: 10px;
-    left: 20px;
+header{
+width: 100%;
+height: 50px;
+}
+.topserch{
+width: 100%;
+height: 100%;
+background: #87cefa;
+display: flex;
+box-sizing: border-box;
+line-height: 50px;
+}
+.topserch p:nth-child(1){
+padding-left: 15px;
+}
+.topserch p:nth-child(2){
+flex: 1;
+text-align: center;
+box-sizing: border-box;
+color: #ffffff;
 }
 .amap-wrapper{
   height:400px;

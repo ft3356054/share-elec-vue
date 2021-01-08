@@ -9,13 +9,13 @@
             <div v-for="(item,index) in data" :key=index>
                 <p class="titles"><span></span>订单信息</p>
                 <p class="pswidth"><span>订单编号</span><span>{{item.orderId}}</span></p>
-                <p class="pswidth"><span>标题</span><span>插座跳闸</span></p>
+                <p class="pswidth"><span>标题</span><span>{{item.customerDescriveTitle}}</span></p>
                 <p class="pswidth"><span>联系人</span><span>{{item.customerName}}</span></p>
                 <p class="pswidth"><span>联系电话</span><span>{{item.customerPhonenumber}}</span></p>
                 <p class="pswidth"><span>发单时间</span><span>{{item.createTime}}</span></p>
-                <p class="pswidth"><span>状态</span><span v-if="item.orderStatus==='3'">施工中</span></p>
-                <p class="pswidth"><span>维修价格</span><span id="money">¥1500</span></p>
-                <p class="pswidth"><span>勘察情况</span> <span>{{item.customerDescrive}}</span> </p>
+                <p class="pswidth"><span>状态</span><span v-if="item.orderStatus==='31'">施工中</span></p>
+                <p class="pswidth"><span>维修价格</span><span id="money">{{item.electricianPrice}}</span></p>
+                <p class="pswidth"><span>勘察情况</span> <span>{{item.electricianDescrive}}</span> </p>
                 <p class="pswidth"><span>施工人员</span> <span>刘磊 155454545454</span></p>
             </div>
              <div>
@@ -56,7 +56,7 @@ export default {
         });
     },
     goback () {
-      this.$router.go(-1)
+      this.$router.push("electricianend")
     },
     Order () {
          var fd=new FormData()
@@ -74,7 +74,6 @@ export default {
       this.$axios.post("/orderElectrician/booking", params).then(res => {
             console.log(res)
             this.$router.push({name:'Servicereport',params:{orderId:this.orderId,electricianId:this.electricianId}})
-
         }).catch(err => {
             alert(err)
         })

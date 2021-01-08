@@ -9,14 +9,14 @@
             <div v-for="(item,index) in data" :key="index">
                 <p class="titles"><span></span>基本信息</p>
                 <p class="pswidth"><span>订单编号</span><span>{{item.orderId}}</span> </p>
-                <p class="pswidth"><span>订单来源</span><span>95598</span> </p>
-                <p class="pswidth"><span>标题</span><span>插座跳闸</span> </p>
+                <p class="pswidth"><span>订单来源</span><span>{{item.orderFrom}}</span> </p>
+                <p class="pswidth"><span>标题</span><span>{{item.customerDescriveTitle}}</span> </p>
                 <p class="pswidth"><span>联系人</span><span>{{item.customerName}}</span> </p>
                 <p class="pswidth del"><span>联系电话</span> <span>{{item.customerPhonenumber}}</span></p>
                 <p class="pswidth del"><span>发单时间</span> <span>{{item.createTime}}</span></p>
                 <p class="pswidth"><span>上门费</span><span id="money">{{item.customerPrice}}</span></p>
-                <p class="pswidth"><span>状态</span><span v-if="item.orderStatus==='23'">待支付</span></p>
-                <p class="pswidth"><span>勘察情况</span> <span>{{item.customerDescrive}}</span> </p>
+                <p class="pswidth"><span>状态</span><span v-if="item.orderStatus==='23'">待支付</span><span v-if="item.orderStatus==='26'">待填写维修费</span></p>
+                <p class="pswidth"><span>勘察情况</span> <span>{{item.electricianDescrive}}</span> </p>
             </div>
 
         </div>
@@ -24,24 +24,30 @@
             <div class="prices">
                 <span>*</span>
                 <span>维修价格</span>
-                <span><input type="text" v-model="price" placeholder="请输入服务内容报价"></span>
+                <span v-if="status==='26'"><input type="text" v-model="price" placeholder="请输入服务内容报价"></span>
+                <span v-if="status==='23'">{{electricianPrice}}</span>
             </div>
             <div class="uploudimg">
                 <span>*</span>
                 <span>上传合同</span>
                 <span>
                <dl>
-                  <dt>
+                  <dt v-if="status==='26'">
                       <van-uploader v-model="fileLists" :after-read="onRead" :max-count="1" >
-                        <img :src="imgs" alt="" style="width: 34px;height: 24px;display:block">
+                        <img :src="imgs" alt="" style="width: 34px;height: 24px;display:block" >
+                       
                       </van-uploader>
+                  </dt>
+                  <dt v-if="status==='23'" style="margin-top:0">
+                   <img :src="imgst" alt="" style="width:100%;height:100%;">
                   </dt>
                   <dd>上传图片</dd>
                 </dl>
                 </span>
             </div>
         </div>
-    <div class="buttons"><button @click="Order">提交</button></div>
+    <div class="buttons"><button @click="Order" v-if="status==='26'">提交</button></div>
+    <!-- <div class="buttons"><button @click="Order" v-if="status==='23'">提交</button></div> -->
 
     </div>
 </div>
@@ -59,7 +65,10 @@ export default {
       price:"",
       orderId:"",
       electricianId:"",
-      data:[]
+      data:[],
+      status:"",
+      imgst:"",
+      electricianPrice:""
     }
   },
   mounted(){
@@ -72,11 +81,14 @@ export default {
         this.electricianId=this.$route.params.electricianId
         this.$api.get("/orderElectrician/orderDetails/"+this.orderId, {"electricianId":this.electricianId}, response => {
             console.log(response.data);
-            this.data=response.data.resultValue.items
+            this.data=response.data.resultValue.items,
+            this.status=response.data.resultValue.items[0].orderStatus
+            this.imgst=response.data.resultValue.items[0].orderContract
+            this.electricianPrice=response.data.resultValue.items[0].electricianPrice
         });
     },
     goback () {
-      this.$router.go(-1)
+      this.$router.push('electricianend')
     },
     godel () {
       window.location.href = `tel:15541544454`
@@ -96,7 +108,8 @@ export default {
         this.fd=fd
         this.fd.append("items",`{"orderId":"${this.orderId}","orderElectricianStatus":"23","method":"上传合同","orderStatus":"23","electricianId":"${this.electricianId}","electricianPrice":"${this.price}"}`)
         this.$axios.post("/orderElectrician/booking", this.fd, {headers: {'Content-Type': 'multipart/form-data'}}).then(res => {
-      this.$router.push({name:'Personneladd',params:{orderId:this.orderId,electricianId:this.electricianId}})
+    //   this.$router.push({name:'Personneladd',params:{orderId:this.orderId,electricianId:this.electricianId}})
+      this.$router.push('electricianend')
         }).catch(err => {
             alert(err)
         })
@@ -225,7 +238,7 @@ margin-right: 10px;
 }
 .prices span:nth-child(3){
     flex: 1;
-    border-bottom: 1px solid #cccccc;
+    /* border-bottom: 1px solid #cccccc; */
     box-sizing: border-box;
     margin: 0 20px;
 }
@@ -251,23 +264,26 @@ margin-right: 10px;
 }
 .uploudimg span:nth-child(3){
    width: 83px;
-   height: 83px;
+   height: 73px;
    /* flex: 1; */
    display: inline-block;
    margin-left: 20px;
    overflow: hidden;
 }
 .uploudimg span:nth-child(3) dl{
+    width: 100%;
+    height: 100%;
     text-align: center;
     margin: 0;
     padding: 0;
     border: 2px dashed #e1f2fd;
-    padding-top: 11px;
+    /* padding-top: 11px; */
     box-sizing: border-box;
 }
 .uploudimg span:nth-child(3) dl dt{
-  width: 100%;
-  height: 100%;
+  /* width: 100%;
+  height: 100%; */
+      margin-top: 16px;
 }
 .uploudimg span:nth-child(3) dl dd{
   margin: 0;
@@ -289,12 +305,12 @@ margin: 0;
     height: 100%;
 }
 /deep/ .uploudimg span:nth-child(3) dl dt .van-uploader__preview-image{
-    margin-top: -10px;
-        width: 83px;
-    height: 83px;
+    margin-top: -17px;
+        /* width: 83px; */
+    /* height: 83px; */
 }
 /deep/ .uploudimg span:nth-child(3) dl dt .van-uploader__preview-delete{
-    top: -7px;
+    top: -16px;
 }
 #money{
     color: #f76f7c;

@@ -6,18 +6,18 @@
     </div>
     <div class="contentbox">
         <div class="content">
-            <div>
+            <div v-for="(item,index) in data" :key="index">
                 <p class="titles"><span></span>订单信息</p>
-                <p class="pswidth"><span>订单编号</span><span>2202323232323</span></p>
-                <p class="pswidth"><span>标题</span><span>插座跳闸</span></p>
-                <p class="pswidth"><span>联系人</span><span>杨磊</span></p>
-                <p class="pswidth"><span>联系电话</span><span>155****4545</span></p>
-                <p class="pswidth"><span>发单时间</span><span>2020/11/03 16:10</span></p>
-                <p class="pswidth"><span>状态</span><span>带现场勘察</span></p>
-                <p class="pswidth"><span>维修价格</span><span id="money">¥1500</span></p>
-                <p class="pswidth"><span>勘察情况</span> <span>变压器故障，变压器故障原因当前未知，请于业主联系</span> </p>
-                <p class="pswidth"><span>施工人员</span> <span>刘磊 155454545454</span></p>
-                <p class="pswidth"><span>施工内容</span> <span>变压器故障，变压器故障原因当前未知，请于业主联系</span></p>
+                <p class="pswidth"><span>订单编号</span><span>{{item.orderId}}</span></p>
+                <p class="pswidth"><span>标题</span><span>{{item.customerDescriveTitle}}</span></p>
+                <p class="pswidth"><span>联系人</span><span>{{item.customerName}}</span></p>
+                <p class="pswidth"><span>联系电话</span><span>{{item.customerPhonenumber}}</span></p>
+                <p class="pswidth"><span>发单时间</span><span>{{item.createTime}}</span></p>
+                <p class="pswidth"><span>状态</span><span>待验收</span></p>
+                <p class="pswidth"><span>维修价格</span><span id="money">{{item.electricianPrice}}</span></p>
+                <p class="pswidth"><span>勘察情况</span> <span>{{item.electricianDescrive}}</span> </p>
+                <p class="pswidth"><span>施工人员</span> <span>{{item.electricianName}} {{item.electricianPhonenumber}}</span></p>
+                <p class="pswidth"><span>施工内容</span> <span>{{item.constructionContent}}</span></p>
             </div>
              <div>
                 <p class="context"><span>*</span>上传服务报告</p>
@@ -34,7 +34,7 @@
             </div>
 
         </div>
-    <div class="buttons"><button @click="Order">完成施工</button></div>
+    <div class="buttons"><button @click="Order">申请验收</button></div>
 
     </div>
 </div>
@@ -50,7 +50,8 @@ export default {
       files:{},
       fd:{},
       orderId:"",
-      electricianId:""
+      electricianId:"",
+      data:[]
     }
   },
   mounted(){
@@ -62,10 +63,11 @@ export default {
         this.electricianId=this.$route.params.electricianId
         this.$api.get("/orderElectrician/orderDetails/"+this.orderId, {"electricianId":this.electricianId}, response => {
         console.log(response.data);
+        this.data=response.data.resultValue.items
         });
     },
     goback () {
-      this.$router.go(-1)
+      this.$router.push('electricianend')
     },
     returnorder () {
       this.$router.push('/returnorder')
@@ -85,9 +87,10 @@ export default {
             console.log(fd.get("myFile"))
          }
          this.fd=fd
-        this.fd.append("items",`{"orderId":"${this.orderId}","method":"验收申请","electricianId":"${this.electricianId}","orderElectricianStatus":"8","orderStatus":"8"}`)
+        this.fd.append("items",`{"orderId":"${this.orderId}","method":"验收申请","electricianId":"${this.electricianId}","orderElectricianStatus":"25","orderStatus":"25"}`)
         this.$axios.post("/orderElectrician/booking", this.fd, {headers: {'Content-Type': 'multipart/form-data'}}).then(res => {
-            this.$router.push({name:'Evaluate',params:{orderId:this.orderId,electricianId:this.electricianId}})
+            // this.$router.push({name:'Evaluate',params:{orderId:this.orderId,electricianId:this.electricianId}})
+            this.$router.push('electricianend')
         }).catch(err => {
             alert(err)
         })

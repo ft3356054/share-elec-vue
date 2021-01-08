@@ -16,19 +16,19 @@
                 <p class="titles"><span></span>订单信息</p>
                 <p class="pswidth"><span>电压类型</span><span>{{item.voltage}}</span></p>
 
-                <p class="pswidth"><span>需求类型</span><span>检修</span></p>
+                <p class="pswidth"><span>需求类型</span><span>{{item.orderTypeId}}</span></p>
                 <p class="pswidth"><span>地址</span><span>{{item.customerAddress}}</span></p>
                 <!-- 上门费不清楚哪个字段 -->
-                <p class="pswidth"><span>上门费</span><span id="money">¥1500</span></p>
+                <p class="pswidth"><span>上门费</span><span id="money">{{item.customerPrice}}</span></p>
                 <p class="pswidth"><span>状态</span><span v-if="item.orderStatus==='20'">待预约</span></p>
                 <p class="pswidth"><span>内容说明</span> <span>{{item.customerDescrive}}</span> </p>
-                <p class="pswidth"><span>发单时间</span><span>2020/11/03 16:10</span></p>
+                <p class="pswidth"><span>发单时间</span><span>{{item.createTime}}</span></p>
             </div>
         </div>
         <div class="yuyuetime">
             <span>*</span><span>预约时间</span><span><input type="datetime-local" name="" id="" v-model="times"></span>
         </div>
-        <div class="buttons" @click="cancelbtn"><button>取消</button><button @click="Order">预约</button></div>
+        <div class="buttons"><button @click="cancelbtn">取消</button><button @click="Order">预约</button></div>
 
     </div>
 </div>
@@ -70,7 +70,7 @@ export default {
         "orderElectricianStatus":"21",
         "electricianId":"${this.electricianId}",
         "method":"预约",
-        "orderStatus":"20",
+        "orderStatus":"21",
         "appointmentTime":"${times}"
         }`)
      

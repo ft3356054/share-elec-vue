@@ -15,7 +15,7 @@
              <div>
                 <p class="titles"><span></span>订单信息</p>
                 <p class="pswidth"><span>电压类型</span><span>{{item.voltage}}</span></p>
-                <p class="pswidth"><span>需求类型</span><span>检修</span></p>
+                <p class="pswidth"><span>需求类型</span><span>{{item.orderTypeId}}</span></p>
                 <p class="pswidth"><span>地址</span><span>{{item.customerAddress}}</span></p>
                 <p class="pswidth"><span>上门费</span><span id="money">¥{{item.customerPrice}}</span></p>
                 <p class="pswidth"><span>状态</span><span v-if="item.orderStatus==='21'">待到达现场</span></p>

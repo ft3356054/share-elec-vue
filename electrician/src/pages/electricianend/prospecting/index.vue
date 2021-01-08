@@ -9,8 +9,9 @@
             <div>
                 <p class="titles"><span></span>订单信息</p>
                 <p class="pswidth"><span>订单编号</span><span>{{item.orderId}}</span></p>
-                <p class="pswidth"><span>订单来源</span><span>95598</span></p>
-                <p class="pswidth"><span>标题</span><span>插座跳闸</span></p>
+                <!-- orderFrom 订单来源-->
+                <p class="pswidth"><span>订单来源</span><span>{{item.orderFrom}}</span></p>
+                <p class="pswidth"><span>标题</span><span>{{item.customerDescriveTitle}}</span></p>
                 <p class="pswidth"><span>联系人</span><span>{{item.customerName}}</span></p>
                 <p class="pswidth"><span>联系电话</span><span>{{item.customerPhonenumber}}</span></p>
                 <p class="pswidth"><span>发单时间</span><span>{{item.createTime}}</span></p>
@@ -59,7 +60,7 @@ export default {
         });
     },
     goback () {
-      this.$router.go(-1)
+      this.$router.go('electricianend')
     },
     Order (item) {
         var fd=new FormData()
@@ -67,15 +68,16 @@ export default {
         params=fd
       params.append("items",`{
                 "orderId":"${this.orderId}",
-                "orderElectricianStatus":"23",
+                "orderElectricianStatus":"26",
                 "method":"现场勘查",
-                "orderStatus":"23",
+                "orderStatus":"26",
                 "electricianDescrive":"${this.context}",
                 "electricianId":"${this.electricianId}"
                 }`)
      
       this.$axios.post("/orderElectrician/booking", params).then(res => {
-      this.$router.push({name:'Uploadcontract',params:{orderId:this.orderId,electricianId:this.electricianId}})
+        //  this.$router.push({name:'Uploadcontract',params:{orderId:this.orderId,electricianId:this.electricianId}})
+         this.$router.push('electricianend')
         }).catch(err => {
             alert(err)
         })

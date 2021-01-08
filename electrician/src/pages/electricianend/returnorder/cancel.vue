@@ -34,7 +34,7 @@ export default {
   },
   methods: {
     goback () {
-      this.$router.push('/')
+      this.$router.go(-1)
     },
     Order () {
       var fd=new FormData()

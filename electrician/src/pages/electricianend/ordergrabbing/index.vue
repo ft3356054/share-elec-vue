@@ -58,10 +58,9 @@ export default {
       }
         this.$axios.get("/orderElectrician/qiangdanrecept", {params}) .then(res => {
             if(res.data.successful==false){
-                Toast.fail("请先去更改接单状态",3000)
+                Toast.fail(`${res.data.resultHint}`,3000)
             }else{
             this.$router.push({name:'Appointment',params:{orderId:params.orderId,electricianId:this.electricianId}})
-
             }
             console.log(res.data)
     });
