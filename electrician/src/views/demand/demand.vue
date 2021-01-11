@@ -285,8 +285,8 @@ export default {
                 `/customerInfo/${this.customerId}`,
                 {},
                 (res) => {
-                  // console.log(res.data.resultValue.items[0]);
-                  let red=res.data.resultValue.items[0]
+                  console.log(res.data);
+                  let red=res.data.resultValue
                   this.customerName=red.customerName
                   this.customerPhonenumber=red.customerPhonenumber
                   this.registeredNumber=red.registeredNumber

@@ -22,11 +22,13 @@ export default {
       uploader: '',
       imgs: require('../../assets/images/addpeople.png'),
       searchtext:'',
-      data:[]
+      data:[],
+      customerId:""
     }
   },
   mounted () {
-
+    this.customerId=this.$route.query.customerId
+      this.serchbtn()
   },
   methods: {
     goback () {
@@ -35,11 +37,19 @@ export default {
     serchbtn(){
       var params=this.searchtext
       this.$axios.get("/electricianSubCompanyInfo/findCompany?companyName="+encodeURI(params)).then(res => {
-          this.data=res.data.resultValue.resultValue
+         console.log(res.data)
+         this.data=res.data.resultValue.resultValue
         });
     },
     gobackbtn(item){
-      this.$router.push({name:'autation',params:{companyName:item.companyName}})
+      this.$router.push({
+        name:'autation',
+        params:{
+          companyName:item.companyName,
+          companyId:item.companyId,
+          subCompanyId:item.subCompanyId,
+          customerId:this.companyId
+          }})
     }
   }
 }

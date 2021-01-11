@@ -28,11 +28,6 @@ const routes = [
     path: '/Paymentf', //支付失败
     name: 'Paymentf',
     component: () => import('../views/Payment/Paymentf.vue')
-  },
-  {
-    path: '/details', //消息详情
-    name: 'details',
-    component: () => import("../views/About/details.vue")
   }, {
     path: "/Infrom", //搜索资讯
     name: "Infrom",
@@ -113,6 +108,15 @@ const routes = [
       path: '/cancelled',  //订单详情  以取消
       name: 'cancelled',
       component: () => import('../views/About/cancelled.vue')
+    },
+    {
+      path: '/details', //消息详情   进行中
+      name: 'details',
+      component: () => import("../views/About/details.vue")
+    },{
+      path: '/prodemo', //消息详情   探查完成
+      name: 'prodemo',
+      component: () => import("../views/About/prodemo.vue")
     },
    // 电工端
     // 首页

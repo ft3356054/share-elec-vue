@@ -26,13 +26,13 @@
             </van-uploader>
               </div>
 
-              <p style="margin-top:10px">电工证</p>
+              <p style="margin-top:10px"><span style="color:red">*</span>电工证</p>
                <div class="ploader">
             <van-uploader v-model="fileLists" multiple :after-read="upimgbtn">
               <van-button type="primary" class="loader">
                 <dl>
                   <dt><img :src="imgs" alt="" /></dt>
-                  <dd>上传材料</dd>
+                  <dd>上传证件</dd>
                 </dl>
               </van-button>
             </van-uploader>
@@ -45,6 +45,7 @@
     </div>
 </template>
 <script>
+import bus from "../../libs/eventBus.js"
 export default {
   data () {
     return {
@@ -55,20 +56,33 @@ export default {
       files:{},
       fd:{},
       companyName:"",
-      electricianId:"321"
+      electricianId:"321",
+      customerId:"1",
+      companyId:"11",
+      subCompanyId:""
     }
   },
-  mounted () {
-    console.log(this.$route.params)
+  created () {
+      this.customerId=this.$route.query.customerId
+  },
+    mounted () {
+        console.log(this.$route.params)
         this.companyName=this.$route.params.companyName
-
+        this.companyId=this.$route.params.companyId
+        this.subCompanyId=this.$route.params.subCompanyId
+        this.customerId=this.$route.params.customerId
   },
   methods: {
     goback () {
       this.$router.go(-1)
     },
     choosebtn(){
-      this.$router.push("/autCom")
+      this.$router.push({
+        path:"/autCom",
+        query:{
+          customerId:this.customerId
+        }
+      })
     },
     blues (file) {
       console.log(file)
@@ -80,6 +94,7 @@ export default {
       this.fd=file.file
     },
     order(){
+      console.log(this.customerId)
       var fd=new FormData()
       if(this.files===null||this.files===""){
         fd.append("myFile","")
@@ -89,13 +104,15 @@ export default {
         fd.append("file2",this.fd)
       }
       this.files=fd
-      this.files.append("items",`{"electricianId":${this.electricianId}}`)
-       this.$axios.post("/orderAuditElectrician/certification", this.files, {headers: {'Content-Type': 'multipart/form-data'}}).then(res => {
+       this.files.append("items",`{"customerId":"${this.customerId}","companyId":"${this.companyId}","subCompanyId":"${this.subCompanyId}","companyName":"${this.companyName}"}`)
+       this.$axios.post("/customerInfo/changeToElecInfo", this.files, {headers: {'Content-Type': 'multipart/form-data'}}).then(res => {
            console.log(res)
+           if(res.data.successful==true){
+             this.$router.push("/my")
+           }
         }).catch(err => {
             alert(err)
         })
-
 
     }
   }
