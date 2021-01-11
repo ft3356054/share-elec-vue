@@ -170,6 +170,9 @@ export default {
     };
   },
   inject:['reload'],
+  created () {
+    localStorage.setItem("customerId",this.cust)
+  },
   mounted() {
     this.getContent(),  //获取未读消息数量
     this.getGunlist()   // 获取滚动数据

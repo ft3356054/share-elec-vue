@@ -18,7 +18,22 @@
         </ul>
         </van-sticky>
     </div>
+        <!-- 无数据时的展示
+     <div class="no-comment" v-if="this.list.length==0">
+        <img src="../../assets/images/wu.png" alt="">
+        <span>暂无消息!</span>
+     </div> -->
     <div class="contentbox" >
+      <van-pull-refresh  v-model="isLoading" success-text="刷新成功" @refresh="onRefresh">
+		    	<van-list 
+                v-model="loading"
+            :finished="finished"
+            :immediate-check="false"
+            finished-text="已全部加载完成"
+            error-text="请求失败，点击重新加载"
+            @load="onLoad"
+            :offset="10"
+          >
         <div class="content" v-show="num==0" v-for="(item,index) in list" :key="index">
             <div class="typebox">
                 <p><span>类别</span><span>{{item.customerDescriveTitle}}</span></p>
@@ -152,6 +167,8 @@
                 </dl>
             </div>
         </div>
+        		</van-list>
+		</van-pull-refresh>
     </div>
 </section>
     </div>
@@ -171,83 +188,27 @@ export default {
       staus:"",
       active: 0,
       value:"",
-      list: [
-        {
-          leb: "类别",
-          name: "插座跳闸",
-          time: "2020/11/09 13:49",
-          address: "天津市东丽区国网客服中心北方园区",
-          title: "插座跳闸，需要检修下",
-          Voltage: "10v",
-          state: "抢修",
-          distance: "<5KM",
-          momey: "上门费 1500",
-        },
-        {
-          leb: "类别",
-          name: "泵房线路安装",
-          time: "2020/11/09 13:49",
-          address: "天津市东丽区能量大厦332号",
-          title: "插座跳闸，需要检修下",
-          Voltage: "10v",
-          state: "抢修",
-          distance: "<5KM",
-        },
-        {
-          leb: "类别",
-          name: "插座跳闸",
-          time: "2020/11/09 13:49",
-          address: "天津市东丽区国网客服中心北方ss方园区",
-          title: "插座跳闸，需要检修下",
-          Voltage: "10v",
-          state: "抢修",
-          distance: "<5KM",
-        },{
-          leb: "类别",
-          name: "插座跳闸",
-          time: "2020/11/09 13:49",
-          address: "天津市东丽区国网客服中心北方园区",
-          title: "插座跳闸，需要检修下",
-          Voltage: "10v",
-          state: "抢修",
-          distance: "<5KM",
-          momey: "上门费 1500",
-        },
-        {
-          leb: "类别",
-          name: "泵房线路安装",
-          time: "2020/11/09 13:49",
-          address: "天津市东丽区能量大厦332号",
-          title: "插座跳闸，需要检修下",
-          Voltage: "10v",
-          state: "抢修",
-          distance: "<5KM",
-        },
-        {
-          leb: "类别",
-          name: "插座跳闸",
-          time: "2020/11/09 13:49",
-          address: "天津市东丽区国网客服中心北方ss方园区",
-          title: "插座跳闸，需要检修下",
-          Voltage: "10v",
-          state: "抢修",
-          distance: "<5KM",
-        },
-      ],
+      list: [],
       cust:"customer001",
       haveList:[],      //进行中
       loverList:[],   //已完成
       orderComplaintId:"",
       orderId:"",
        show: false,
-       ths:false
+       ths:false,
+        isLoading: false, //下拉刷新
+			    	loading: false,    //上拉加载
+            finished: false,  //下拉完成
+            upFinished: false, //上拉加载完毕
+            offset: 10, //滚动条与底部距离小于 offset 时触发load事件
+            pageIndex:1,
+            itemCount:0,//总条数
     };
   },
    inject:['reload'],
   mounted() {
     this.cust = this.$route.query.cust;
      this.getlist()
-      console.log(this.num)
   },
   methods: {
     fh(){
@@ -255,7 +216,7 @@ export default {
     },
     nums(index){
         this.num=index
-        console.log(this.num)
+        // console.log(this.num)
        this.shousui()
     },
     ipt(e){
@@ -319,14 +280,23 @@ export default {
     },
     // 获取数据
      getlist(){
-       this.$api.get(`/orderCustomer/queryAll?params={"pageIndex":1,"pageSize":20,"filter":"customerId=${this.cust}"}`,{
+       this.$api.get(`/orderCustomer/queryAll?params={"pageIndex":${this.pageIndex},"pageSize":5,"filter":"customerId=${this.cust}"}`,{
        },res=>{
-         console.log(res)
-        //  this.list=res.data.resultValue.items.sort((a,b)=>{
-        //    return  Date(a.createTime).getTime()-Date(b.createTime).getTime()
-        //  })
-         this.list=res.data.resultValue.items
-          res.data.resultValue.items.forEach(item => {
+        //  console.log(res)
+        //  this.list=res.data.resultValue.items
+        //   res.data.resultValue.items.forEach(item => {
+        //    if(item.orderStatus=="4" || item.orderStatus=="9" || item.orderStatus=="8" ){
+        //        this.loverList.push(item)
+        //       //  console.log( this.loverList,"8")
+        //    }else  if(item.orderStatus!=="4"|| item.orderStatus!=="9" || item.orderStatus!=="8" ){
+        //       this.haveList.push(item)
+        //    }
+        //  });
+        let lists =res.data.resultValue.items
+           this.loading = false;
+            this.itemCount = res.data.resultValue.itemCount;  //总条数
+           
+           lists.forEach(item => {
            if(item.orderStatus=="4" || item.orderStatus=="9" || item.orderStatus=="8" ){
                this.loverList.push(item)
               //  console.log( this.loverList,"8")
@@ -334,6 +304,20 @@ export default {
               this.haveList.push(item)
            }
          });
+        if (lists == null || lists.length === 0) {
+          // 加载结束
+          this.finished = true;
+          return;
+        }
+
+        // 将新数据与老数据进行合并
+        this.list = this.list.concat(lists);
+       
+       //如果列表数据条数>=总条数，不再触发滚动加载
+        if (this.list.length >= this.total) {
+          this.finished = true;
+        }
+      
        })
      },
       // 取消
@@ -516,7 +500,23 @@ export default {
         default:
           break;
       }
-    }
+    },
+    // 下拉刷新
+      onRefresh() {
+		      setTimeout(() => {
+            this.isLoading = false;
+            this.pageIndex=1
+            // this.getList()
+            this.reload()
+		      }, 1000);
+        },
+        // 上拉加载
+		    onLoad() {
+            setTimeout(() => {
+            this.pageIndex++;
+           this.getList()
+		      }, 1000);
+		    }
   },
 }
 </script>
@@ -743,6 +743,20 @@ font-size: 14px;
 }
 /deep/ .van-overlay{
   background-color: rgba(0,0,0,.4);
+}
+.no-comment{
+  margin-top: 100px;
+  position: relative;
+  img{
+    width: 100%;
+    height: 100%;
+  }
+  span{
+    position: absolute;
+    left: 40%;
+    bottom: 0px;
+    font-size: 13px;
+  }
 }
 </style>
 

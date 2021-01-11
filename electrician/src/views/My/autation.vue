@@ -57,7 +57,7 @@ export default {
       fd:{},
       companyName:"",
       electricianId:"321",
-      customerId:"1",
+      customerId:"",
       companyId:"11",
       subCompanyId:""
     }
@@ -94,7 +94,7 @@ export default {
       this.fd=file.file
     },
     order(){
-      console.log(this.customerId)
+      this.customerId=localStorage.getItem("customerId")
       var fd=new FormData()
       if(this.files===null||this.files===""){
         fd.append("myFile","")

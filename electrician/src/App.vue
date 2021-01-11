@@ -68,6 +68,9 @@ export default {
         console.log("socket已经关闭")
     },
   },
+  destroyed() {
+    localStorage.clear()
+  },
 }
 </script>
 <style lang="scss">

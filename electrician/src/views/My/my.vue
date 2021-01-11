@@ -65,8 +65,7 @@ export default {
     }
   },
   mounted() {
-      console.log(this.$route.query.cust)
-      this.customerId=this.$route.query.cust
+      this.customerId=localStorage.getItem("customerId")
        this.$api.get(`/customerInfo/${this.customerId}`,{
        },res=>{
            console.log(res.data)

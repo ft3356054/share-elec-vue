@@ -4,9 +4,24 @@
       <p><span @click="fh()"><img src="@/assets/images/bai.png" alt=""></span>消息列表</p>
     </div>
      <main>
-           
-        <div class="box" v-for="(item,index) in list" :key="index">
-          <div class="top"><hoursTip :time="item.createTime"/></div>
+        <!-- 无数据时的展示 -->
+     <div class="no-comment" v-if="this.list.length==0">
+        <img src="../../assets/images/wu.png" alt="">
+        <span>暂无消息!</span>
+     </div>
+         <van-pull-refresh  v-model="isLoading" success-text="刷新成功" @refresh="onRefresh">
+		    	<van-list 
+                v-model="loading"
+            :finished="finished"
+            :immediate-check="false"
+            finished-text="已全部加载完成"
+            error-text="请求失败，点击重新加载"
+            @load="onLoad"
+            :offset="10"
+          >
+					  <div class="box" v-for="(item,index) in list" :key="index">
+          <!-- <div class="top"><hoursTip :time="item.createTime"/></div> -->
+         <div class="top" v-text="transTime(item.createTime)"></div>
           <div class="bottom">
              <div class="bot-top">
                  <div class="act" v-if="item.notifyType==='1'">维修</div>
@@ -27,6 +42,9 @@
              </div>
           </div>
         </div>
+			</van-list>
+		</van-pull-refresh>
+      
      </main>
   </div>
 </template>
@@ -40,11 +58,18 @@ export default {
    data() {
         return {
             cust:"",
-            list:"",
+            list:[],
             time:"",
             announceId:"",
             orderId:"",
             socket:'',
+            isLoading: false, //下拉刷新
+			    	loading: false,    //上拉加载
+            finished: false,  //下拉完成
+            upFinished: false, //上拉加载完毕
+            offset: 10, //滚动条与底部距离小于 offset 时触发load事件
+            pageIndex:1,
+            itemCount:0,//总条数
         }
     },
     inject:['reload'],
@@ -113,57 +138,141 @@ export default {
       },
       // 获取消息列表
       getList(){
-          this.$api.get(`/notifyAnnounceUser/queryAll?params={"pageIndex":1,"pageSize":10,"filter":["userId=${this.cust}","status=2"]}`,{
+          this.$api.get(`/notifyAnnounceUser/queryAll?params={"pageIndex":${this.pageIndex},"pageSize":5,"filter":["userId=${this.cust}","status=2"]}`,{
        },res=>{
-          //  console.log(res)
-           this.list=res.data.resultValue.items
-          //  this.list.sort(Utils.compare())
-          //  console.log(this.list)
-           this.times()
+           console.log(res.data)
+           let lists =res.data.resultValue.items
+           this.loading = false;
+            this.itemCount = res.data.resultValue.itemCount;  //总条数
+
+        if (lists == null || lists.length === 0) {
+          // 加载结束
+          this.finished = true;
+          return;
+        }
+
+        // 将新数据与老数据进行合并
+        this.list = this.list.concat(lists);
+       
+       //如果列表数据条数>=总条数，不再触发滚动加载
+        if (this.list.length >= this.total) {
+          this.finished = true;
+        }
        })
       },
-   
-       showtime(time) {
-      let date =
-        typeof time === "number"
-          ? new Date(time)
-          : new Date((time || "").replace(/-/g, "/"));
-      let diff = (new Date().getTime() - date.getTime()) / 1000;
-      let dayDiff = Math.floor(diff / 86400);
+       transTime (time) {
+          //  time=new Date(time).getTime()
+    let toDay = (new Date()).getDate() // 今天是哪号
+    let timeDay = (new Date(time)).getDate() // 时间缀转为具体的哪一号
 
-      let isValidDate =
-        Object.prototype.toString.call(date) === "[object Date]" &&
-        !isNaN(date.getTime());
+    var toYear = (new Date()).getFullYear() // 获取年
+    var timeYear = (new Date(time)).getFullYear() // 获取年
 
-      if (!isValidDate) {
-        window.console.error("not a valid date");
+    var toMonth = (new Date()).getMonth() + 1 // 获取月
+    var timeMonth = (new Date(time)).getMonth() + 1 // 获取月
+    let myMonth = toMonth - timeMonth
+    let toHours = (new Date()).getHours() // 获取小时
+    let timeHours = (new Date(time)).getHours() // 获取小时
+    let Minutes = (new Date()).getMinutes() // 获取分钟
+    let timeMinutes = (new Date(time)).getMinutes() // 获取分钟
+    if (timeHours < 10) {
+      timeHours = '0' + timeHours
+    }
+    if (Minutes < 10) {
+      Minutes = '0' + Minutes
+    }
+    // console.log(toYear, timeYear)
+    if (toYear - timeYear > 0) {
+      let tm = timeMonth
+      if (tm < 10) {
+        tm = ('0' + tm)
       }
-      const formatDate = function(date) {
-        let today = new Date(date);
-        let year = today.getFullYear();
-        let month = ("0" + (today.getMonth() + 1)).slice(-2);
-        let day = ("0" + today.getDate()).slice(-2);
-        let hour = today.getHours();
-        let minute = today.getMinutes();
-        let second = today.getSeconds();
-        return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
-      };
-
-      if (isNaN(dayDiff) || dayDiff < 0 || dayDiff >= 31) {
-        return formatDate(date);
+      let td = timeDay
+      if (td < 10) {
+        td = ('0' + td)
       }
-      return (
-        (dayDiff === 0 &&
-          ((diff < 60 && "刚刚") ||
-            (diff < 120 && "1分钟前") ||
-            (diff < 3600 && Math.floor(diff / 60) + "分钟前") ||
-            (diff < 7200 && "1小时前") ||
-            (diff < 86400 && Math.floor(diff / 3600) + "小时前"))) ||
-        (dayDiff === 1 && "昨天") ||
-        (dayDiff < 7 && dayDiff + "天前") ||
-        (dayDiff < 31 && Math.ceil(dayDiff / 7) + "周前")
-      );
-    },
+      // console.log('一年前')
+      // console.log(timeYear + '-' + timeMonth + '-' + timeDay)
+      return (timeYear + '-' + tm + '-' + td + ' ' + timeHours + ':' + Minutes)
+    }
+    // 大于一周
+    // console.log(toDay, timeDay)
+    if ((myMonth === 0) && ((toYear - timeYear) === 0)) {
+      // 本月
+      // 一周内的
+      if ((toDay - timeDay) === 0) {
+        // 日期是今天的
+        // 一个小时内3分钟前的
+        // 15分内3分前的
+        if ((toHours - timeHours) === 0) {
+          // 一个小时内
+          let xz = ((new Date()) - time) / 60000
+          let fz = Math.floor(xz)
+          if (fz > 3) {
+            return Math.floor(xz) + '分钟前'
+          }
+        } else {
+          // 大于一个小时
+          if (timeMinutes < 10) {
+            timeMinutes = '0' + timeMinutes
+          }
+          return (timeHours + ':' + timeMinutes)
+        }
+      } else if (((toDay - timeDay) >= 1) && (toDay - timeDay <= 7)) {
+        // 1周内的
+        let weekTime = (new Date(time)).getDay()
+        let weekD
+        if (weekTime === 0) weekD = '星期日'
+        if (weekTime === 1) weekD = '星期一'
+        if (weekTime === 2) weekD = '星期二'
+        if (weekTime === 3) weekD = '星期三'
+        if (weekTime === 4) weekD = '星期四'
+        if (weekTime === 5) weekD = '星期五'
+        if (weekTime === 6) weekD = '星期六'
+        // console.log(weekD)
+        return (weekD + ' ' + timeHours + ':' + Minutes)
+        // console.log('昨天')
+      } else {
+        // 大于一周显示日期（如：3月25日
+        let tm = timeMonth
+        if (tm < 10) {
+          tm = ('0' + tm)
+        }
+        let td = timeDay
+        if (td < 10) {
+          td = ('0' + td)
+        }
+        return (timeYear + '-' + tm + '-' + td + ' ' + timeHours + ':' + Minutes)
+      }
+    }
+    if ((myMonth > 0) && ((toYear - timeYear) === 0)) {
+      // 大于1个月，同一年的
+      let tm = timeMonth
+      if (tm < 10) {
+        tm = ('0' + tm)
+      }
+      let td = timeDay
+      if (td < 10) {
+        td = ('0' + td)
+      }
+      return (timeYear + '-' + tm + '-' + td + ' ' + timeHours + ':' + Minutes)
+    }
+  },
+      onRefresh() {
+		      setTimeout(() => {
+            this.isLoading = false;
+            this.pageIndex=1
+            // this.getList()
+            this.reload()
+		      }, 1000);
+		    },
+		    onLoad() {
+            setTimeout(() => {
+            this.pageIndex++;
+           this.getList()
+		      }, 1000);
+		    }
+
   },
 };
 </script>
@@ -209,7 +318,7 @@ main{
       text-align: center;
       font-size: 9px;
       color:#989b9d;
-      margin: 10px auto;
+      margin: 5px auto;
       display: flex;
       flex-wrap: nowrap;
       justify-content: center;
@@ -305,6 +414,18 @@ main{
     }
   }
 }
-
+.no-comment{
+  margin-top: 100px;
+  position: relative;
+  img{
+    width: 100%;
+    height: 100%;
+  }
+  span{
+    position: absolute;
+    left: 36%;
+    bottom: 0px;
+  }
+}
 
 </style>
