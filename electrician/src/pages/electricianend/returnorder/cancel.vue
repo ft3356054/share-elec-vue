@@ -43,11 +43,12 @@ export default {
          params.append("items",`{
                 "orderId":"${this.orderId}",
                 "orderElectricianStatus":"5",
-                "method":"取消订单",
+                "method":"abc",
                 "orderStatus":"11",
                 "electricianDescrive":"${this.returncontext}",
                 "electricianId":"${this.electricianId}"
                 }`)
+          
       this.$axios.post("/orderElectrician/booking", params).then(res => {
             console.log(res)
             this.$router.push('/electricianend')

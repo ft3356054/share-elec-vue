@@ -16,7 +16,7 @@
                 <p class="pswidth"><span>状态</span><span>待验收</span></p>
                 <p class="pswidth"><span>维修价格</span><span id="money">{{item.electricianPrice}}</span></p>
                 <p class="pswidth"><span>勘察情况</span> <span>{{item.electricianDescrive}}</span> </p>
-                <p class="pswidth"><span>施工人员</span> <span>{{item.electricianName}} {{item.electricianPhonenumber}}</span></p>
+                <p class="pswidth"><span>施工人员</span> <span style="display:inline-block;width:50px;overflow:hidden;word-break:break-all">{{item.remarkStr1}}</span></p>
                 <p class="pswidth"><span>施工内容</span> <span>{{item.constructionContent}}</span></p>
             </div>
              <div>

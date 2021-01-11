@@ -11,7 +11,7 @@
             </div>
         </div>
         <div class="content">
-            <p v-for="(item,index) in data" :key="index" @click="gobackbtn(item)">{{item.companyName}}</p>
+            <p v-for="(item,index) in data" :key="index" @click="gobackbtn(item)">{{item.electricianName}}{{item.electricianPhonenumber}}</p>
         </div>
     </div>
 </template>
@@ -23,12 +23,15 @@ export default {
       imgs: require('../../../assets/images/addpeople.png'),
       searchtext:'',
       data:[],
-      electricianId:""
+      electricianId:"",
+      orderId:""
     }
   },
   mounted () {
     //   this.getelectri()
     this.electricianId=this.$route.params.electricianId
+    this.orderId=this.$route.params.orderID
+    console.log(this.$route.params)
   },
   methods: {
     //   getelectri(){
@@ -40,14 +43,14 @@ export default {
       this.$router.go(-1)
     },
     serchbtn(){
+    console.log(this.orderId)
       var params=this.searchtext
       this.$axios.get(`/orderElectrician/queryElectrician?electricianId=${this.electricianId}&electricianName=${this.searchtext}`).then(res => {
-        //   this.data=res.data.resultValue.resultValue
-        console.log(res)
+          this.data=res.data.resultValue
         });
     },
     gobackbtn(item){
-      this.$router.push({name:'Authentication',params:{companyName:item.companyName}})
+      this.$router.push({name:'Personneladd',params:{electricianName:item,orderId:this.orderId}})
     }
   }
 }

@@ -60,17 +60,17 @@
                         <p>{{item.voltage}} 抢修 {{item.distance}}</p>
                     </dt>
                     <dd>
-                        <p v-show="item.orderStatus==='3'" style="color:red">人员增加</p>
-                        <p v-show="item.orderStatus==='8'" style="color:red">待评价</p>
-                        <p v-show="item.orderStatus==='20'" style="color:red">待预约</p>
-                        <p v-show="item.orderStatus==='21'" style="color:red">待维修</p>
-                        <p v-show="item.orderStatus==='22'" style="color:red">待现场勘察</p>
-                        <p v-show="item.orderStatus==='23'" style="color:red">待支付维修费</p>
-                        <p v-show="item.orderStatus==='24'" style="color:red">施工完成</p>
-                        <p v-show="item.orderStatus==='25'" style="color:red">待验收</p>
-                        <p v-show="item.orderStatus==='26'" style="color:red">待填写维修费</p>
-                        <p v-show="item.orderStatus==='31'" style="color:red">施工中</p>
-                        <p v-show="item.orderStatus==='1'" style="line-height:0"><button @click="quxiao(item)">取消</button> <button class="jiedan" @click="jiedan(item)">接单</button></p>
+                        <p v-show="item.orderElectricianStatus==='3'" style="color:red">人员增加</p>
+                        <p v-show="item.orderElectricianStatus==='8'" style="color:red">待评价</p>
+                        <p v-show="item.orderElectricianStatus==='0'" style="color:red">待预约</p>
+                        <p v-show="item.orderElectricianStatus==='21'" style="color:red">待维修</p>
+                        <p v-show="item.orderElectricianStatus==='22'" style="color:red">待现场勘察</p>
+                        <p v-show="item.orderElectricianStatus==='23'" style="color:red">待支付维修费</p>
+                        <p v-show="item.orderElectricianStatus==='24'" style="color:red">施工完成</p>
+                        <p v-show="item.orderElectricianStatus==='25'" style="color:red">待验收</p>
+                        <p v-show="item.orderElectricianStatus==='26'" style="color:red">待填写维修费</p>
+                        <p v-show="item.orderElectricianStatus==='31'" style="color:red">施工中</p>
+                        <p v-show="item.orderElectricianStatus==='2'" style="line-height:0"><button @click="quxiao(item)">取消</button> <button class="jiedan" @click="jiedan(item)">接单</button></p>
                     </dd>
                 </dl>
             </div>
@@ -115,7 +115,8 @@ export default {
         {name: '本系统将于24日凌晨24:00开始停机更新3'},
         {name: '本系统将于24日凌晨24:00开始停机更新4'}
       ],
-      electricianId:"321"
+      electricianId:"321",
+      orderId:""
     }
   },
   created () {
@@ -175,12 +176,7 @@ export default {
         });
      },
      quxiao(item){
-         var params={
-             orderID:item.orderId,
-             electricianId:this.electricianId
-         }
-        // 报orderElectricianId为必填项
-        this.$axios.get("/orderElectrician/esc", {params}).then(res => {
+        this.$axios.get(`/orderElectrician/esc?orderElectricianId=${this.electricianId}&orderElectricianStatus=5`).then(res => {
             console.log(res)
         }).catch(err => {
             alert(err)
@@ -188,27 +184,27 @@ export default {
 
      },
      godetail(item){
-         if(item.orderStatus==="8"){
+         if(item.orderElectricianStatus==="8"){
             this.$router.push({name:'Evaluate',params:{orderId:item.orderId,electricianId:this.electricianId}})
-         }else if(item.orderStatus==="20"){
+         }else if(item.orderElectricianStatus==="0"){
             this.$router.push({name:'Appointment',params:{orderId:item.orderId,electricianId:this.electricianId}})
-         }else if(item.orderStatus==="21"){
+         }else if(item.orderElectricianStatus==="21"){
             this.$router.push({name:'Repair',params:{orderId:item.orderId,electricianId:this.electricianId}})
-         }else if(item.orderStatus==="22"){
+         }else if(item.orderElectricianStatus==="22"){
             this.$router.push({name:'Prospecting',params:{orderId:item.orderId,electricianId:this.electricianId}})
-         }else if(item.orderStatus==="23"){
+         }else if(item.orderElectricianStatus==="23"){
             this.$router.push({name:'Uploadcontract',params:{orderId:item.orderId,electricianId:this.electricianId}})
-         }else if(item.orderStatus==="24"){
+         }else if(item.orderElectricianStatus==="24"){
             this.$router.push({name:'Servicereport',params:{orderId:item.orderId,electricianId:this.electricianId}})
-         }else if(item.orderStatus==="25"){
+         }else if(item.orderElectricianStatus==="25"){
             //  如果电工上传完待验收 改为只读状态
             // this.$router.push({name:'Servicereport',params:{orderId:item.orderId,electricianId:this.electricianId}})
             Toast.fail("待用户验收完成")
-         }else if(item.orderStatus==="26"){
+         }else if(item.orderElectricianStatus==="26"){
             this.$router.push({name:'Uploadcontract',params:{orderId:item.orderId,electricianId:this.electricianId}})
-         }else if(item.orderStatus==="31"){
+         }else if(item.orderElectricianStatus==="31"){
             this.$router.push({name:'Completion',params:{orderId:item.orderId,electricianId:this.electricianId}})
-         }else if(item.orderStatus==="3"){
+         }else if(item.orderElectricianStatus==="3"){
             this.$router.push({name:'Personneladd',params:{orderId:item.orderId,electricianId:this.electricianId}})
          }
      },
@@ -439,6 +435,16 @@ section .contentbox .content .addressbox dt p{
 margin: 0;
 padding: 0;
 margin-top: 5px;
+}
+.contentbox .content .addressbox dt p:nth-child(2){
+width: 150px;
+text-overflow: -o-ellipsis-lastline;
+overflow: hidden;
+text-overflow: ellipsis;
+display: -webkit-box;
+-webkit-line-clamp: 2;
+line-clamp: 2;
+-webkit-box-orient: vertical;
 }
 section .contentbox .content .addressbox dd{
 padding: 0;

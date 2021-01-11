@@ -5,23 +5,23 @@
         <p>订单详情</p>
     </div>
     <div class="contentbox">
-        <div class="content">
+        <div class="content" v-for="(item,index) in data" :key="index">
             <div>
                 <p class="titles"><span></span>基本信息</p>
-                <p class="pswidth"><span>订单编号</span><span>2020111310500004</span> </p>
-                <p class="pswidth"><span>发单人</span><span>杨磊</span> </p>
-                <p class="pswidth"><span>手机号</span> <span>159****8080</span> </p>
+                <p class="pswidth"><span>订单编号</span><span>{{item.orderId}}</span> </p>
+                <p class="pswidth"><span>发单人</span><span>{{item.customerName}}</span> </p>
+                <p class="pswidth"><span>手机号</span> <span>{{item.customerPhonenumber}}</span> </p>
             </div>
              <div>
                 <p class="titles"><span></span>订单信息</p>
-                <p class="pswidth"><span>电压类型</span><span>220V</span></p>
+                <p class="pswidth"><span>电压类型</span><span>{{item.voltage}}</span></p>
                 <p class="pswidth"><span>需求类型</span><span>检修</span></p>
-                <p class="pswidth"><span>地址</span><span>天津市东丽区国网客服中心</span></p>
-                <p class="pswidth"><span>上门费</span><span id="money">¥1500</span></p>
+                <p class="pswidth"><span>地址</span><span>{{item.customerAddress}}</span></p>
+                <p class="pswidth"><span>上门费</span><span id="money">¥{{item.customerPrice}}</span></p>
                 <p class="pswidth"><span>状态</span><span>已取消</span></p>
-                <p class="pswidth"><span>内容说明</span> <span>变压器故障，变压器故障原因当前未知，请于业主联系</span> </p>
-                <p class="pswidth"><span>发单时间</span><span>2020/11/03 16:10</span></p>
-                <p class="pswidth"><span>预约时间</span><span>2020/11/03 16:10</span></p>
+                <p class="pswidth"><span>内容说明</span> <span>{{item.customerDescrive}}</span> </p>
+                <p class="pswidth"><span>发单时间</span><span>{{item.createTime}}</span></p>
+                <p class="pswidth"><span>预约时间</span><span>{{item.appointmentTime}}</span></p>
             </div>
         </div>
     <div class="buttons"><button @click="goback">返回</button></div>
@@ -33,16 +33,25 @@
 export default {
   data () {
     return {
-
+        data:[]
     }
+  },
+  mounted(){
+      this.getdetail()
   },
   methods: {
     goback () {
       this.$router.go(-1)
     },
-    Order () {
-      alert('抢单成功')
-      this.$router.push(`/appointment`)
+    getdetail(){
+        var params={
+              orderId:this.$route.params.orderId,
+              electricianId:this.$route.params.electricianId
+          }
+        this.$api.get("/orderElectrician/orderDetails/"+params.orderId, {"electricianId":params.electricianId}, response => {
+            console.log(response.data);
+            this.data=response.data.resultValue.items
+        });
     }
   }
 }

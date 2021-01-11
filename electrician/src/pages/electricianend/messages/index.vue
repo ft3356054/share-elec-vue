@@ -5,7 +5,7 @@
             <p>消息列表</p>
         </header>
         <section>
-             <div class="content" v-for="(item,index) in data" :key="index">
+             <div class="content" v-for="(item,index) in data" :key="index" @click="seebtn(item)">
                 <div class="typebox">
                     <p><span>类别</span><span>{{item.title}}</span></p>
                     <p></p>
@@ -18,7 +18,7 @@
                             <!-- <p>{{item.progess}}</p> -->
                         </dt>
                         <dd>
-                            <button class="jiedan" @click="seebtn(item)">查看 <img src="@/assets/images/messagejiantou.png" alt=""></button>
+                            <button class="jiedan">查看 <img src="@/assets/images/messagejiantou.png" alt=""></button>
                         </dd>
                     </dl>
                 </div>
@@ -33,7 +33,8 @@ export default {
       data: [],
       path:"ws://localhost:8083/websocketserver/",
       socket:'',
-      id:"321"
+      electricianId:"321",
+      orderId:""
     }
   },
   mounted () {
@@ -46,14 +47,48 @@ export default {
     },
     seebtn(item){
         console.log(item)
+            this.$axios.get(`/notifyAnnounce/read/?params={"filter":["announceId=${item.announceId}","announceUserId=${item.announceUserId}"]}`).then(res => {
+                console.log(res)
+                this.orderId=res.data.resultValue.items[0].orderId
+                this.getdetail()
+            }).catch(err => {
+                alert(err)
+            })
+    },
+    getdetail(){
+        this.$api.get("/orderElectrician/orderDetails/"+this.orderId, {"electricianId":this.electricianId}, response => {
+            console.log(response.data.resultValue.items[0].orderElectricianStatus);
+            var items=response.data.resultValue.items[0]
+               if(items.orderElectricianStatus==="8"){
+                    this.$router.push({name:'Evaluate',params:{orderId:items.orderId,electricianId:this.electricianId}})
+                }else if(items.orderElectricianStatus==="9"){
+            // console.log(items)
+                    this.$router.push({name:'Completed',params:{orderId:items.orderId,electricianId:this.electricianId}})
+                }else if(items.orderElectricianStatus==="0"){
+                    this.$router.push({name:'Appointment',params:{orderId:items.orderId,electricianId:this.electricianId}})
+                }else if(items.orderElectricianStatus==="21"){
+                    this.$router.push({name:'Repair',params:{orderId:items.orderId,electricianId:this.electricianId}})
+                }else if(items.orderElectricianStatus==="22"){
+                    this.$router.push({name:'Prospecting',params:{orderId:items.orderId,electricianId:this.electricianId}})
+                }else if(items.orderElectricianStatus==="23"){
+                    this.$router.push({name:'Uploadcontract',params:{orderId:items.orderId,electricianId:this.electricianId}})
+                }else if(items.orderElectricianStatus==="24"){
+                    this.$router.push({name:'Servicereport',params:{orderId:items.orderId,electricianId:this.electricianId}})
+                }else if(items.orderElectricianStatus==="25"){
+                    //  如果电工上传完待验收 改为只读状态
+                    // this.$router.push({name:'Servicereport',params:{orderId:item.orderId,electricianId:this.electricianId}})
+                    Toast.fail("待用户验收完成")
+                }else if(items.orderElectricianStatus==="26"){
+                    this.$router.push({name:'Uploadcontract',params:{orderId:items.orderId,electricianId:this.electricianId}})
+                }else if(items.orderElectricianStatus==="31"){
+                    this.$router.push({name:'Completion',params:{orderId:items.orderId,electricianId:this.electricianId}})
+                }else if(items.orderElectricianStatus==="3"){
+                    this.$router.push({name:'Personneladd',params:{orderId:items.orderId,electricianId:this.electricianId}})
+                }
+        });
     },
     message(){
-            var params={
-                "pageIndex":1,
-                "pageSize":20,
-                "filter":["userId=321","status=2"]
-                }
-            this.$axios.get(`/notifyAnnounceUser/queryAll?params={"pageIndex":1,"pageSize":20,"filter":["userId=${this.id}","status=2"]}`).then(res => {
+            this.$axios.get(`/notifyAnnounceUser/queryAll?params={"pageIndex":1,"pageSize":20,"filter":["userId=${this.electricianId}","status=2"]}`).then(res => {
                 console.log(res)
                 this.data=res.data.resultValue.items
             }).catch(err => {

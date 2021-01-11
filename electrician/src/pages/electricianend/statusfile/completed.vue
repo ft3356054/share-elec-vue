@@ -18,7 +18,7 @@
                 <p class="pswidth"><span>上门费</span><span id="money">¥{{item.customerPrice}}</span></p>
                 <p class="pswidth"><span>维修价格</span><span id="money1">¥{{item.electricianPrice}}</span></p>
                 <p class="pswidth"><span>勘察情况</span> <span>{{item.electricianDescrive}}</span> </p>
-                <p class="pswidth"><span>施工人员</span> <span>刘强 13815124614 <br> 刘强 13815124614</span> </p>
+                <p class="pswidth"><span>施工人员</span> <span style="display:inline-block;width:50px;overflow:hidden;word-break:break-all">{{item.remarkStr1}}</span> </p>
                 <p class="pswidth"><span>施工内容</span> <span>{{item.constructionContent}}</span> </p>
             </div>
         </div>
@@ -26,8 +26,8 @@
             <div>
                 <p style="font-size: 15px;font-weight: bold;">合同</p>
                 <img :src="item.orderContract" alt="" style="width:100%;height:100px;display:block">
-                <p  style="font-size: 15px;font-weight: bold;">服务报告</p>
-                <img src="../../../assets/images/banner.png" alt="" style="width:100%;height:100px;display:block">
+                <p  style="font-size: 15px;font-weight: bold;">验收报告</p>
+                <img :src="item.inspectionReport" alt="" style="width:100%;height:100px;display:block">
             </div>
         </div>
     </div>
@@ -45,6 +45,7 @@ export default {
   },
   mounted(){
       this.getdetail()
+      console.log(this.$route.params)
   },
   methods: {
      getdetail(){

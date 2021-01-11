@@ -82,7 +82,7 @@ export default {
         this.$api.get("/orderElectrician/orderDetails/"+this.orderId, {"electricianId":this.electricianId}, response => {
             console.log(response.data);
             this.data=response.data.resultValue.items,
-            this.status=response.data.resultValue.items[0].orderStatus
+            this.status=response.data.resultValue.items[0].orderElectricianStatus
             this.imgst=response.data.resultValue.items[0].orderContract
             this.electricianPrice=response.data.resultValue.items[0].electricianPrice
         });

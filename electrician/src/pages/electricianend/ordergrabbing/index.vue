@@ -190,6 +190,16 @@ margin: 0;
 padding: 0;
 margin-top: 5px;
 }
+.contentbox .content .addressbox dt p:nth-child(2){
+width: 200px;
+text-overflow: -o-ellipsis-lastline;
+overflow: hidden;
+text-overflow: ellipsis;
+display: -webkit-box;
+-webkit-line-clamp: 2;
+line-clamp: 2;
+-webkit-box-orient: vertical;
+}
 .contentbox .content .addressbox dd{
 text-align: right;
 padding-left: 10px;

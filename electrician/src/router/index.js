@@ -222,7 +222,7 @@ const routes = [
     },
     // 人员增加
     {
-      path: '/personneladd',
+      path: '/personneladd:orderId/:electricianId',
       name: 'Personneladd',
       component: () => import('@/pages/electricianend/personneladd')
     },

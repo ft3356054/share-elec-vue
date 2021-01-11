@@ -28,7 +28,7 @@
         <div class="yuyuetime">
             <span>*</span><span>预约时间</span><span><input type="datetime-local" name="" id="" v-model="times"></span>
         </div>
-        <div class="buttons"><button @click="cancelbtn">取消</button><button @click="Order">预约</button></div>
+        <div class="buttons" ><button @click="cancelbtn">取消</button><button @click="Order">预约</button></div>
 
     </div>
 </div>
@@ -58,7 +58,7 @@ export default {
             });
       },
     goback () {
-      this.$router.go(-1)
+      this.$router.push('/electricianend')
     },
     Order () {
       var times = this.times.split('T').join(' ')

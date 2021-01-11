@@ -28,6 +28,7 @@
                     </dt>
                     <dd>
                         <p v-show="item.orderElectricianStatus==='3'" style="color:red">人员增加</p>
+                        <p v-show="item.orderElectricianStatus==='5'" style="color:red">已取消</p>
                         <p v-show="item.orderElectricianStatus==='9'" style="color:red">已完成</p>
                         <p v-show="item.orderElectricianStatus==='8'" style="color:red">待评价</p>
                         <p v-show="item.orderElectricianStatus==='0'" style="color:red">待预约</p>
@@ -58,6 +59,7 @@
                     </dt>
                     <dd>
                         <p v-show="item1.orderElectricianStatus==='3'" style="color:red">人员增加</p>
+                        <p v-show="item1.orderElectricianStatus==='5'" style="color:red">已取消</p>
                         <p v-show="item1.orderElectricianStatus==='9'" style="color:red">已完成</p>
                         <p v-show="item1.orderElectricianStatus==='8'" style="color:red">待评价</p>
                         <p v-show="item1.orderElectricianStatus==='0'" style="color:red">待预约</p>
@@ -77,7 +79,7 @@
             <div class="typebox">
                 <p><span>类别</span><span>泵房线路安装</span></p>
                 <p></p>
-                <p>2020/11/09 13:49</p>
+                <p>{{item2.createTime}}</p>
             </div>
              <div class="addressbox">
                 <dl>
@@ -184,6 +186,8 @@ export default {
             this.$router.push({name:'Completion',params:{orderId:item.orderId,electricianId:this.electricianId}})
          }else if(item.orderElectricianStatus==="3"){
             this.$router.push({name:'Personneladd',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }else if(item.orderElectricianStatus==="5"){
+            this.$router.push({name:'Cancelled',params:{orderId:item.orderId,electricianId:this.electricianId}})
          }
      },
      godetail1(item){
@@ -390,6 +394,16 @@ section .contentbox .content .addressbox dt p{
 margin: 0;
 padding: 0;
 margin-top: 5px;
+}
+section .contentbox .content .addressbox dt p:nth-child(2){
+width: 150px;
+text-overflow: -o-ellipsis-lastline;
+overflow: hidden;
+text-overflow: ellipsis;
+display: -webkit-box;
+-webkit-line-clamp: 2;
+line-clamp: 2;
+-webkit-box-orient: vertical;
 }
 section .contentbox .content .addressbox dd{
 text-align: right;

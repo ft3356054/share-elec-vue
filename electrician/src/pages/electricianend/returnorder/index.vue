@@ -43,7 +43,7 @@ export default {
          params.append("items",`{
                 "orderId":"${this.orderId}",
                 "orderElectricianStatus":"5",
-                "method":"现场勘查退回订单",
+                "method":"abc",
                 "orderStatus":"11",
                 "electricianDescrive":"${this.returncontext}",
                 "electricianId":"${this.electricianId}"

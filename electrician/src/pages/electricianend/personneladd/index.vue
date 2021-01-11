@@ -19,13 +19,15 @@
             </div>
              <div>
                 <p class="add"><span></span><span>人员增加</span><span @click="addbtn"><img src="../../../assets/images/peopleadd.png" alt=""></span></p>
-                <p style="font-size:13px;color:#9d9d9d;margin-top:5px">请输入人员姓名和手机号，多个人员用逗号分隔</p>
-                <textarea v-model="context" @keydown="context=context.replace(/\+/g,'')" name="" id="" cols="30" rows="5" style="width:100%;margin-top:5px;background:#f7fbff;border:0;outline:none;font-size:13px;font-weight:bold" placeholder="例：刘强 13812345678，杨磊 15584552222"></textarea>
-                <p><button @click="showPopup">保存</button><button @click="deletebtn">删除</button></p>
+                <div v-if="addlist!=undefined" style="margin-top:0;">
+                <p style="font-size:15px;margin-top:5px"  v-for="(item,index) in addlist" :key="index">{{item.electricianName}}{{item.electricianPhonenumber}}</p>
+                </div>
+                <!-- <textarea v-model="context" @keydown="context=context.replace(/\+/g,'')" name="" id="" cols="30" rows="5" style="width:100%;margin-top:5px;background:#f7fbff;border:0;outline:none;font-size:13px;font-weight:bold" placeholder="例：刘强 13812345678，杨磊 15584552222"></textarea> -->
+                <!-- <p><button @click="showPopup">保存</button><button @click="deletebtn">删除</button></p> -->
             </div>
         </div>
     <div class="buttons"><button @click="Order">开始施工</button></div>
-    <van-popup v-model="show">
+    <!-- <van-popup v-model="show">
         <p class="guanbi" @click="guanbi"><img src="../../../assets/images/close.png" alt=""></p>
         <p class="title">请确认增加人员信息是否正确</p>
         <div class="context">
@@ -35,7 +37,7 @@
         <div class="btnbox">
             <button @click="foubtn">否</button><button @click="preservation">是</button>
         </div>
-    </van-popup>
+    </van-popup> -->
     </div>
 </div>
 </template>
@@ -49,11 +51,18 @@ export default {
       context:"",
       orderId:"",
       electricianId:"",
-      data:[]
+      data:[],
+      addlist:[]
     }
   },
   mounted(){
       console.log(this.$route.params)
+      if(this.$route.params.electricianName===undefined){
+          this.addlist=[]
+      }else{
+      this.addlist.push(this.$route.params.electricianName)
+      }
+      console.log(this.addlist)
       this.getlist()
   },
   methods: {
@@ -65,11 +74,11 @@ export default {
         });
     },
     goback () {
-     this.$router.push("electricianend")
+     this.$router.push("/electricianend")
     },
     addbtn(){
         // this.$router.push("electricianinquiry")
-         this.$router.push({name:'Electricianinquiry',params:{electricianId:this.electricianId}})
+         this.$router.push({name:'Electricianinquiry',params:{electricianId:this.electricianId,orderID:this.orderId}})
     },
     Order () {
          var fd=new FormData()
@@ -81,7 +90,9 @@ export default {
           "electricianId":"${this.electricianId}",
           "orderElectricianStatus":"31",
           "orderStatus":"31",
-          "remark_str1":[{tom:"12345678913"},{cat:"12345678912"}]}`)
+          "remark_str1":[{${this.addlist[0].electricianName}:"${this.addlist[0].electricianPhonenumber}"}]
+          }`)
+          console.log(params)
       this.$axios.post("/orderElectrician/booking", params).then(res => {
             // this.$router.push({name:'Completion',params:{orderId:this.orderId,electricianId:this.electricianId}})
             this.$router.push("electricianend")

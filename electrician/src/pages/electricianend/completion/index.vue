@@ -16,7 +16,7 @@
                 <p class="pswidth"><span>状态</span><span v-if="item.orderStatus==='31'">施工中</span></p>
                 <p class="pswidth"><span>维修价格</span><span id="money">{{item.electricianPrice}}</span></p>
                 <p class="pswidth"><span>勘察情况</span> <span>{{item.electricianDescrive}}</span> </p>
-                <p class="pswidth"><span>施工人员</span> <span>刘磊 155454545454</span></p>
+                <p class="pswidth"><span>施工人员</span> <span style="display:inline-block;width:50px;overflow:hidden;word-break:break-all" id="peopleadd">{{item.remarkStr1}} <br> </span></p>
             </div>
              <div>
                 <p class="context"><span>*</span>施工内容</p>
@@ -169,11 +169,18 @@ color: #6f6f6f;
 }
 .contentbox .content div .pswidth span:nth-child(2){
 flex: 1;
-width: 55px;
+/* width: 20px; */
 font-size: 11px;
 margin-right: 27px;
 color: #111111;
 font-weight: bold;
+}
+.contentbox .content div .pswidth #peopleadd{
+    /* flex: 0; */
+    display:inline-block;
+    width:50px;
+    overflow:hidden;
+    word-break:break-all
 }
 .contentbox .yuyuetime{
     width: 100%;
