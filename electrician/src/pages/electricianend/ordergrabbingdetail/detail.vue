@@ -59,7 +59,7 @@ export default {
           "orderId":item.orderId,
           "electricianId":this.electricianId
       }
-        this.$axios.post(`/orderElectrician/qiangdanrecept?orderId=${this.orderId}&electricianId=${this.electricianId}`) .then(res => {
+        this.$axios.post(`/orderElectrician/accept?orderId=${this.orderId}&electricianId=${this.electricianId}`) .then(res => {
             // if(res.successful){
             //     Toast.success('抢单成功')
             // }

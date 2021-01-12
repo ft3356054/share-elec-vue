@@ -95,7 +95,7 @@ export default {
           console.log(params)
       this.$axios.post("/orderElectrician/booking", params).then(res => {
             // this.$router.push({name:'Completion',params:{orderId:this.orderId,electricianId:this.electricianId}})
-            this.$router.push("electricianend")
+            this.$router.push("/electricianend")
         }).catch(err => {
             alert(err)
         })

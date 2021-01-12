@@ -45,7 +45,11 @@ export default {
   methods: {
       getlist(){
             this.$axios.post("/orderElectrician/queryAllOrder/"+this.electricianId) .then(res => {
+                if(res.data.resultValue==='此区域没有订单'){
+                    this.data=[]
+                }else{
                     this.data=res.data.resultValue
+                }
             });
       },
     goback () {
