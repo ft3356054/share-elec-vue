@@ -46,16 +46,10 @@ export default {
            if(this.list.realNameAuth=="1"){
                Toast("您还没有实名认证，请实名认证")
            }else{
-                Toast("有实名认整")
                 console.log(this.list.realNameAuth)
                if(this.list.auditStatus=="0"){
                     console.log(this.customerId,"a1")
-             this.$router.push({
-                 path:'/autation',
-                 query:{
-                     customerId:this.customerId
-                 }
-             })
+             this.$router.push('/autation')
            }else if(this.list.auditStatus=="1"){
                Toast('正在审核中，请稍等');
            }else if(this.list.auditStatus=="2"){

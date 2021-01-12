@@ -36,7 +36,7 @@
           :show-indicators="false"
           :width="360"
         >
-          <van-swipe-item v-for="(item,index) in messages" :key="index" @click="swipe(item.orderId)">
+          <van-swipe-item v-for="(item,index) in messages" :key="index" @click="swipe(item.announceId,item.orderId)">
             系统消息:  {{item.content}}
           </van-swipe-item>
         </van-swipe>
@@ -45,11 +45,9 @@
     </nav>
     <section>
     <div class="tab-box">
-        <van-sticky :offset-top="374">
         <ul>
               <li v-for="(item,index) in tabs" :key="index" :class="{active:num==index}" @click="nums(index)">{{item}}</li>
         </ul>
-        </van-sticky>
     </div>
     <div class="contentbox">
         <div class="content" v-show="num==0" v-for="(item,index) in toPay" :key="index">
@@ -364,10 +362,45 @@ export default {
                       // console.log(this.content)
                 })
     },
-    // 系统消息
-    swipe(index){
-      console.log(index)
+    // 系统消息 
+    swipe(announceId,orderId){
+          this.dawd(announceId)
+          this.getdetails(orderId)
     },
+     // 点击未读变已读
+      dawd(announceId){
+         this.announceId=announceId
+          this.$axios.get(`/notifyAnnounce/read/?params={"filter":["announceId=${this.announceId}","announceUserId=${this.cust}"]}`,{
+       },res=>{
+          //  console.log(res.data)
+       })
+      },
+      // 点击获取详情数据
+      getdetails(orderId){
+        this.orderId=orderId
+        this.$api.get(`/orderCustomer/OrderDetail/${this.orderId}`,{   
+        },res=>{
+          console.log(res.data.resultValue.items[0])
+         let orderStatus=res.data.resultValue.items[0].orderStatus
+        switch (orderStatus) {
+        case "20":   //待预约
+          this.$router.push({
+            path:"/stayMake",
+            query:{
+              orderId:this.orderId
+            }
+          })
+          break;
+        case "23":  //待现场勘查察
+            this.$router.push({
+           path: `/Pay/${this.orderId}`,
+          })
+          break;                
+        default:
+          break;
+      }
+        })
+      },
     // 详情
     about(orderId,orderStatus){
       this.orderId=orderId

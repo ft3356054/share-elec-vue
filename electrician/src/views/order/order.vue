@@ -8,23 +8,15 @@
           <input type="text" placeholder="搜索我的订单" @change="ipt($event)"/>
         </div>
       </div>
-    </div>
-    <div class="main">
-         <section>
-    <div class="tab-box">
-            <van-sticky :offset-top="71">
+       <div class="tab-box">
          <ul>
            <li v-for="(item,index) in tabs" :key="index" :class="{active:num==index}" @click="nums(index)">{{item}}</li>
         </ul>
-        </van-sticky>
     </div>
-        <!-- 无数据时的展示
-     <div class="no-comment" v-if="this.list.length==0">
-        <img src="../../assets/images/wu.png" alt="">
-        <span>暂无消息!</span>
-     </div> -->
-    <div class="contentbox" >
-      <van-pull-refresh  v-model="isLoading" success-text="刷新成功" @refresh="onRefresh">
+    </div>
+    <div class="main">
+         <section>
+           <van-pull-refresh  v-model="isLoading" success-text="刷新成功" @refresh="onRefresh">
 		    	<van-list 
                 v-model="loading"
             :finished="finished"
@@ -34,6 +26,12 @@
             @load="onLoad"
             :offset="10"
           >
+        <!-- 无数据时的展示
+     <div class="no-comment" v-if="this.list.length==0">
+        <img src="../../assets/images/wu.png" alt="">
+        <span>暂无消息!</span>
+     </div> -->
+    <div class="contentbox" >
         <div class="content" v-show="num==0" v-for="(item,index) in list" :key="index">
             <div class="typebox">
                 <p><span>类别</span><span>{{item.customerDescriveTitle}}</span></p>
@@ -167,9 +165,10 @@
                 </dl>
             </div>
         </div>
-        		</van-list>
-		</van-pull-refresh>
+   
     </div>
+         		</van-list>
+		</van-pull-refresh>
 </section>
     </div>
   </div>
@@ -197,12 +196,14 @@ export default {
        show: false,
        ths:false,
         isLoading: false, //下拉刷新
-			    	loading: false,    //上拉加载
-            finished: false,  //下拉完成
-            upFinished: false, //上拉加载完毕
-            offset: 10, //滚动条与底部距离小于 offset 时触发load事件
-            pageIndex:1,
-            itemCount:0,//总条数
+			  loading: false,    //上拉加载
+        finished: false,  //下拉完成
+        upFinished: false, //上拉加载完毕
+        offset: 10, //滚动条与底部距离小于 offset 时触发load事件
+        pageNumber:1,
+        pageSize:5,
+        pageIndex:1,
+        itemCount:0,//总条数
     };
   },
    inject:['reload'],
@@ -279,10 +280,11 @@ export default {
          })
     },
     // 获取数据
-     getlist(){
-       this.$api.get(`/orderCustomer/queryAll?params={"pageIndex":${this.pageIndex},"pageSize":5,"filter":"customerId=${this.cust}"}`,{
+    async getlist(){
+       this.pageIndex=this.pageNumber*this.pageSize-(this.pageSize-1)
+       this.$api.get(`/orderCustomer/queryAll?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":"customerId=${this.cust}"}`,{
        },res=>{
-        //  console.log(res)
+         console.log(res)
         //  this.list=res.data.resultValue.items
         //   res.data.resultValue.items.forEach(item => {
         //    if(item.orderStatus=="4" || item.orderStatus=="9" || item.orderStatus=="8" ){
@@ -292,34 +294,48 @@ export default {
         //       this.haveList.push(item)
         //    }
         //  });
-        let lists =res.data.resultValue.items
-           this.loading = false;
-            this.itemCount = res.data.resultValue.itemCount;  //总条数
-           
-           lists.forEach(item => {
-           if(item.orderStatus=="4" || item.orderStatus=="9" || item.orderStatus=="8" ){
-               this.loverList.push(item)
-              //  console.log( this.loverList,"8")
-           }else  if(item.orderStatus!=="4"|| item.orderStatus!=="9" || item.orderStatus!=="8" ){
-              this.haveList.push(item)
-           }
-         });
-        if (lists == null || lists.length === 0) {
-          // 加载结束
-          this.finished = true;
-          return;
-        }
-
-        // 将新数据与老数据进行合并
-        this.list = this.list.concat(lists);
-       
-       //如果列表数据条数>=总条数，不再触发滚动加载
-        if (this.list.length >= this.total) {
-          this.finished = true;
-        }
-      
+         this.list = res.data.resultValue.items    //datas是列表集合
+          this.itemCount = res.data.resultValue.itemCount;  //总条数
+             // itemCount是后台返回的列表总条数
+             if(res.data.resultValue.itemCount === this.list.length){
+                 this.finished = true
+            }else {
+                this.finished = false
+             }
+             this.pageNumber++
+             this.isLoading = false
+             this.loading = false
        })
      },
+       // 下拉刷新
+      onRefresh() {
+		      setTimeout(() => {
+            this.isLoading = false;
+            this.list=[]
+            this.pageNumber=1
+            this.getlist()
+            // this.reload()
+		      }, 1000);
+        },
+        // 上拉加载
+		    onLoad() {
+             setTimeout(() => {
+                this.pageIndex=this.pageNumber*this.pageSize-(this.pageSize-1)
+                  this.$api.get(`/orderCustomer/queryAll?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":"customerId=${this.cust}"}`,{
+            },res=>{
+                let datas= res.data.resultValue.items    //datas是列表集合
+                this.list=this.list.concat(datas)
+                this.itemCount = res.data.resultValue.itemCount;  //总条数
+                  // itemCount是后台返回的列表总条数
+                  if(res.data.resultValue.itemCount > this.list.length){
+                              this.loading = false
+                          }else{
+                              this.finished = true
+                              this.loading = true
+                          }
+                })
+                }, 500);
+		    },
       // 取消
     cancel(){
       this.show=true       
@@ -501,22 +517,7 @@ export default {
           break;
       }
     },
-    // 下拉刷新
-      onRefresh() {
-		      setTimeout(() => {
-            this.isLoading = false;
-            this.pageIndex=1
-            // this.getList()
-            this.reload()
-		      }, 1000);
-        },
-        // 上拉加载
-		    onLoad() {
-            setTimeout(() => {
-            this.pageIndex++;
-           this.getList()
-		      }, 1000);
-		    }
+  
   },
 }
 </script>
@@ -531,10 +532,12 @@ export default {
 }
 .header {
   width: 100%;
-  height: 55px;
   background: #87cefa;
-  padding: 0 20px;
+  
   line-height: 55px;
+  .mask-input{
+padding: 0 10px;
+  }
   span {
     width: 30px;
     img{
@@ -570,6 +573,26 @@ export default {
       color: #000;
     }
   }
+   .tab-box{
+    width: 100%;
+    height: 30px;
+    margin-bottom: 10px;
+  // background: #87cefa;
+}
+ .tab-box ul{
+width: 100%;
+height: 43px;
+line-height: 40px;
+padding-left: 15px;
+color: #828284;
+font-size: 12px;
+background: #fff;
+}
+ .tab-box ul li{
+list-style: none;
+float: left;
+margin-left: 25px;
+}
 }
 .main{
   flex: 1;
@@ -586,25 +609,7 @@ section{
 section::-webkit-scrollbar{
     width: 0;
 }
-section .tab-box{
-    width: 100%;
-    height: 30px;
-    margin-bottom: 10px;
-}
-section .tab-box ul{
-width: 100%;
-height: 40px;
-line-height: 40px;
-padding-left: 15px;
-color: #828284;
-font-size: 12px;
-background: #fff;
-}
-section .tab-box ul li{
-list-style: none;
-float: left;
-margin-left: 25px;
-}
+
 
 section .contentbox{
     width: 100%;
