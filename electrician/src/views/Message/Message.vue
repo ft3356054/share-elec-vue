@@ -14,7 +14,7 @@
                 v-model="loading"
             :finished="finished"
             :immediate-check="false"
-            finished-text="已全部加载完成"
+            :finished-text="this.finName"
             error-text="请求失败，点击重新加载"
             @load="onLoad"
             :offset="10"
@@ -72,6 +72,8 @@ export default {
             pageSize:5,
             pageIndex:1,
             itemCount:0,//总条数
+            finName:"已全部加载完成",
+            timer:null  //定时器
         }
     },
     inject:['reload'],
@@ -258,7 +260,7 @@ export default {
 		      }, 1000);
 		    },
 		    onLoad() {
-          setTimeout(() => {
+      this.tomer=setTimeout(() => {
           this.pageIndex=this.pageNumber*this.pageSize-(this.pageSize-1)
              this.$api.get(`/notifyAnnounceUser/queryAll?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":["userId=${this.cust}","status=2"]}`,{
        },res=>{
@@ -271,10 +273,15 @@ export default {
                     }else{
                         this.finished = true
                         this.loading = true
+                        // this.finName=''
                     }
            })
           }, 2000);
 		    }
+  },
+  beforeDestroy() {
+       clearTimeout(this.timer)
+       this.timer=null
   },
 };
 </script>
@@ -434,8 +441,8 @@ main{
 }
 /deep/ .van-list>.van-list__finished-text{
             // position: fixed;
-            // bottom: -50px;
+            // bottom: 50px;
             // left: 33%;
-            // transition: all 3s;
+            transition-duration: 0;
 }
 </style>
