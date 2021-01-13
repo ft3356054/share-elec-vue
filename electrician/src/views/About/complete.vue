@@ -73,13 +73,17 @@
        </van-image-preview>
       </div>
       </div>
-      <div class="box"   v-for="(item,ss) in demo" :key="ss+5">
+      <div class="box" v-for="(item,ss) in demo" :key="ss+5">
           <h4>服务报告</h4>
             <div class="gz" style="margin-bottom:60px" @click="imgs">
-        <img :src="item.inspectionReport" alt="" />
-         <van-image-preview v-model="shows" :images="[item.inspectionReport]" >
-       </van-image-preview>
+                <img :src="item.inspectionReport" alt="" />
+                <van-image-preview v-model="shows" :images="[item.inspectionReport]" >
+              </van-image-preview>
+          </div>
+         
       </div>
+      <div class="btt" v-show="ts">
+        <button @click="tocomplaint()">投诉</button>
       </div>
   </div>
 </template>
@@ -118,7 +122,9 @@ export default {
       },
      orderId:"",
      show:false,
-     shows:false
+     shows:false,
+     creatTime:"",
+     ts:true
     };
   },
     mounted() {
@@ -157,7 +163,24 @@ export default {
        },res=>{
            console.log(res.data.resultValue.items)
            this.demo=res.data.resultValue.items
+           this.creatTime=res.data.resultValue.items[0].finishTime
+           console.log(this.creatTime)
+           let times=new Date(this.creatTime).getTime()
+            console.log(times,"结束")
+            let toDay = (new Date()).getTime() // 今天的时间戳
+          console.log(toDay,"现在")
+           if((toDay-times)/(1000*3600*24)>15){
+             this.ts=false
+           }
        })
+    },
+      tocomplaint() {
+        this.$router.push({
+        path:"/complaint",
+        query:{
+          orderId:this.orderId
+        }
+      })
     },
   },
  
@@ -171,6 +194,8 @@ export default {
   margin: 0 auto;
   position: relative;
   background: #f3f8fe;
+  padding-bottom: 10px;
+  overflow: hidden;
 }
 .head {
   width: 100%;
@@ -281,5 +306,28 @@ export default {
       height: 100%;
     }
   }
+}
+.btt {
+  width: 100%;
+  height: 60px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 7px;
+  button {
+    margin-left: 10px;
+    width: 85px;
+    height: 37px;
+   background: -webkit-linear-gradient(#83ccfa,#7bcbf7,#6ec1f5,#61bbf3,#57b6f0);
+    border-radius: 20px;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 16px;
+    // font-weight: bold;
+  }
+  
 }
 </style>

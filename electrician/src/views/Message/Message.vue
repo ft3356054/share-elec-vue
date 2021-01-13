@@ -67,7 +67,7 @@ export default {
 			    	loading: false,    //上拉加载
             finished: false,  //下拉完成
             upFinished: false, //上拉加载完毕
-            offset: 10, //滚动条与底部距离小于 offset 时触发load事件
+            offset: 20, //滚动条与底部距离小于 offset 时触发load事件
             pageNumber:1,
             pageSize:5,
             pageIndex:1,
@@ -92,7 +92,7 @@ export default {
       },
       // 详请
       details(announceId,orderId){
-       console.log(announceId,orderId)
+      //  console.log(announceId,orderId)
           this.dawd(announceId)
           this.getdetails(orderId)
           //  this.reload() 
@@ -153,7 +153,7 @@ export default {
       // 展示消息时间
       transTime (time) {
       time=new Date(time).valueOf()
-      console.log(time)
+      // console.log(time)
     let toDay = (new Date()).getDate() // 今天是哪号
     let timeDay = (new Date(time)).getDate() // 时间缀转为具体的哪一号
     var toYear = (new Date()).getFullYear() // 获取年
@@ -429,5 +429,13 @@ main{
     bottom: 0px;
   }
 }
-
+/deep/ .van-list{
+  position: relative;
+}
+/deep/ .van-list>.van-list__finished-text{
+            // position: fixed;
+            // bottom: -50px;
+            // left: 33%;
+            // transition: all 3s;
+}
 </style>

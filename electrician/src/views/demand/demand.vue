@@ -127,8 +127,8 @@ export default {
       customerAddress: "", //地址
       appointmentTime: "",  //预约时间
       provinceId:"", //省份ID
-      minDate: new Date(2020, 0, 1),
-      maxDate: new Date(2025, 10, 1),
+      minDate: new Date(),
+      maxDate: new Date(2050, 10, 1),
       currentDate: new Date(),
       dataTime: "",
       registeredNumber:"",  //户号
@@ -249,12 +249,13 @@ export default {
                 fd.append('myFile',this.files)
               }
              this.fd=fd
+            let customerDescrive=this.customerDescrive.replace(/\n|\r\n/g,"")
              this.fd.append("items",
              `{"customerId":"${this.customerId}",  
                 "customerName":"${this.customerName}",
                  "customerPhonenumber":"${this.customerPhonenumber}", 
                   "customerDescriveTitle":"${this.customerEvaluateTitle}", 
-                  "customerDescrive":"${this.customerDescrive}",  
+                  "customerDescrive":"${customerDescrive}",  
                   "orderTypeId":"${this.selected}",   
                   "voltage":"${this.voltage}", 
                   "identityId":"${this.sele}",  
@@ -268,14 +269,20 @@ export default {
             this.$axios.post(
                     `/orderCustomer/save`,
                     this.fd,{headers: {'Content-Type': 'multipart/form-data'}},
-                    Toast.success('发单成功'), 
+                    
                   ).then(res=>{
-                    // console.log(res)
-                    this.set=setTimeout(()=>{
-                          this.$router.push({
-                          path: `/Pay/${res.data.resultValue.items[0].orderId}`,
-                      })  
-                  },1000)    
+                    console.log(res)
+                    if(res.data.successful==true){
+                       Toast.success('发单成功'), 
+                      this.set=setTimeout(()=>{
+                            this.$router.push({
+                            path: `/Pay/${res.data.resultValue.items[0].orderId}`,
+                         })  
+                        },1000)    
+                    }else{
+                       Toast.fail('发单失败')
+                    }
+                    
                   });  
        }  
     },
@@ -381,7 +388,7 @@ export default {
         float: right;
         width: 185px;
         height: 80px;
-        line-height: 30px;
+        line-height: 20px;
         border: none;
         border-bottom: 1px solid #ebebeb;
         font-size: 12px;
