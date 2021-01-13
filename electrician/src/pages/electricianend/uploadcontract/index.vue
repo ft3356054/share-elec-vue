@@ -31,18 +31,21 @@
                 <span>*</span>
                 <span>上传合同</span>
                 <span>
-               <dl>
-                  <dt v-if="status==='26'">
-                      <van-uploader v-model="fileLists" :after-read="onRead" :max-count="1" >
-                        <img :src="imgs" alt="" style="width: 34px;height: 24px;display:block" >
-                       
-                      </van-uploader>
-                  </dt>
-                  <dt v-if="status==='23'" style="margin-top:0">
-                   <img :src="imgst" alt="" style="width:100%;height:100%;">
-                  </dt>
-                  <dd>上传图片</dd>
-                </dl>
+                    <p v-if="status==='23'">
+                        <img :src="imgst" alt="" style="width: 100%;height: 4rem;display:block;" >
+                    </p>
+                    <p v-if="status==='26'">
+                        <van-uploader v-model="fileLists" :after-read="onRead" :max-count="1">
+                            <dl>
+                                <dt style="margin-top:0">
+                                <img :src="imgs" alt="" style="width:34px;height:24px;margin-top: -10px;">
+                                </dt>
+                                <dd>上传图片</dd>
+                            </dl>
+                       </van-uploader> 
+                    </p>
+                     
+              
                 </span>
             </div>
         </div>
@@ -119,7 +122,7 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .contianer{
 width: 100%;
 height: 100%;
@@ -128,6 +131,7 @@ position: relative;
 box-sizing: border-box;
 overflow: auto;
 }
+
 .contianer .backgroundbox{
     width: 100%;
     height: 135px;
@@ -264,7 +268,7 @@ margin-right: 10px;
 }
 .uploudimg span:nth-child(3){
    width: 83px;
-   height: 73px;
+   height: 70px;
    /* flex: 1; */
    display: inline-block;
    margin-left: 20px;
@@ -288,26 +292,36 @@ margin-right: 10px;
 .uploudimg span:nth-child(3) dl dd{
   margin: 0;
     padding: 0;
-    margin-top: -15px;
+    margin-top: -40px;
     font-size: 11px;
     color: #68b4e5;
+}
+/deep/ .van-uploader{
+    width: 100%;
+    height: 100%;
+    display: inline;
 }
 /deep/ .uploudimg span:nth-child(3) dl dt .van-uploader{
 position: static;
 display: inline;
+width: 100%;
+height: 100%;
+}
+/deep/ .van-uploader__input-wrapper{
+    width: 100%;
+    height: 100%;
 }
 /deep/ .uploudimg span:nth-child(3) dl dt .van-uploader__wrapper{
 justify-content: center;
 }
-/deep/ .uploudimg span:nth-child(3) dl dt .van-uploader__preview{
+/deep/ .van-uploader__preview{
 margin: 0;
     width: 100%;
     height: 100%;
 }
-/deep/ .uploudimg span:nth-child(3) dl dt .van-uploader__preview-image{
-    margin-top: -17px;
-        /* width: 83px; */
-    /* height: 83px; */
+/deep/  .van-uploader__preview-image{
+   width: 100%;
+   height: 100%;
 }
 /deep/ .uploudimg span:nth-child(3) dl dt .van-uploader__preview-delete{
     top: -16px;

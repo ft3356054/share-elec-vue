@@ -90,6 +90,7 @@ export default {
           "electricianId":"${this.electricianId}",
           "orderElectricianStatus":"31",
           "orderStatus":"31",
+          "orderElectricianId":"{${this.addlist[0].electricianId}}",
           "remark_str1":[{${this.addlist[0].electricianName}:"${this.addlist[0].electricianPhonenumber}"}]
           }`)
           console.log(params)

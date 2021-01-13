@@ -26,7 +26,11 @@
             </div>
         </div>
         <div class="yuyuetime">
-            <span>*</span><span>预约时间</span><span><input type="datetime-local" name="" id="" v-model="times" @blur="datebtn"></span>
+            <span>*</span>
+            <span>预约时间</span>
+            <span>
+                <input type="datetime-local" name="" id="" v-model="times" @blur="datebtn">
+            </span>
         </div>
         <div class="buttons" ><button @click="cancelbtn">取消</button><button @click="Order">预约</button></div>
 
@@ -43,7 +47,11 @@ export default {
       phone: 13739865412,
       orderId:"",
       electricianId:'',
-      data:[]
+      data:[],
+    minDate: new Date(2020, 0, 1),
+      maxDate: new Date(2025, 10, 1),
+      currentDate: new Date(),
+      show:false
     }
   },
   mounted(){
