@@ -164,17 +164,21 @@ export default {
       orderId:"",
       items:{},
       show:false,
-      ths:false
+      ths:false,
+      path:"ws://localhost:8083/websocketserver/",  //websocketserver
+      messages:""
     };
   },
   inject:['reload'],
   created () {
     localStorage.setItem("customerId",this.cust)
+    
   },
   mounted() {
     this.getContent(),  //获取未读消息数量
     this.getGunlist()   // 获取滚动数据
     this.getlist()   //获取订单数据
+     this.WebSocketTest()  //websocketserver
   },
   methods: {
     nums(index){
@@ -339,7 +343,7 @@ export default {
     getlist(){
        this.$api.get(`/orderCustomer/queryAllToBegin?params={"pageIndex":1,"pageSize":20,"filter":"customerId=${this.cust}"}`,{
        },res=>{
-        //  console.log(res.data)
+         console.log(res.data)
          res.data.resultValue.items.forEach(item => {
            this.orderId=item.orderId
            if(item.orderStatus==="0" ||item.orderStatus==="23" ){
@@ -432,7 +436,48 @@ export default {
           })
           break;
       }
-    }
+    },
+    // websocketserver
+       WebSocketTest(){
+         if(typeof(WebSocket) === "undefined"){
+                alert("您的浏览器不支持socket")
+            }else{
+                // 实例化socket
+                var uid = "123";
+                this.socket = new WebSocket(this.path+uid)
+                // 监听socket连接
+                this.socket.onopen = this.open
+                // 监听socket错误信息
+                this.socket.onerror = this.error
+                // 监听socket消息
+                this.socket.onmessage = this.getMessage
+//                 console.log(this.socket)
+            }
+    },
+    open: function () {
+            console.log("socket连接成功")
+        },
+    error: function () {
+        console.log("连接错误")
+    },
+    getMessage: function (msg) {   //content
+//         console.log(msg)
+        let obj=JSON.parse(msg.data) 
+        // console.log(obj.content)
+        this.messages=obj.content
+        // console.log(this.messages)
+          this.$dialog.alert({
+              width:"80%",
+              message: this.messages,
+              closeOnClickOverlay:true
+            });
+    },
+    send: function () {
+        this.socket.send(params)
+    },
+    close: function () {
+        console.log("socket已经关闭")
+    },
   },
 };
 </script>

@@ -249,12 +249,13 @@ export default {
                 fd.append('myFile',this.files)
               }
              this.fd=fd
+            let customerDescrive=this.customerDescrive.replace(/\n|\r\n/g,"")
              this.fd.append("items",
              `{"customerId":"${this.customerId}",  
                 "customerName":"${this.customerName}",
                  "customerPhonenumber":"${this.customerPhonenumber}", 
                   "customerDescriveTitle":"${this.customerEvaluateTitle}", 
-                  "customerDescrive":"${this.customerDescrive}",  
+                  "customerDescrive":"${customerDescrive}",  
                   "orderTypeId":"${this.selected}",   
                   "voltage":"${this.voltage}", 
                   "identityId":"${this.sele}",  
