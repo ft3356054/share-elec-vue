@@ -96,6 +96,18 @@
         </div>
     </div>
 </section>
+<van-overlay :show="show" @click="show = false">
+  <div class="wrapper" @click.stop>
+    <div class="block">
+        <p><img src="../../../assets/images/close.png" alt="" @click="closebtn"></p>   
+        <p>插座跳闸(<span>15s</span>)</p>
+        <p>天津市东丽区国网客服中心北方园区</p>
+        <p>插座跳闸，需要检修下</p>
+        <p>10kv 抢修 < 5KM </p>
+        <p style="color:#ccc;font-size:15px">2020/11/16 17:12</p>
+    </div>
+  </div>
+</van-overlay>
 </div>
 
 </template>
@@ -116,7 +128,8 @@ export default {
         {name: '本系统将于24日凌晨24:00开始停机更新4'}
       ],
       electricianId:"321",
-      orderId:""
+      orderId:"",
+      show:false
     }
   },
   created () {
@@ -217,6 +230,9 @@ export default {
     jiedan (item) {
       this.$router.push({name:'Ordergrabbingdetail',params:{orderId:item.orderId,electricianId:this.electricianId}})
     },
+    closebtn(){
+        this.show=false
+    },
     gomyorderabbing () {
       this.$router.push('/myorderabbing')
     },
@@ -235,6 +251,49 @@ export default {
     transition: all 0.7s;
     margin-top: -30px;
 }
+  .wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+
+  .block {
+    width: 240px;
+    height: 150px;
+    border-radius: 15px;
+    background-color: #fff;
+    padding: 10px;
+    box-sizing: border-box
+  }
+  .block p:nth-child(1){
+  text-align: right;
+  margin-top: 0;
+  }
+    .block p:nth-child(2){
+  font-size: 15px;
+  }
+   .block p:nth-child(2) span{
+  /* font-size: 15px; */
+  color: red;
+  }
+    .block p:nth-child(3){
+  font-size: 12px;
+  }
+  .block p:nth-child(4){
+  font-size: 12px;
+  }
+  .block p:nth-child(5){
+  font-size: 12px;
+  }
+  .block p img{
+      width: 10px;
+      height: 10px;
+      margin-right: 10px;
+  }
+  .block p{
+  margin-top: 5px;
+  }
 #con1 img{
 position: absolute;
 top: 11px;

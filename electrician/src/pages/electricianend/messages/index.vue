@@ -5,8 +5,10 @@
             <p>消息列表</p>
         </header>
         <section>
-             <div class="content" v-for="(item,index) in data" :key="index" @click="seebtn(item)">
-                <div class="typebox">
+             <div class="" v-for="(item,index) in data" :key="index" @click="seebtn(item)">
+                 <div class="top" v-text="transTime(item.createTime)"></div>
+                 <div class="content">
+                       <div class="typebox">
                     <p><span>类别</span><span>{{item.title}}</span></p>
                     <p></p>
                     <p>{{item.createTime}}</p>
@@ -22,6 +24,8 @@
                         </dd>
                     </dl>
                 </div>
+                 </div>
+              
             </div>
         </section>
     </div>
@@ -96,6 +100,103 @@ export default {
             })
        
     },
+    transTime (time) {
+      time=new Date(time).valueOf()
+    let toDay = (new Date()).getDate() // 今天是哪号
+    let timeDay = (new Date(time)).getDate() // 时间缀转为具体的哪一号
+    var toYear = (new Date()).getFullYear() // 获取年
+    var timeYear = (new Date(time)).getFullYear() // 获取年
+
+    var toMonth = (new Date()).getMonth() + 1 // 获取月
+    var timeMonth = (new Date(time)).getMonth() + 1 // 获取月
+    let myMonth = toMonth - timeMonth
+    let toHours = (new Date()).getHours() // 获取小时
+    let timeHours = (new Date(time)).getHours() // 获取小时
+    let Minutes = (new Date()).getMinutes() // 获取分钟
+    let timeMinutes = (new Date(time)).getMinutes() // 获取分钟
+    if (timeHours < 10) {
+      timeHours = '0' + timeHours
+    }
+    if (Minutes < 10) {
+      Minutes = '0' + Minutes
+    }
+    // console.log(toYear, timeYear)
+    if (toYear - timeYear > 0) {
+      let tm = timeMonth
+      if (tm < 10) {
+        tm = ('0' + tm)
+      }
+      let td = timeDay
+      if (td < 10) {
+        td = ('0' + td)
+      }
+      // console.log('一年前')
+      // console.log(timeYear + '-' + timeMonth + '-' + timeDay)
+      return (timeYear + '-' + tm + '-' + td + ' ' + timeHours + ':' + Minutes)
+    }
+    // 大于一周
+    // console.log(toDay, timeDay)
+    if ((myMonth === 0) && ((toYear - timeYear) === 0)) {
+      // 本月
+      // 一周内的
+      if ((toDay - timeDay) === 0) {
+        // 日期是今天的
+        // 一个小时内3分钟前的
+        // 15分内3分前的
+        if ((toHours - timeHours) === 0) {
+          // 一个小时内
+          let xz = ((new Date()) - time) / 60000
+          let fz = Math.floor(xz)
+          if (fz > 3) {
+            return Math.floor(xz) + '分钟前'
+          }
+        } else {
+          // 大于一个小时
+          if (timeMinutes < 10) {
+            timeMinutes = '0' + timeMinutes
+          }
+          return (timeHours + ':' + timeMinutes)
+        }
+      } else if (((toDay - timeDay) >= 1) && (toDay - timeDay <= 7)) {
+        // 1周内的
+        let weekTime = (new Date(time)).getDay()
+        let weekD
+        if (weekTime === 0) weekD = '星期日'
+        if (weekTime === 1) weekD = '星期一'
+        if (weekTime === 2) weekD = '星期二'
+        if (weekTime === 3) weekD = '星期三'
+        if (weekTime === 4) weekD = '星期四'
+        if (weekTime === 5) weekD = '星期五'
+        if (weekTime === 6) weekD = '星期六'
+        // console.log(weekD)
+        return (weekD + ' ' + timeHours + ':' + Minutes)
+        // console.log('昨天')
+      } else {
+        // 大于一周显示日期（如：3月25日
+        let tm = timeMonth
+        if (tm < 10) {
+          tm = ('0' + tm)
+        }
+        let td = timeDay
+        if (td < 10) {
+          td = ('0' + td)
+        }
+        return (timeYear + '-' + tm + '-' + td + ' ' + timeHours + ':' + Minutes)
+      }
+    }
+    if ((myMonth > 0) && ((toYear - timeYear) === 0)) {
+      // 大于1个月，同一年的
+      let tm = timeMonth
+      if (tm < 10) {
+        tm = ('0' + tm)
+      }
+      let td = timeDay
+      if (td < 10) {
+        td = ('0' + td)
+      }
+      return (timeYear + '-' + tm + '-' + td + ' ' + timeHours + ':' + Minutes)
+    }
+     },
     WebSocketTest(){
          if(typeof(WebSocket) === "undefined"){
                 alert("您的浏览器不支持socket")
@@ -144,6 +245,15 @@ flex-direction: column;
 padding-bottom: 20px;
 box-sizing: border-box;
 }
+.top{
+      text-align: center;
+      font-size: 9px;
+      color:#989b9d;
+      margin: 5px auto;
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: center
+    }
 header{
     width: 100%;
     height: 80px;
@@ -183,7 +293,7 @@ section::-webkit-scrollbar{
     border-radius: 15px;
     padding: 20px;
     box-sizing: border-box;
-    margin-top: 20px;
+    /* margin-top: 20px; */
 }
 .typebox{
     display: flex;

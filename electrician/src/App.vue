@@ -60,7 +60,7 @@ export default {
               message: this.messages,
               closeOnClickOverlay:true
             });
-    },
+            },
     send: function () {
         this.socket.send(params)
     },

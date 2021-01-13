@@ -22,15 +22,25 @@
              <div>
                 <p class="context"><span>*</span>上传服务报告</p>
                   <div class="xuxian">
-                 <dl>
-                  <dt>
-                    <van-uploader v-model="fileLists" multiple :max-count="1"  :after-read="upimgbtn">
-                      <img :src="imgs" alt="" style="width: 34px;height: 24px;display:block">
-                    </van-uploader>
-                  </dt>
-                  <dd>添加照片</dd>
-                </dl>
-              </div>
+                    <!-- <dl>
+                      <dt>
+                        <van-uploader v-model="fileLists" multiple :max-count="1"  :after-read="upimgbtn">
+                          <img :src="imgs" alt="" style="width: 34px;height: 24px;display:block">
+                        </van-uploader>
+                      </dt>
+                      <dd>添加照片</dd>
+                   </dl> -->
+
+                    <van-uploader v-model="fileLists" :after-read="upimgbtn" :max-count="1">
+                            <dl>
+                                <dt>
+                                <img :src="imgs" alt="" style="width:34px;height:24px;margin-top: -10px;">
+                                </dt>
+                                <dd>上传图片</dd>
+                            </dl>
+                       </van-uploader> 
+
+                  </div>
             </div>
 
         </div>
@@ -99,7 +109,32 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+/deep/ .van-image__img{
+  object-fit: fill !important;
+}
+/deep/ .van-uploader{
+    width: 100%;
+    height: 100%;
+    display: inline;
+}
+/deep/ .van-uploader__preview{
+margin: 0;
+    width: 100%;
+    height: 100%;
+}
+/deep/  .van-uploader__preview-image{
+   width: 100%;
+   height: 100%;
+}
+/deep/ .van-uploader__input-wrapper{
+    width: 100%;
+    height: 100%;
+}
+/deep/ .van-uploader__wrapper{
+    width: 100%;
+    height: 100%;
+}
 .contianer{
 width: 100%;
 height: 100%;
@@ -158,9 +193,7 @@ box-sizing: border-box;
 .contentbox .content div:nth-child(2){
 margin-top: 10px;
 }
-.contentbox .content div:nth-child(2) div{
-margin-top: 20px;
-}
+
 .contentbox .content div .titles{
 font-size: 13px;
 font-weight: bold;
@@ -263,19 +296,23 @@ font-weight: bold;
 }
 
  .xuxian dl{
+   width: 100%;
+   height:100%;
     text-align: center;
     margin: 0;
     padding: 0;
 }
 .xuxian dl dt{
-  width: 100%;
-  height: 100%;
+  // width: 100%;
+  // height: 100%;
+      margin-top: 30px;
 }
 .xuxian dl dd{
 font-size: 13px;
 color: #66b3e5;
 margin: 0;
 padding: 0;
+    // margin-top: -40px;
 }
 /deep/  .xuxian dl dt .van-uploader__upload{
   width: 50px;
@@ -305,8 +342,6 @@ background: #ffffff;
 /deep/ .van-uploader__preview{
   margin: 0;
 }
-/deep/ .van-uploader__preview-delete{
-  margin-top: -17px;
-}
+
 
 </style>>
