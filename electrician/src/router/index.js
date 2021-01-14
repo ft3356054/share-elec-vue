@@ -133,7 +133,7 @@ const routes = [
     },
     // 待预约
     {
-      path: '/appointment:orderId/:electricianId',
+      path: '/appointment/:orderId/:electricianId',
       name: 'Appointment',
       component: () => import('@/pages/electricianend/appointment')
 
@@ -153,7 +153,7 @@ const routes = [
     },
     // 去维修
     {
-      path: '/repair:orderId/:electricianId',
+      path: '/repair/:orderId/:electricianId',
       name: 'Repair',
       component: () => import('@/pages/electricianend/repair')
     },
@@ -202,7 +202,7 @@ const routes = [
     },
     // 现场勘察
     {
-      path: '/prospecting',
+      path: '/prospecting/:orderId/:electricianId',
       name: 'Prospecting',
       component: () => import('@/pages/electricianend/prospecting')
     },
@@ -218,6 +218,12 @@ const routes = [
       name: 'Cancel',
       component: () => import('@/pages/electricianend/returnorder/cancel')
     },
+     // 支付
+     {
+      path: '/payment',
+      name: 'Payment',
+      component: () => import('@/pages/electricianend/payment')
+    },
     // 上传合同
     {
       path: '/uploadcontract',
@@ -226,7 +232,7 @@ const routes = [
     },
     // 人员增加
     {
-      path: '/personneladd:orderId/:electricianId',
+      path: '/personneladd/:orderId/:electricianId',
       name: 'Personneladd',
       component: () => import('@/pages/electricianend/personneladd')
     },

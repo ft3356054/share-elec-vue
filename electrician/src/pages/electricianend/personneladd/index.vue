@@ -20,7 +20,7 @@
              <div>
                 <p class="add"><span></span><span>人员增加</span><span @click="addbtn"><img src="../../../assets/images/peopleadd.png" alt=""></span></p>
                 <div v-if="addlist!=undefined" style="margin-top:0;">
-                <p style="font-size:15px;margin-top:5px"  v-for="(item,index) in addlist" :key="index">{{item.electricianName}}{{item.electricianPhonenumber}}</p>
+                        <p style="font-size:15px;margin-top:5px"  v-for="(item,index) in addlist" :key="index">{{item.electricianName}}{{item.electricianPhonenumber}} <span @click="deletebtn(item)">删除</span> </p>
                 </div>
                 <!-- <textarea v-model="context" @keydown="context=context.replace(/\+/g,'')" name="" id="" cols="30" rows="5" style="width:100%;margin-top:5px;background:#f7fbff;border:0;outline:none;font-size:13px;font-weight:bold" placeholder="例：刘强 13812345678，杨磊 15584552222"></textarea> -->
                 <!-- <p><button @click="showPopup">保存</button><button @click="deletebtn">删除</button></p> -->
@@ -48,7 +48,6 @@ export default {
     return {
       times: '',
       show: false,
-      context:"",
       orderId:"",
       electricianId:"",
       data:[],
@@ -56,13 +55,8 @@ export default {
     }
   },
   mounted(){
-      console.log(this.$route.params)
-      if(this.$route.params.electricianName===undefined){
-          this.addlist=[]
-      }else{
-      this.addlist.push(this.$route.params.electricianName)
-      }
-      console.log(this.addlist)
+      var datas=JSON.parse(sessionStorage.getItem('initialize'))
+      this.addlist=datas
       this.getlist()
   },
   methods: {
@@ -77,29 +71,44 @@ export default {
      this.$router.push("/electricianend")
     },
     addbtn(){
-        // this.$router.push("electricianinquiry")
          this.$router.push({name:'Electricianinquiry',params:{electricianId:this.electricianId,orderID:this.orderId}})
     },
     Order () {
-         var fd=new FormData()
-        var params={}
-        params=fd
-      params.append("items",`{
-          "orderId":"${this.orderId}",
-          "method":"开始施工",
-          "electricianId":"${this.electricianId}",
-          "orderElectricianStatus":"31",
-          "orderStatus":"31",
-          "orderElectricianId":"{${this.addlist[0].electricianId}}",
-          "remark_str1":[{${this.addlist[0].electricianName}:"${this.addlist[0].electricianPhonenumber}"}]
-          }`)
-          console.log(params)
-      this.$axios.post("/orderElectrician/booking", params).then(res => {
-            // this.$router.push({name:'Completion',params:{orderId:this.orderId,electricianId:this.electricianId}})
-            this.$router.push("/electricianend")
-        }).catch(err => {
-            alert(err)
-        })
+        var addlists=[]
+        addlists=this.addlist
+        // console.log(addlists)
+        // 总对象
+        // var object={}
+        var electricianId=[]
+        // 总数组
+        // var data=[]
+        // 数据循环
+       addlists.forEach(element => {
+        //    object={
+        //        electricianPhonenumber:element.electricianPhonenumber,
+        //        electricianName:element.electricianName
+        //    }
+            // data.push(object)
+            electricianId.push(element.electricianId)
+        });
+            //  var datas=JSON.stringify(data)
+             var fd=new FormData()
+                    var params={}
+                    params=fd
+                    params.append("items",`{
+                    "orderId":"${this.orderId}",
+                    "method":"开始施工",
+                    "electricianId":"${this.electricianId}",
+                    "orderElectricianStatus":"31",
+                    "orderStatus":"31",
+                    "otherElectricianId":"{${electricianId}}",
+                    }`)
+                this.$axios.post("/orderElectrician/booking", params).then(res => {
+                        this.$router.push("/electricianend")
+                        sessionStorage.clear()
+                    }).catch(err => {
+                        alert(err)
+                    })
     },
     returnorder () {
       this.$router.push('/returnorder')
@@ -107,17 +116,17 @@ export default {
     showPopup () {
       this.show = true
     },
-    deletebtn(){
-    this.context=""
+    deletebtn(item){
+        console.log(item)
           var fd=new FormData()
-        var params={}
-        params=fd
-      params.append("items",`{
+          var params={}
+          params=fd
+          params.append("items",`{
               "orderId":"${this.orderId}",
               "method":"电工人员删除",
               "electricianId":"${this.electricianId}",
-              "name":"小红",
-              "telephone":"18733243626"
+              "name":"${item.electricianName}",
+              "telephone":"${item.electricianPhonenumber}"
             }`)
      
       this.$axios.post("/orderElectrician/booking", params).then(res => {

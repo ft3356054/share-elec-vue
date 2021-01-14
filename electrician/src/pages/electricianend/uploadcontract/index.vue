@@ -268,7 +268,7 @@ margin-right: 10px;
 }
 .uploudimg span:nth-child(3){
    width: 83px;
-   height: 70px;
+   height: auto;
    /* flex: 1; */
    display: inline-block;
    margin-left: 20px;

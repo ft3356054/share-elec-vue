@@ -33,7 +33,7 @@
 </template>
 <script>
 import { location } from '../../../apiconfig/location'
-import AMap from 'vue-amap'
+// import AMap from 'vue-amap'
 export default {
   data () {
     let vm = this

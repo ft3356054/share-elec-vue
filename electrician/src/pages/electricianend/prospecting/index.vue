@@ -60,7 +60,7 @@ export default {
         });
     },
     goback () {
-      this.$router.go('electricianend')
+      this.$router.push('/electricianend')
     },
     Order (item) {
         var fd=new FormData()
@@ -77,7 +77,7 @@ export default {
      
       this.$axios.post("/orderElectrician/booking", params).then(res => {
         //  this.$router.push({name:'Uploadcontract',params:{orderId:this.orderId,electricianId:this.electricianId}})
-         this.$router.push('electricianend')
+         this.$router.push('/electricianend')
         }).catch(err => {
             alert(err)
         })

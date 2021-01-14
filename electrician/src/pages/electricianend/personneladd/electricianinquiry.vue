@@ -24,14 +24,14 @@ export default {
       searchtext:'',
       data:[],
       electricianId:"",
-      orderId:""
+      orderId:"",
+      datas:[]
     }
   },
   mounted () {
     //   this.getelectri()
     this.electricianId=this.$route.params.electricianId
     this.orderId=this.$route.params.orderID
-    console.log(this.$route.params)
   },
   methods: {
     //   getelectri(){
@@ -43,14 +43,22 @@ export default {
       this.$router.go(-1)
     },
     serchbtn(){
-    console.log(this.orderId)
       var params=this.searchtext
       this.$axios.get(`/orderElectrician/queryElectrician?electricianId=${this.electricianId}&electricianName=${this.searchtext}`).then(res => {
           this.data=res.data.resultValue
         });
     },
     gobackbtn(item){
-      this.$router.push({name:'Personneladd',params:{electricianName:item,orderId:this.orderId}})
+      let getData=JSON.parse(sessionStorage.getItem("initialize"))
+      if (getData!=null) {
+        console.log(item)
+        getData.push(item)
+        sessionStorage.setItem('initialize', JSON.stringify(getData))
+	    }else{
+        this.datas.push(item)
+        sessionStorage.setItem('initialize', JSON.stringify(this.datas))
+      }
+      this.$router.push({name:'Personneladd',params:{electricianName:getData,orderId:this.orderId}})
     }
   }
 }

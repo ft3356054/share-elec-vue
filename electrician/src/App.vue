@@ -22,7 +22,6 @@ export default {
         this.isRouterAlive=true
       })
     },
-<<<<<<< HEAD
      WebSocketTest(){
          if(typeof(WebSocket) === "undefined"){
                 alert("您的浏览器不支持socket")
@@ -63,8 +62,6 @@ export default {
     close: function () {
         console.log("socket已经关闭")
     },
-=======
->>>>>>> 2d73917c7984921b77cf7051f267f9ccbbbd8b19
   },
   destroyed() {
     localStorage.clear()

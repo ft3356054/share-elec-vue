@@ -77,7 +77,7 @@
         </div>
          <div class="content context"  v-for="(item2,index) in calledData" :key="'context'+index" @click="gocomlete(item2)" v-show="num==2">
             <div class="typebox">
-                <p><span>类别</span><span>泵房线路安装</span></p>
+                <p><span>类别</span><span>{{item2.orderTypeId}}</span></p>
                 <p></p>
                 <p>{{item2.createTime}}</p>
             </div>
@@ -89,7 +89,7 @@
                         <p>{{item2.voltage}} 抢修 {{item2.distance}}</p>
                     </dt>
                     <dd>
-                        <p style="line-height:70px;font-size:15px;color:orange">已完成</p>
+                        <p style="color:orange">已完成</p>
                     </dd>
                 </dl>
             </div>
@@ -410,7 +410,7 @@ text-align: right;
 padding-left: 10px;
 box-sizing: border-box;
 line-height: 70px;
-font-size: 15px;
+font-size: 12px;
 }
 section .contentbox .content .addressbox dd button{
 width: 50px;
