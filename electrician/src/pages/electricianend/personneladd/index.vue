@@ -22,22 +22,9 @@
                 <div v-if="addlist!=undefined" style="margin-top:0;">
                         <p style="font-size:15px;margin-top:5px"  v-for="(item,index) in addlist" :key="index">{{item.electricianName}}{{item.electricianPhonenumber}} <span @click="deletebtn(item)">删除</span> </p>
                 </div>
-                <!-- <textarea v-model="context" @keydown="context=context.replace(/\+/g,'')" name="" id="" cols="30" rows="5" style="width:100%;margin-top:5px;background:#f7fbff;border:0;outline:none;font-size:13px;font-weight:bold" placeholder="例：刘强 13812345678，杨磊 15584552222"></textarea> -->
-                <!-- <p><button @click="showPopup">保存</button><button @click="deletebtn">删除</button></p> -->
             </div>
         </div>
     <div class="buttons"><button @click="Order">开始施工</button></div>
-    <!-- <van-popup v-model="show">
-        <p class="guanbi" @click="guanbi"><img src="../../../assets/images/close.png" alt=""></p>
-        <p class="title">请确认增加人员信息是否正确</p>
-        <div class="context">
-            <p>刘强 138555454545</p>
-            <p>杨磊 138555454545</p>
-        </div>
-        <div class="btnbox">
-            <button @click="foubtn">否</button><button @click="preservation">是</button>
-        </div>
-    </van-popup> -->
     </div>
 </div>
 </template>
@@ -76,22 +63,10 @@ export default {
     Order () {
         var addlists=[]
         addlists=this.addlist
-        // console.log(addlists)
-        // 总对象
-        // var object={}
         var electricianId=[]
-        // 总数组
-        // var data=[]
-        // 数据循环
-       addlists.forEach(element => {
-        //    object={
-        //        electricianPhonenumber:element.electricianPhonenumber,
-        //        electricianName:element.electricianName
-        //    }
-            // data.push(object)
+        addlists.forEach(element => {
             electricianId.push(element.electricianId)
         });
-            //  var datas=JSON.stringify(data)
              var fd=new FormData()
                     var params={}
                     params=fd
@@ -117,23 +92,15 @@ export default {
       this.show = true
     },
     deletebtn(item){
-        console.log(item)
-          var fd=new FormData()
-          var params={}
-          params=fd
-          params.append("items",`{
-              "orderId":"${this.orderId}",
-              "method":"电工人员删除",
-              "electricianId":"${this.electricianId}",
-              "name":"${item.electricianName}",
-              "telephone":"${item.electricianPhonenumber}"
-            }`)
-     
-      this.$axios.post("/orderElectrician/booking", params).then(res => {
-            console.log(res)
-        }).catch(err => {
-            alert(err)
-        })
+        for(let i=0;i<this.addlist.length;i++){
+            console.log(this.addlist[i])
+            if(item.electricianId===this.addlist[i].electricianId){
+                this.addlist.splice(i,1)
+            }
+        }
+        if(this.addlist.length===0){
+            sessionStorage.clear()
+        }
     },
     guanbi () {
       this.show = false

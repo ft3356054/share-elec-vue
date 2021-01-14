@@ -23,7 +23,7 @@
                 <p class="pswidth"><span>发单时间</span><span>{{item.createTime}}</span></p>
             </div>
         </div>
-            <div class="buttons"><button @click="Order(item)">立即接单</button></div>
+            <div class="buttons"><button @click="Order(item)">立即抢单</button></div>
     </div>
 </div>
 </template>
@@ -49,23 +49,37 @@ export default {
                 console.log(response.data);
                 this.data=response.data.resultValue.items
             });
+            
       },
     goback () {
       this.$router.go(-1)
     },
      Order (item) {
-         console.log(item)
-      var params={
-          "orderId":item.orderId,
-          "electricianId":this.electricianId
-      }
-        this.$axios.post(`/orderElectrician/accept?orderId=${this.orderId}&electricianId=${this.electricianId}`) .then(res => {
-            // if(res.successful){
-            //     Toast.success('抢单成功')
-            // }
-            this.$router.push({name:'Appointment',params:{orderId:item.orderId,electricianId:this.electricianId}})
+                var params={
+                    "orderId":item.orderId,
+                    "electricianId":this.electricianId
+                      }
+                    this.$axios.get("/orderElectrician/qiangdanrecept", {params}) .then(res => {
+                        if(res.data.successful==false){
+                            Toast.fail(`${res.data.resultHint}`,3000)
+                        }else{
 
-    });
+
+                             this.$dialog.alert({
+                                width:"80%",
+                                message: '抢单成功',
+                                confirmButtonColor:"#87cefa"
+                            })
+                            .then((res) => {
+                                // console.log("点击了确认按钮噢")
+                                console.log(params.orderId)
+                                this.$router.push({name:'Appointment',params:{orderId:params.orderId,electricianId:this.electricianId}})
+                            })
+                        }
+                    });
+
+
+
     }
   }
 }
@@ -80,12 +94,12 @@ position: relative;
 }
 .contianer .backgroundbox{
     width: 100%;
-    height: 135px;
+     height: 135px;
     background-color: #87cefa;
     border-bottom-right-radius: 20%;
     border-bottom-left-radius: 20%;
 display: flex;
-padding-top: 42px;
+padding-top:10px;
     box-sizing: border-box;
 }
 .contianer .backgroundbox p{
@@ -105,7 +119,7 @@ font-weight: bold;
 }
 .contentbox{
     position: absolute;
-    top: 85px;
+    top: 35px;
     left: 0;
     width: 100%;
     height: auto;

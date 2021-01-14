@@ -5,7 +5,7 @@
         <p>待抢订单</p>
     </div>
     <div class="contentbox">
-        <div class="content" v-for="(item,index) in data" :key="index">
+        <div class="content" v-for="(item,index) in data" :key="index" @click="godetails(item)">
             <div class="typebox">
                 <p><span>类别</span><span>插座跳闸</span></p>
                 <p></p>
@@ -75,6 +75,9 @@ export default {
                 });
             }
     });
+    },
+    godetails(item){
+        this.$router.push({name:'Ordergrabbingdetail',params:{orderId:item.orderId,electricianId:this.electricianId}})
     }
   }
 }

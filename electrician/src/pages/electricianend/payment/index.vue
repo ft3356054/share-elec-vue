@@ -7,7 +7,7 @@
     <div class="contentbox" v-for="(item,index) in data" :key="index">
         <div class="content">
             <p style="text-align:center;font-size:15px">支付金额</p>
-            <p style="text-align:center;font-size:35px;color:orange"><span style="font-size:15px">￥</span>{{item.customerPrice}}</p>
+            <p style="text-align:center;font-size:35px;color:orange"><span style="font-size:15px">￥</span>{{price}}</p>
             <p style="display:flex;font-size:15px">
                 <span style="color:#808080">订单编号</span>
                 <span style="flex:1;text-align:right">{{item.orderId}}</span>
@@ -29,7 +29,8 @@ export default {
     return {
       orderId:"",
       electricianId:"",
-      data:[]
+      data:[],
+      price:""
     }
   },
   mounted(){
@@ -49,6 +50,8 @@ export default {
          this.$api.get("/orderElectrician/orderDetails/"+this.orderId, {"electricianId":this.electricianId}, response => {
             console.log(response.data);
             this.data=response.data.resultValue.items
+            this.price=response.data.resultValue.items[0].customerPrice*1+response.data.resultValue.items[0].electricianPrice*1
+            console.log(this.price)
         });
     }
   }
