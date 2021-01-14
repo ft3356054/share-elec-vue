@@ -135,8 +135,8 @@ export default {
       baseVoltageData:[],
       files:{},
       fd:{},
-      addressLongitude:172.125447, //坐标
-      addressLatitude:95.265478,  //坐标
+      addressLongitude:117.223132, //坐标
+      addressLatitude:39.134212,  //坐标
       set:"",
     };
   },
