@@ -63,8 +63,6 @@ export default {
                         if(res.data.successful==false){
                             Toast.fail(`${res.data.resultHint}`,3000)
                         }else{
-
-
                              this.$dialog.alert({
                                 width:"80%",
                                 message: '抢单成功',
@@ -77,9 +75,6 @@ export default {
                             })
                         }
                     });
-
-
-
     }
   }
 }

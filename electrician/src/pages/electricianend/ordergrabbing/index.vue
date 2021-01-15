@@ -5,7 +5,7 @@
         <p>待抢订单</p>
     </div>
     <div class="contentbox">
-        <div class="content" v-for="(item,index) in data" :key="index" @click="godetails(item)">
+        <div class="content" v-for="(item,index) in data" :key="index">
             <div class="typebox">
                 <p><span>类别</span><span>插座跳闸</span></p>
                 <p></p>
@@ -13,7 +13,7 @@
             </div>
             <div class="addressbox">
                 <dl>
-                    <dt>
+                    <dt @click="godetails(item)">
                         <p>{{item.customerAddress}}</p>
                         <p>{{item.customerDescrive}}</p>
                         <p>{{item.voltage}} 抢修 {{item.distance}}</p>

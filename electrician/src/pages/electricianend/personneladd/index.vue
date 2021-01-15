@@ -20,7 +20,7 @@
              <div>
                 <p class="add"><span></span><span>人员增加</span><span @click="addbtn"><img src="../../../assets/images/peopleadd.png" alt=""></span></p>
                 <div v-if="addlist!=undefined" style="margin-top:0;">
-                        <p style="font-size:15px;margin-top:5px"  v-for="(item,index) in addlist" :key="index">{{item.electricianName}}{{item.electricianPhonenumber}} <span @click="deletebtn(item)">删除</span> </p>
+                        <p style="font-size:15px;margin-top:20px;display:flex"  v-for="(item,index) in addlist" :key="index">{{item.electricianName}}{{item.electricianPhonenumber}} <span @click="deletebtn(item)" style="flex:1;text-align:right;color:red">删除</span> </p>
                 </div>
             </div>
         </div>
@@ -43,6 +43,17 @@ export default {
   },
   mounted(){
       var datas=JSON.parse(sessionStorage.getItem('initialize'))
+      var datasA=JSON.parse(sessionStorage.getItem('initialize1'))
+    //   console.log(datas)
+    //   console.log(datasA)
+      var newArr=[]
+      if(datasA!=null){
+          for(var i=0;i<datasA.length;i++){
+                // this.addlist.push(datasA[i])
+                newArr.push(datasA[i])
+                console.log(newArr)
+          }
+      } 
       this.addlist=datas
       this.getlist()
   },
@@ -56,6 +67,7 @@ export default {
     },
     goback () {
      this.$router.push("/electricianend")
+    sessionStorage.clear()
     },
     addbtn(){
          this.$router.push({name:'Electricianinquiry',params:{electricianId:this.electricianId,orderID:this.orderId}})
@@ -65,7 +77,7 @@ export default {
         addlists=this.addlist
         var electricianId=[]
         addlists.forEach(element => {
-            electricianId.push(element.electricianId)
+        electricianId.push(element.electricianId)
         });
              var fd=new FormData()
                     var params={}
@@ -92,10 +104,13 @@ export default {
       this.show = true
     },
     deletebtn(item){
+      var datas=JSON.parse(sessionStorage.getItem('initialize'))
+
         for(let i=0;i<this.addlist.length;i++){
-            console.log(this.addlist[i])
             if(item.electricianId===this.addlist[i].electricianId){
                 this.addlist.splice(i,1)
+                // sessionStorage.removeItem("initialize")
+                sessionStorage.setItem("initialize",JSON.stringify(this.addlist) )
             }
         }
         if(this.addlist.length===0){

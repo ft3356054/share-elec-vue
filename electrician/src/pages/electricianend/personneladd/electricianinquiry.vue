@@ -51,14 +51,29 @@ export default {
     gobackbtn(item){
       let getData=JSON.parse(sessionStorage.getItem("initialize"))
       if (getData!=null) {
-        console.log(item)
-        getData.push(item)
-        sessionStorage.setItem('initialize', JSON.stringify(getData))
+        if(typeof(getData)===Object){
+          alert("111")
+        }else{
+          let newArr=getData.find((n)=>n.electricianId == item.electricianId)
+        if(newArr){
+            this.$dialog.alert({
+              width:"80%",
+              message: "不能选择重复的电工",
+              closeOnClickOverlay:true
+            });
+             return;
+         
+        }else{
+           getData.push(item)
+           sessionStorage.setItem('initialize', JSON.stringify(getData))
+        }
+        }
+       
 	    }else{
         this.datas.push(item)
         sessionStorage.setItem('initialize', JSON.stringify(this.datas))
       }
-      this.$router.push({name:'Personneladd',params:{electricianName:getData,orderId:this.orderId}})
+      this.$router.push({name:'Personneladd',params:{orderId:this.orderId}})
     }
   }
 }

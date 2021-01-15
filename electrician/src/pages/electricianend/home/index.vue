@@ -128,7 +128,8 @@ export default {
       electricianId:"321",
       orderId:"",
       show:false,
-      path:"ws://localhost:8083/websocketserver/",  //websocketserver
+      path:"ws://localhost:8083/websocketserver/",  //websocketserver,
+      gettime:""
     }
   },
   created () {
@@ -229,7 +230,17 @@ export default {
           this.$router.push({name:'Evaluate',params:{orderId:item.orderId,electricianId:this.electricianId}})
      },
     gordergrabbing () { 
-      this.$router.push('/ordergrabbing')
+            //   var _this = this;
+		    //   let hh = new Date().getHours();
+		    //   let mf = new Date().getMinutes()<10 ? '0'+new Date().getMinutes() : new Date().getMinutes();
+		    //   let ss = new Date().getSeconds()<10 ? '0'+new Date().getSeconds() : new Date().getSeconds();
+		    //   _this.gettime =hh+':'+mf+':'+ss;
+            //   console.log(_this.gettime)
+            //   console.log()
+            //   if(this.gettime==="18:00:00"&&this.gettime<"23:59:59"){
+            //       alert("1111")
+            //   }
+              this.$router.push('/ordergrabbing')
     },
     jiedan (item) {
       this.$router.push({name:'Ordergrabbingdetail',params:{orderId:item.orderId,electricianId:this.electricianId}})

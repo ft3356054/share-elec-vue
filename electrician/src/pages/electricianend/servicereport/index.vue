@@ -22,15 +22,6 @@
              <div>
                 <p class="context"><span>*</span>上传服务报告</p>
                   <div class="xuxian">
-                    <!-- <dl>
-                      <dt>
-                        <van-uploader v-model="fileLists" multiple :max-count="1"  :after-read="upimgbtn">
-                          <img :src="imgs" alt="" style="width: 34px;height: 24px;display:block">
-                        </van-uploader>
-                      </dt>
-                      <dd>添加照片</dd>
-                   </dl> -->
-
                     <van-uploader v-model="fileLists" :after-read="upimgbtn" :max-count="1">
                             <dl>
                                 <dt>
@@ -72,7 +63,6 @@ export default {
         this.orderId=this.$route.params.orderId
         this.electricianId=this.$route.params.electricianId
         this.$api.get("/orderElectrician/orderDetails/"+this.orderId, {"electricianId":this.electricianId}, response => {
-        console.log(response.data);
         this.data=response.data.resultValue.items
         });
     },
@@ -87,23 +77,30 @@ export default {
       this.files=file.file
     },
      Order () {
-      
-      var fd=new FormData()
+      if(this.fileLists===[]){
+         this.$dialog.alert({
+                width:"80%",
+                message: "请上传照片",
+                confirmButtonText: "确定",
+                confirmButtonColor:"#87cefa"
+            })
+      }else{
+        var fd=new FormData()
          if(this.files===null|| this.files===""){
              fd.append("myFile","")
-         console.log(fd)
          }else{
              fd.append("myFile",this.files)
-            console.log(fd.get("myFile"))
          }
          this.fd=fd
         this.fd.append("items",`{"orderId":"${this.orderId}","method":"验收申请","electricianId":"${this.electricianId}","orderElectricianStatus":"25","orderStatus":"25"}`)
         this.$axios.post("/orderElectrician/booking", this.fd, {headers: {'Content-Type': 'multipart/form-data'}}).then(res => {
             // this.$router.push({name:'Evaluate',params:{orderId:this.orderId,electricianId:this.electricianId}})
-            this.$router.push('electricianend')
+            this.$router.push('/electricianend')
         }).catch(err => {
             alert(err)
         })
+      }
+      
     },
   }
 }
