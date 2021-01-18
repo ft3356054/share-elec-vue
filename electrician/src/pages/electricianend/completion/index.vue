@@ -16,7 +16,10 @@
                 <p class="pswidth"><span>状态</span><span v-if="item.orderStatus==='31'">施工中</span></p>
                 <p class="pswidth"><span>维修价格</span><span id="money">{{item.electricianPrice}}</span></p>
                 <p class="pswidth"><span>勘察情况</span> <span>{{item.electricianDescrive}}</span> </p>
-                <p class="pswidth"><span>施工人员</span> <span style="display:inline-block;width:50px;overflow:hidden;word-break:break-all" id="peopleadd">{{item.remarkStr1}} <br> </span></p>
+                <p class="pswidth"><span>施工人员</span> 
+                <span style="display:inline-block;" id="peopleadd">{{item.remarkStr1}} 
+                </span>
+                </p>
             </div>
              <div>
                 <p class="context"><span>*</span>施工内容</p>
@@ -161,7 +164,7 @@ display: flex;
 margin-top: 5px;
 }
 .contentbox .content div .pswidth span:nth-child(1){
-width: 55px;
+width: 30%;
 font-size: 11px;
 margin-right: 27px;
 margin-left: 14px;
@@ -169,7 +172,6 @@ color: #6f6f6f;
 }
 .contentbox .content div .pswidth span:nth-child(2){
 flex: 1;
-/* width: 20px; */
 font-size: 11px;
 margin-right: 27px;
 color: #111111;

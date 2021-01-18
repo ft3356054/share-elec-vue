@@ -68,7 +68,6 @@ export default {
       jdimgs: require('../../../assets/images/Receivingorderss.png'),
       xximgs: require('../../../assets/images/rest.png'),
       userdata:[],
-      status1:""
     }
   },
   mounted () {

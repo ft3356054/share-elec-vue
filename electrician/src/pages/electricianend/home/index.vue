@@ -4,7 +4,14 @@
 <header>
     <div class="backimg">
         <p>
-            <span><img src="@/assets/images/message.png" alt="" @click="gomessages"></span>
+            <span  v-if="content=='0'? true : false " @click="gomessages">
+                <img src="@/assets/images/message.png" alt="" >
+            </span>
+            <span v-else @click="gomessages">
+                <van-badge  :content="this.content" max="99">
+                <img src="@/assets/images/message.png" alt="" />
+                </van-badge>
+            </span>
             <span></span>
             <span><img src="@/assets/images/information.png" alt="" @click="gouser"></span>
         </p>
@@ -16,9 +23,11 @@
                     <dt><img src="@/assets/images/ordergrabbing.png" alt=""></dt>
                     <dd>抢单</dd>
                 </dl>
-                <dl>
-                    <dt><img src="@/assets/images/stoporders.png" alt=""></dt>
-                    <dd>暂停接单</dd>
+                <dl @click="stylebtn">
+                    <dt v-if="lay_type"><img :src="img" alt=""></dt>
+                    <dt v-else><img :src="img1" alt=""></dt>
+                    <dd v-if="lay_type">开始接单</dd>
+                    <dd v-else>暂停接单</dd>
                 </dl>
                 <dl @click="gomyorderabbing">
                     <dt><img src="@/assets/images/Myorder.png" alt=""></dt>
@@ -112,6 +121,7 @@
 
 <script>
 import { Toast } from 'vant'
+import qs from 'qs'
 export default {
   data () {
     return {
@@ -119,17 +129,17 @@ export default {
       animate:false,
       data: [],
       datas:[],
-      messages: [
-        {name: '本系统将于24日凌晨24:00开始停机更新1'},
-        {name: '本系统将于24日凌晨24:00开始停机更新2'},
-        {name: '本系统将于24日凌晨24:00开始停机更新3'},
-        {name: '本系统将于24日凌晨24:00开始停机更新4'}
-      ],
+      messages: [],
       electricianId:"321",
       orderId:"",
       show:false,
       path:"ws://localhost:8083/websocketserver/",  //websocketserver,
-      gettime:""
+      gettime:"",
+      content:"",
+      cust:"customer001",
+      img:require('../../../assets/images/startorder.png'),
+      img1:require('../../../assets/images/stoporders.png'),
+      lay_type:0, 
     }
   },
   created () {
@@ -139,9 +149,48 @@ export default {
         this.gettodo(),
         this.getevaluate(),
         this.getmessage()
-     this.WebSocketTest()  //websocketserver
+        this.WebSocketTest()  //websocketserver
+        this.getContent()
+        this.getdetail()
+    this.getuserinfo()
   },
   methods: {
+       getuserinfo(){
+      var params="321"
+      this.$axios.get("/orderElectrician/queryElectricianInfo/"+params).then(res => {
+          if(res.data.resultValue.items[0].electricianStatus=='1'){
+            this.lay_type=0
+          }else{
+            this.lay_type=1
+          }
+        });
+    },
+      stylebtn(){
+           if(this.lay_type == 0){
+               this.lay_type = 1
+               var params={statu:"休息中"}
+                    params=qs.stringify(params)
+                    this.$axios.post("/electricianInfo/changeStatus/321", params,{headers: {'Content-Type': 'application/x-www-form-urlencoded'}}) .then(res => {
+                        });
+               
+            }else{
+                this.lay_type = 0
+                  var params={
+                statu:"接单中"
+                }
+                params=qs.stringify(params)
+                this.$axios.post("/electricianInfo/changeStatus/321", params,{headers: {'Content-Type': 'application/x-www-form-urlencoded'}}) .then(res => {
+                });
+            }
+      },
+      getContent(){
+          this.$api.get(`/notifyAnnounceUser/notReadNum/${this.cust}`,{
+                },res=>{
+                  console.log(res)
+                    this.content=res.data.resultValue
+                      // console.log(this.content)
+                })
+    },
       getmessage(){
             var params={
                 "pageIndex":1,
@@ -154,19 +203,52 @@ export default {
                 alert(err)
             })
       },
+      getdetail(){
+        this.$api.get("/orderElectrician/orderDetails/"+this.orderId, {"electricianId":this.electricianId}, response => {
+            console.log(response.data.resultValue.items[0].orderElectricianStatus);
+            var items=response.data.resultValue.items[0]
+               if(items.orderElectricianStatus==="8"){
+                    this.$router.push({name:'Evaluate',params:{orderId:items.orderId,electricianId:this.electricianId}})
+                }else if(items.orderElectricianStatus==="9"){
+            // console.log(items)
+                    this.$router.push({name:'Completed',params:{orderId:items.orderId,electricianId:this.electricianId}})
+                }else if(items.orderElectricianStatus==="0"){
+                    this.$router.push({name:'Appointment',params:{orderId:items.orderId,electricianId:this.electricianId}})
+                }else if(items.orderElectricianStatus==="21"){
+                    this.$router.push({name:'Repair',params:{orderId:items.orderId,electricianId:this.electricianId}})
+                }else if(items.orderElectricianStatus==="22"){
+                    this.$router.push({name:'Prospecting',params:{orderId:items.orderId,electricianId:this.electricianId}})
+                }else if(items.orderElectricianStatus==="23"){
+                    this.$router.push({name:'Uploadcontract',params:{orderId:items.orderId,electricianId:this.electricianId}})
+                }else if(items.orderElectricianStatus==="24"){
+                    this.$router.push({name:'Servicereport',params:{orderId:items.orderId,electricianId:this.electricianId}})
+                }else if(items.orderElectricianStatus==="25"){
+                    //  如果电工上传完待验收 改为只读状态
+                    // this.$router.push({name:'Servicereport',params:{orderId:item.orderId,electricianId:this.electricianId}})
+                    Toast.fail("待用户验收完成")
+                }else if(items.orderElectricianStatus==="26"){
+                    this.$router.push({name:'Uploadcontract',params:{orderId:items.orderId,electricianId:this.electricianId}})
+                }else if(items.orderElectricianStatus==="31"){
+                    this.$router.push({name:'Completion',params:{orderId:items.orderId,electricianId:this.electricianId}})
+                }else if(items.orderElectricianStatus==="3"){
+                    this.$router.push({name:'Personneladd',params:{orderId:items.orderId,electricianId:this.electricianId}})
+                }
+        });
+    },
     //   消息滚屏事件
       scroll(){
             this.animate=true;    // 因为在消息向上滚动的时候需要添加css3过渡动画，所以这里需要设置true
             setTimeout(()=>{      //  这里直接使用了es6的箭头函数，省去了处理this指向偏移问题，代码也比之前简化了很多
                     this.messages.push(this.messages[0]);  // 将数组的第一个元素添加到数组的
-                    this.messages.shift();               //删除数组的第一个元素
+                    this.messages.shift();              //删除数组的第一个元素
                     this.animate=false;  // margin-top 为0 的时候取消过渡动画，实现无缝滚动
             },800)
       },
       gomessagedetail(item){
           console.log(item)
          this.$axios.get(`/notifyAnnounce/read/?params={"filter":["announceId=${item.announceId}","announceUserId=${item.announceUserId}"]}`).then(res => {
-                console.log(res)
+                 this.orderId=res.data.resultValue.items[0].orderId
+                this.getdetail()
             }).catch(err => {
                 alert(err)
             })
@@ -230,17 +312,16 @@ export default {
           this.$router.push({name:'Evaluate',params:{orderId:item.orderId,electricianId:this.electricianId}})
      },
     gordergrabbing () { 
-            //   var _this = this;
-		    //   let hh = new Date().getHours();
-		    //   let mf = new Date().getMinutes()<10 ? '0'+new Date().getMinutes() : new Date().getMinutes();
-		    //   let ss = new Date().getSeconds()<10 ? '0'+new Date().getSeconds() : new Date().getSeconds();
-		    //   _this.gettime =hh+':'+mf+':'+ss;
-            //   console.log(_this.gettime)
-            //   console.log()
-            //   if(this.gettime==="18:00:00"&&this.gettime<"23:59:59"){
-            //       alert("1111")
-            //   }
-              this.$router.push('/ordergrabbing')
+             　let date=new Date();
+            　　if(date.getHours()>=18&&date.getHours()<9){
+            　　　this.$dialog.alert({
+                        width:"80%",
+                        message: "现在是下班时间，不可接单",
+                        closeOnClickOverlay:true
+                  });
+            　　}else{
+                    this.$router.push('/ordergrabbing')
+            }
     },
     jiedan (item) {
       this.$router.push({name:'Ordergrabbingdetail',params:{orderId:item.orderId,electricianId:this.electricianId}})
@@ -263,7 +344,7 @@ export default {
                 alert("您的浏览器不支持socket")
             }else{
                 // 实例化socket
-                var uid = "123";
+                var uid = "321";
                 this.socket = new WebSocket(this.path+uid)
                 // 监听socket连接
                 this.socket.onopen = this.open
