@@ -33,10 +33,10 @@ export default {
       this.$router.go(-1)
     },
     serchbtn(){
-      var params=this.searchtext
-      this.$axios.get("/electricianSubCompanyInfo/findCompany?companyName="+encodeURI(params)).then(res => {
+      this.$axios.get(`electricianCompanyInfo/findCompany?companyName=${this.searchtext}`).then(res => {
           this.data=res.data.resultValue.resultValue
-        });
+        });      
+
     },
     gobackbtn(item){
       this.$router.push({name:'Authentication',params:{companyName:item.companyName}})

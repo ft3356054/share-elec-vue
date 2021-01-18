@@ -7,7 +7,7 @@
     <div class="contentbox">
         <div class="content" v-for="(item,index) in data" :key="index">
             <div class="typebox">
-                <p><span>类别</span><span>插座跳闸</span></p>
+                <p><span>类别</span><span>{{item.orderTypeId}}</span></p>
                 <p></p>
                 <p>{{item.createTime}}</p>
             </div>

@@ -50,9 +50,7 @@ export default {
       this.$router.go(-1)
     },
     seebtn(item){
-        console.log(item)
             this.$axios.get(`/notifyAnnounce/read/?params={"filter":["announceId=${item.announceId}","announceUserId=${item.announceUserId}"]}`).then(res => {
-                console.log(res)
                 this.orderId=res.data.resultValue.items[0].orderId
                 this.getdetail()
             }).catch(err => {

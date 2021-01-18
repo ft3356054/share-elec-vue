@@ -207,7 +207,7 @@ display: flex;
 margin-top: 5px;
 }
 .contentbox .content div .pswidth span:nth-child(1){
-width: 55px;
+width: 30%;
 font-size: 11px;
 margin-right: 27px;
 margin-left: 14px;

@@ -4,8 +4,8 @@
         <p  @click="goback"><img src="../../../assets/images/jiantou.png" alt=""></p>
         <p>订单详情</p>
     </div>
-    <div class="contentbox" v-for="(item,index) in data" :key="index">
-        <div class="content">
+    <div class="contentbox">
+        <div class="content" v-for="(item,index) in data" :key="index">
             <div>
                 <p class="titles"><span></span>订单信息</p>
                 <p class="pswidth"><span>订单编号</span><span>{{item.orderId}}</span></p>
@@ -22,12 +22,12 @@
                 <p class="pswidth"><span>施工内容</span> <span>{{item.constructionContent}}</span> </p>
             </div>
         </div>
-         <div class="content">
+         <div class="bottom">
             <div>
                 <p style="font-size: 15px;font-weight: bold;">合同</p>
-                <img :src="item.orderContract" alt="" style="width:100%;height:100px;display:block">
+                <img :src="orderContractimg" alt="" style="width:100%;height:100px;display:block">
                 <p  style="font-size: 15px;font-weight: bold;">验收报告</p>
-                <img :src="item.inspectionReport" alt="" style="width:100%;height:100px;display:block">
+                <img :src="inspectionReport" alt="" style="width:100%;height:100px;display:block">
             </div>
         </div>
     </div>
@@ -40,7 +40,9 @@ export default {
     return {
         orderid:"",
         electricianId:"",
-        data:[]
+        data:[],
+        orderContractimg:"",
+        inspectionReport:""
     }
   },
   mounted(){
@@ -56,6 +58,8 @@ export default {
         this.$api.get("/orderElectrician/orderDetails/"+params.orderId, {"electricianId":params.electricianId}, response => {
             console.log(response.data);
             this.data=response.data.resultValue.items
+            this.orderContractimg=this.data[0].orderContract
+            this.inspectionReport=this.data[0].inspectionReport
         });
     },
     goback () {
@@ -71,13 +75,11 @@ width: 100%;
 height: 100%;
 background: #f0f6fd;
 position: relative;
+box-sizing: border-box;
 overflow: auto;
 }
-.contianer::-webkit-scrollbar{
-    width: 0;
-}
 .contianer .backgroundbox{
-    width: 100%;
+   width: 100%;
     height: 135px;
     background-color: #87cefa;
     border-bottom-right-radius: 20%;
@@ -100,7 +102,6 @@ flex: 1;
 text-align: center;
 font-size: 15px;
 font-weight: bold;
-/* margin-left: -30px; */
 }
 .contentbox{
     position: absolute;
@@ -110,21 +111,18 @@ font-weight: bold;
     height: auto;
     padding: 0 15px;
     box-sizing: border-box;
-    padding-bottom: 15px;
-    overflow: auto;
-}
-.contentbox::-webkit-scrollbar{
-    width: 0;
 }
 .contentbox .content{
     width: 100%;
     height: auto;
     border-radius: 16px;
     background: #ffffff;
-    padding: 3px 12px;
-    box-sizing: border-box;
+    padding: 15px 20px;
+box-sizing: border-box;
     margin-top: 10px;
+   box-shadow: 0px -5px 0px  #b4e0fc,0 -9px 0 #93d3fb;
 }
+
 .contentbox .content div{
 margin-top: 30px;
 }
@@ -147,7 +145,7 @@ display: flex;
 margin-top: 5px;
 }
 .contentbox .content div .pswidth span:nth-child(1){
-width: 55px;
+width: 30%;
 font-size: 11px;
 margin-right: 27px;
 margin-left: 14px;
@@ -155,10 +153,79 @@ color: #6f6f6f;
 }
 .contentbox .content div .pswidth span:nth-child(2){
 flex: 1;
-width: 55px;
 font-size: 11px;
 margin-right: 27px;
 color: #111111;
 font-weight: bold;
+}
+.contentbox .content div .pswidth #peopleadd{
+    /* flex: 0; */
+    display:inline-block;
+    width:50px;
+    overflow:hidden;
+    word-break:break-all
+}
+.contentbox .yuyuetime{
+    width: 100%;
+    height: 60px;
+    background: #ffffff;
+    margin-top: 15px;
+    border-radius: 16px;
+    line-height: 60px;
+    display: flex;
+    font-size: 15px;
+}
+.contentbox .yuyuetime span:nth-child(1){
+    color: red;
+    padding-left: 34px;
+    font-size: 12px;
+    box-sizing: border-box;
+}
+.contentbox .yuyuetime span:nth-child(3){
+flex: 1;
+padding-left: 22px;
+box-sizing: border-box;
+}
+.contentbox .yuyuetime span input{
+border:none;
+color: #4097ce;
+background: #ffffff;
+}
+.contentbox .yuyuetime span input::-webkit-clear-button{
+visibility:hidden;
+}
+.contentbox .yuyuetime span input::-webkit-calendar-picker-indicator{
+border: 0;
+outline: none;
+background: #ffffff;
+}
+.contentbox .content div .context span:nth-child(1){
+color: red;
+font-size: 15px;
+margin-right: 10px;
+}
+.contentbox .content div .context{
+font-size: 13px;
+font-weight: bold;
+}
+.bottom{
+    width: 100%;
+    height: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.bottom div{
+background: #ffffff;
+padding: 10px 10px;
+    box-sizing: border-box;
+}
+.bottom div p{
+margin-top: 10px;
+}
+.bottom div p:nth-child(1){
+margin-top: 0;
+}
+.bottom div img{
+margin-top: 10px;
 }
 </style>

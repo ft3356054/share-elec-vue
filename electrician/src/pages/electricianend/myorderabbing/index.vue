@@ -44,7 +44,7 @@
                 </dl>
             </div>
         </div>
-        <div class="content"  v-for="(item1,index) in doingData" :key="index" v-show="num==1" @click="godetail1(item)">
+        <div class="content"  v-for="(item1,index) in doingData" :key="index" v-show="num==1" @click="godetail1(item1)">
             <div class="typebox">
                 <p><span>类别</span><span>{{item1.orderTypeId}}</span></p>
                 <p></p>
@@ -101,6 +101,7 @@
 
 <script>
 import qs from "qs"
+import { Toast,Dialog} from 'vant'
 export default {
   data () {
     return {
