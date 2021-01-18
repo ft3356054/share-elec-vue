@@ -43,7 +43,7 @@ export default {
       },
     //   电工认证
        gorenzheng () {
-           if(this.list.realNameAuth=="1"){
+           if(this.list.realNameAuth=="1" || this.list.realNameAuth==null){
                Toast("您还没有实名认证，请实名认证")
            }else{
                 console.log(this.list.realNameAuth)
