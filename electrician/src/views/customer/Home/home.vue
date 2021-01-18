@@ -445,7 +445,9 @@ export default {
             }else{
                 // 实例化socket
                 var uid =this.cust
-                this.socket = new WebSocket(this.path+uid)
+                if( this.socket==null){
+                    this.socket = new WebSocket(this.path+uid)
+                }
                 // 监听socket连接
                 this.socket.onopen = this.open
                 // 监听socket错误信息
