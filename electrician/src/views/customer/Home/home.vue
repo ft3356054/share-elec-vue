@@ -444,7 +444,7 @@ export default {
                 alert("您的浏览器不支持socket")
             }else{
                 // 实例化socket
-                var uid = "123";
+                var uid =this.cust
                 this.socket = new WebSocket(this.path+uid)
                 // 监听socket连接
                 this.socket.onopen = this.open
