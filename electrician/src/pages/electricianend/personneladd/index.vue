@@ -20,24 +20,11 @@
              <div>
                 <p class="add"><span></span><span>人员增加</span><span @click="addbtn"><img src="../../../assets/images/peopleadd.png" alt=""></span></p>
                 <div v-if="addlist!=undefined" style="margin-top:0;">
-                <p style="font-size:15px;margin-top:5px"  v-for="(item,index) in addlist" :key="index">{{item.electricianName}}{{item.electricianPhonenumber}}</p>
+                        <p style="font-size:15px;margin-top:20px;display:flex"  v-for="(item,index) in addlist" :key="index">{{item.electricianName}}{{item.electricianPhonenumber}} <span @click="deletebtn(item)" style="flex:1;text-align:right;color:red">删除</span> </p>
                 </div>
-                <!-- <textarea v-model="context" @keydown="context=context.replace(/\+/g,'')" name="" id="" cols="30" rows="5" style="width:100%;margin-top:5px;background:#f7fbff;border:0;outline:none;font-size:13px;font-weight:bold" placeholder="例：刘强 13812345678，杨磊 15584552222"></textarea> -->
-                <!-- <p><button @click="showPopup">保存</button><button @click="deletebtn">删除</button></p> -->
             </div>
         </div>
     <div class="buttons"><button @click="Order">开始施工</button></div>
-    <!-- <van-popup v-model="show">
-        <p class="guanbi" @click="guanbi"><img src="../../../assets/images/close.png" alt=""></p>
-        <p class="title">请确认增加人员信息是否正确</p>
-        <div class="context">
-            <p>刘强 138555454545</p>
-            <p>杨磊 138555454545</p>
-        </div>
-        <div class="btnbox">
-            <button @click="foubtn">否</button><button @click="preservation">是</button>
-        </div>
-    </van-popup> -->
     </div>
 </div>
 </template>
@@ -48,7 +35,6 @@ export default {
     return {
       times: '',
       show: false,
-      context:"",
       orderId:"",
       electricianId:"",
       data:[],
@@ -56,13 +42,19 @@ export default {
     }
   },
   mounted(){
-      console.log(this.$route.params)
-      if(this.$route.params.electricianName===undefined){
-          this.addlist=[]
-      }else{
-      this.addlist.push(this.$route.params.electricianName)
-      }
-      console.log(this.addlist)
+      var datas=JSON.parse(sessionStorage.getItem('initialize'))
+      var datasA=JSON.parse(sessionStorage.getItem('initialize1'))
+    //   console.log(datas)
+    //   console.log(datasA)
+      var newArr=[]
+      if(datasA!=null){
+          for(var i=0;i<datasA.length;i++){
+                // this.addlist.push(datasA[i])
+                newArr.push(datasA[i])
+                console.log(newArr)
+          }
+      } 
+      this.addlist=datas
       this.getlist()
   },
   methods: {
@@ -75,31 +67,35 @@ export default {
     },
     goback () {
      this.$router.push("/electricianend")
+    sessionStorage.clear()
     },
     addbtn(){
-        // this.$router.push("electricianinquiry")
          this.$router.push({name:'Electricianinquiry',params:{electricianId:this.electricianId,orderID:this.orderId}})
     },
     Order () {
-         var fd=new FormData()
-        var params={}
-        params=fd
-      params.append("items",`{
-          "orderId":"${this.orderId}",
-          "method":"开始施工",
-          "electricianId":"${this.electricianId}",
-          "orderElectricianStatus":"31",
-          "orderStatus":"31",
-          "orderElectricianId":"{${this.addlist[0].electricianId}}",
-          "remark_str1":[{${this.addlist[0].electricianName}:"${this.addlist[0].electricianPhonenumber}"}]
-          }`)
-          console.log(params)
-      this.$axios.post("/orderElectrician/booking", params).then(res => {
-            // this.$router.push({name:'Completion',params:{orderId:this.orderId,electricianId:this.electricianId}})
-            this.$router.push("/electricianend")
-        }).catch(err => {
-            alert(err)
-        })
+        var addlists=[]
+        addlists=this.addlist
+        var electricianId=[]
+        addlists.forEach(element => {
+        electricianId.push(element.electricianId)
+        });
+             var fd=new FormData()
+                    var params={}
+                    params=fd
+                    params.append("items",`{
+                    "orderId":"${this.orderId}",
+                    "method":"开始施工",
+                    "electricianId":"${this.electricianId}",
+                    "orderElectricianStatus":"31",
+                    "orderStatus":"31",
+                    "otherElectricianId":"{${electricianId}}",
+                    }`)
+                this.$axios.post("/orderElectrician/booking", params).then(res => {
+                        this.$router.push("/electricianend")
+                        sessionStorage.clear()
+                    }).catch(err => {
+                        alert(err)
+                    })
     },
     returnorder () {
       this.$router.push('/returnorder')
@@ -107,24 +103,19 @@ export default {
     showPopup () {
       this.show = true
     },
-    deletebtn(){
-    this.context=""
-          var fd=new FormData()
-        var params={}
-        params=fd
-      params.append("items",`{
-              "orderId":"${this.orderId}",
-              "method":"电工人员删除",
-              "electricianId":"${this.electricianId}",
-              "name":"小红",
-              "telephone":"18733243626"
-            }`)
-     
-      this.$axios.post("/orderElectrician/booking", params).then(res => {
-            console.log(res)
-        }).catch(err => {
-            alert(err)
-        })
+    deletebtn(item){
+      var datas=JSON.parse(sessionStorage.getItem('initialize'))
+
+        for(let i=0;i<this.addlist.length;i++){
+            if(item.electricianId===this.addlist[i].electricianId){
+                this.addlist.splice(i,1)
+                // sessionStorage.removeItem("initialize")
+                sessionStorage.setItem("initialize",JSON.stringify(this.addlist) )
+            }
+        }
+        if(this.addlist.length===0){
+            sessionStorage.clear()
+        }
     },
     guanbi () {
       this.show = false

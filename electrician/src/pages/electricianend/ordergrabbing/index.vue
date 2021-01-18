@@ -13,7 +13,7 @@
             </div>
             <div class="addressbox">
                 <dl>
-                    <dt>
+                    <dt @click="godetails(item)">
                         <p>{{item.customerAddress}}</p>
                         <p>{{item.customerDescrive}}</p>
                         <p>{{item.voltage}} 抢修 {{item.distance}}</p>
@@ -75,6 +75,9 @@ export default {
                 });
             }
     });
+    },
+    godetails(item){
+        this.$router.push({name:'Ordergrabbingdetail',params:{orderId:item.orderId,electricianId:this.electricianId}})
     }
   }
 }

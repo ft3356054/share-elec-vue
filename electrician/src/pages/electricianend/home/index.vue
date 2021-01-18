@@ -32,8 +32,6 @@
                         <img src="@/assets/images/messagejiantou.png" alt="">
                     </ul>
                 </p>
-                <!-- <p></p> -->
-                <!-- <p><img src="@/assets/images/messagejiantou.png" alt=""></p> -->
             </div>
         </div>
     </div>
@@ -129,7 +127,9 @@ export default {
       ],
       electricianId:"321",
       orderId:"",
-      show:false
+      show:false,
+      path:"ws://localhost:8083/websocketserver/",  //websocketserver,
+      gettime:""
     }
   },
   created () {
@@ -139,6 +139,7 @@ export default {
         this.gettodo(),
         this.getevaluate(),
         this.getmessage()
+     this.WebSocketTest()  //websocketserver
   },
   methods: {
       getmessage(){
@@ -206,7 +207,11 @@ export default {
          }else if(item.orderElectricianStatus==="22"){
             this.$router.push({name:'Prospecting',params:{orderId:item.orderId,electricianId:this.electricianId}})
          }else if(item.orderElectricianStatus==="23"){
+             if(item.orderFrom==="来源APP端"){
             this.$router.push({name:'Uploadcontract',params:{orderId:item.orderId,electricianId:this.electricianId}})
+             }else{
+            this.$router.push({name:'Payment',params:{orderId:item.orderId,electricianId:this.electricianId}})
+             }
          }else if(item.orderElectricianStatus==="24"){
             this.$router.push({name:'Servicereport',params:{orderId:item.orderId,electricianId:this.electricianId}})
          }else if(item.orderElectricianStatus==="25"){
@@ -225,7 +230,17 @@ export default {
           this.$router.push({name:'Evaluate',params:{orderId:item.orderId,electricianId:this.electricianId}})
      },
     gordergrabbing () { 
-      this.$router.push('/ordergrabbing')
+            //   var _this = this;
+		    //   let hh = new Date().getHours();
+		    //   let mf = new Date().getMinutes()<10 ? '0'+new Date().getMinutes() : new Date().getMinutes();
+		    //   let ss = new Date().getSeconds()<10 ? '0'+new Date().getSeconds() : new Date().getSeconds();
+		    //   _this.gettime =hh+':'+mf+':'+ss;
+            //   console.log(_this.gettime)
+            //   console.log()
+            //   if(this.gettime==="18:00:00"&&this.gettime<"23:59:59"){
+            //       alert("1111")
+            //   }
+              this.$router.push('/ordergrabbing')
     },
     jiedan (item) {
       this.$router.push({name:'Ordergrabbingdetail',params:{orderId:item.orderId,electricianId:this.electricianId}})
@@ -241,7 +256,62 @@ export default {
     },
     gomessages () {
       this.$router.push('/messages')
-    }
+    },
+    // websocketserver
+       WebSocketTest(){
+         if(typeof(WebSocket) === "undefined"){
+                alert("您的浏览器不支持socket")
+            }else{
+                // 实例化socket
+                var uid = "123";
+                this.socket = new WebSocket(this.path+uid)
+                // 监听socket连接
+                this.socket.onopen = this.open
+                // 监听socket错误信息
+                this.socket.onerror = this.error
+                // 监听socket消息
+                this.socket.onmessage = this.getMessage
+//                 console.log(this.socket)
+            }
+    },
+    open: function () {
+            console.log("socket连接成功")
+        },
+    error: function () {
+        console.log("连接错误")
+    },
+    getMessage: function (msg) {   //content
+        console.log(msg)
+        let obj=JSON.parse(msg.data) 
+        console.log(obj)
+        this.messages=obj.content
+        if(obj.orderId){
+            this.$dialog.confirm({
+                width:"80%",
+                message: this.messages,
+                confirmButtonText: "抢单",
+                })
+            .then((res) => { //点击确认按钮后的调用
+                // console.log("点击了确认按钮噢")
+                console.log(obj.orderId)
+                this.$router.push({name:'Ordergrabbingdetail',params:{orderId:obj.orderId,electricianId:this.electricianId}})
+
+            })
+        }else{
+           this.$dialog.alert({
+                width:"80%",
+                message: this.messages,
+                closeOnClickOverlay:true
+            });
+        }
+
+    },
+    send: function () {
+        this.socket.send(params)
+    },
+    close: function () {
+        console.log("socket已经关闭")
+    },
   }
 }
 </script>

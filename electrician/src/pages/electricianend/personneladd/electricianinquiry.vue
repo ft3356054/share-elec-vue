@@ -24,14 +24,14 @@ export default {
       searchtext:'',
       data:[],
       electricianId:"",
-      orderId:""
+      orderId:"",
+      datas:[]
     }
   },
   mounted () {
     //   this.getelectri()
     this.electricianId=this.$route.params.electricianId
     this.orderId=this.$route.params.orderID
-    console.log(this.$route.params)
   },
   methods: {
     //   getelectri(){
@@ -43,14 +43,37 @@ export default {
       this.$router.go(-1)
     },
     serchbtn(){
-    console.log(this.orderId)
       var params=this.searchtext
       this.$axios.get(`/orderElectrician/queryElectrician?electricianId=${this.electricianId}&electricianName=${this.searchtext}`).then(res => {
           this.data=res.data.resultValue
         });
     },
     gobackbtn(item){
-      this.$router.push({name:'Personneladd',params:{electricianName:item,orderId:this.orderId}})
+      let getData=JSON.parse(sessionStorage.getItem("initialize"))
+      if (getData!=null) {
+        if(typeof(getData)===Object){
+          alert("111")
+        }else{
+          let newArr=getData.find((n)=>n.electricianId == item.electricianId)
+        if(newArr){
+            this.$dialog.alert({
+              width:"80%",
+              message: "不能选择重复的电工",
+              closeOnClickOverlay:true
+            });
+             return;
+         
+        }else{
+           getData.push(item)
+           sessionStorage.setItem('initialize', JSON.stringify(getData))
+        }
+        }
+       
+	    }else{
+        this.datas.push(item)
+        sessionStorage.setItem('initialize', JSON.stringify(this.datas))
+      }
+      this.$router.push({name:'Personneladd',params:{orderId:this.orderId}})
     }
   }
 }

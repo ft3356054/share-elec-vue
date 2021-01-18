@@ -100,22 +100,40 @@ export default {
       this.files=file.file  // postData是一个数组
     },
      Order () {
-         var fd=new FormData()
-         if(this.files===null|| this.files===""){
-             fd.append("myFile","")
-         console.log(fd)
-         }else{
-             fd.append("myFile",this.files)
-            console.log(fd.get("myFile"))
+         if(this.price===""){
+             this.$dialog.alert({
+                width:"80%",
+                message: "请输入维修价格",
+                confirmButtonText: "确定",
+                confirmButtonColor:"#87cefa"
+            })
          }
-        this.fd=fd
-        this.fd.append("items",`{"orderId":"${this.orderId}","orderElectricianStatus":"23","method":"上传合同","orderStatus":"23","electricianId":"${this.electricianId}","electricianPrice":"${this.price}"}`)
-        this.$axios.post("/orderElectrician/booking", this.fd, {headers: {'Content-Type': 'multipart/form-data'}}).then(res => {
-    //   this.$router.push({name:'Personneladd',params:{orderId:this.orderId,electricianId:this.electricianId}})
-      this.$router.push('electricianend')
-        }).catch(err => {
-            alert(err)
-        })
+         if(this.fileLists===[]){
+             this.$dialog.alert({
+                width:"80%",
+                message: "请上传照片",
+                confirmButtonText: "确定",
+                confirmButtonColor:"#87cefa"
+            })
+         }else{
+               var fd=new FormData()
+                if(this.files===null|| this.files===""){
+                    fd.append("myFile","")
+                console.log(fd)
+                }else{
+                    fd.append("myFile",this.files)
+                    console.log(fd.get("myFile"))
+                }
+                this.fd=fd
+                this.fd.append("items",`{"orderId":"${this.orderId}","orderElectricianStatus":"23","method":"上传合同","orderStatus":"23","electricianId":"${this.electricianId}","electricianPrice":"${this.price}"}`)
+                this.$axios.post("/orderElectrician/booking", this.fd, {headers: {'Content-Type': 'multipart/form-data'}}).then(res => {
+                //   this.$router.push({name:'Personneladd',params:{orderId:this.orderId,electricianId:this.electricianId}})
+                this.$router.push('/electricianend')
+                    }).catch(err => {
+                        alert(err)
+                    })
+         }
+        
 
     },
   }
@@ -268,7 +286,7 @@ margin-right: 10px;
 }
 .uploudimg span:nth-child(3){
    width: 83px;
-   height: 70px;
+   height: auto;
    /* flex: 1; */
    display: inline-block;
    margin-left: 20px;

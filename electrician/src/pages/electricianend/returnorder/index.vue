@@ -7,8 +7,8 @@
     <div class="contentbox">
         <div class="content">
             <div>
-                <p style="font-weight:bold">退回原因:</p>
-                <textarea v-model="returncontext" name="" id="" cols="30" rows="10"></textarea>
+                <p style="font-weight:bold;margin-bottom:20px">退回原因:</p>
+                <textarea v-model="returncontext" name="" id="" cols="30" rows="10" placeholder="请输入退回原因"></textarea>
             </div>
         </div>
     <div class="buttons"><button @click="Order">确定</button></div>
@@ -28,13 +28,12 @@ export default {
     }
   },
   mounted(){
-    console.log(this.$route.params)
     this.orderId=this.$route.params.orderId
     this.electricianId=this.$route.params.electricianId
   },
   methods: {
     goback () {
-      this.$router.push('/')
+      this.$router.go(-1)
     },
     Order () {
       var fd=new FormData()
@@ -50,7 +49,7 @@ export default {
                 }`)
       this.$axios.post("/orderElectrician/booking", params).then(res => {
             console.log(res)
-            this.$router.push('/electricianend')
+      this.$router.push({name:'Payment',params:{orderId:this.orderId,electricianId:this.electricianId}})
         }).catch(err => {
             alert(err)
         })
@@ -132,15 +131,6 @@ background: #7ac8f8;
 color: #ffffff;
 font-size: 15px;
 font-weight: bold;
-}
-@media (max-width: 375px) {
-  .contentbox{
-    width: 100%;
-    height: 710px;
-    padding: 0 15px;
-    box-sizing: border-box;
-    overflow: auto;
-}
 }
 
 </style>>

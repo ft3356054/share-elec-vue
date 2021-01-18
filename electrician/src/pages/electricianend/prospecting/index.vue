@@ -20,7 +20,7 @@
                 <p class="pswidth"><span>内容说明</span> <span>{{item.customerDescrive}}</span> </p>
             </div>
              <div>
-                <p class="titles"><span></span>勘察原因</p>
+                <p class="titles"><span></span>勘察情况</p>
                 <textarea v-model="context" name="" id="" cols="30" rows="5" style="width:100%;background:#f7fbff;border:0;outline:none;font-size:13px;font-weight:bold"></textarea>
             </div>
 
@@ -60,28 +60,37 @@ export default {
         });
     },
     goback () {
-      this.$router.go('electricianend')
+      this.$router.push('/electricianend')
     },
     Order (item) {
-        var fd=new FormData()
-        var params={}
-        params=fd
-      params.append("items",`{
-                "orderId":"${this.orderId}",
-                "orderElectricianStatus":"26",
-                "method":"现场勘查",
-                "orderStatus":"26",
-                "electricianDescrive":"${this.context}",
-                "electricianId":"${this.electricianId}"
-                }`)
-     
-      this.$axios.post("/orderElectrician/booking", params).then(res => {
-        //  this.$router.push({name:'Uploadcontract',params:{orderId:this.orderId,electricianId:this.electricianId}})
-         this.$router.push('electricianend')
-        }).catch(err => {
-            alert(err)
-        })
+        if(this.context===""){
+            this.$dialog.alert({
+                width:"80%",
+                message: "请输入勘察情况",
+                confirmButtonText: "确定",
+                confirmButtonColor:"#87cefa"
+            })
+        }else{
+             var fd=new FormData()
+                var params={}
+                params=fd
+                params.append("items",`{
+                        "orderId":"${this.orderId}",
+                        "orderElectricianStatus":"26",
+                        "method":"现场勘查",
+                        "orderStatus":"26",
+                        "electricianDescrive":"${this.context}",
+                        "electricianId":"${this.electricianId}"
+                        }`)
+            this.$axios.post("/orderElectrician/booking", params).then(res => {
+                //  this.$router.push({name:'Uploadcontract',params:{orderId:this.orderId,electricianId:this.electricianId}})
+                this.$router.push('/electricianend')
+                }).catch(err => {
+                    alert(err)
+                })
 
+        }
+       
 
     },
     returnorder () {

@@ -29,7 +29,7 @@
             <span>*</span>
             <span>预约时间</span>
             <span>
-                <input type="datetime-local" name="" id="" v-model="times" @blur="datebtn">
+                <input type="datetime-local" name="" id="" v-model="times">
             </span>
         </div>
         <div class="buttons" ><button @click="cancelbtn">取消</button><button @click="Order">预约</button></div>
@@ -70,24 +70,34 @@ export default {
     },
     Order () {
       var times = this.times.split('T').join(' ')
-      var fd=new FormData()
-      var params={}
-      params=fd
-      params.append("items",`{
-        "orderId":"${this.orderId}",
-        "orderElectricianStatus":"21",
-        "electricianId":"${this.electricianId}",
-        "method":"预约",
-        "orderStatus":"21",
-        "appointmentTime":"${times}"
-        }`)
+      if(this.times===""){
+           this.$dialog.alert({
+                width:"80%",
+                message: "请输入预约时间",
+                confirmButtonText: "确定",
+                confirmButtonColor:"#87cefa"
+            })
+      }else{
+            var fd=new FormData()
+            var params={}
+            params=fd
+            params.append("items",`{
+                "orderId":"${this.orderId}",
+                "orderElectricianStatus":"21",
+                "electricianId":"${this.electricianId}",
+                "method":"预约",
+                "orderStatus":"21",
+                "appointmentTime":"${times}"
+                }`)
+            
+            this.$axios.post("/orderElectrician/booking", params).then(res => {
+                    console.log(res)
+                this.$router.push({name:'Repair',params:{orderId:this.orderId,electricianId:this.electricianId}})
+                }).catch(err => {
+                    alert(err)
+                })
+      }
      
-      this.$axios.post("/orderElectrician/booking", params).then(res => {
-            console.log(res)
-        this.$router.push({name:'Repair',params:{orderId:this.orderId,electricianId:this.electricianId}})
-        }).catch(err => {
-            alert(err)
-        })
     },
     cancelbtn(){
         this.$router.push({name:'Cancel',params:{orderId:this.orderId,electricianId:this.electricianId}})
@@ -95,17 +105,6 @@ export default {
     godel (item) {
       window.location.href = `tel:${item.customerPhonenumber}`
     },
-    datebtn(){
-        //  var timeRegex = "^((([0-9]{3}[1-9]|[0-9]{2}[1-9][0-9]{1}|[0-9]{1}[1-9][0-9]{2}|[1-9][0-9]{3})-" +
-        //   "(((0[13578]|1[02])-(0[1-9]|[12][0-9]|3[01]))|((0[469]|11)-(0[1-9]|[12][0-9]|30))|(02-(0[1-9]|[1][0-9]|2[0-8]))))|((([0-9]{2})" +
-        //   "(0[48]|[2468][048]|[13579][26])|((0[48]|[2468][048]|[3579][26])00))-02-29))\\s+" +
-        //   "([0-1]?[0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9]).([0-9]{3})$"
-        // var Regex = new RegExp(timeRegex)
-        //  if (!Regex.test(this.times)) {
-        // alert("请输入合法时间")
-        //   return
-        // }
-    }
   }
 }
 </script>
