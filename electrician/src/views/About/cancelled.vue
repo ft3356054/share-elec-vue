@@ -81,7 +81,7 @@ export default {
     },
     // 取消订单
     cancel() {
-      this.$router.push("/customer");
+        this.$router.go(-1);
     },
     getdemo(){
         this.$api.get(`/orderCustomer/OrderDetail/${this.orderId}`,{

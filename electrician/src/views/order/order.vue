@@ -143,7 +143,7 @@
         <div class="content" v-show="num==2" v-for="(item,index) in loverList" :key="'info2'+index">
             <div class="typebox">
                 <p><span>类别</span><span>{{item.customerDescriveTitle}}</span></p>
-                <p></p>
+                <p>{{item.orderStatus}}</p>
                  <p>{{item.finishTime }}</p>
             </div>
             <div class="addressbox">

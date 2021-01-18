@@ -56,7 +56,7 @@
         <li>
           <div class="left">施工人员</div>
           <ul style="margin-left:80px">
-              <li v-for="(item,index) in demo.y" :key="index">{{item.otherElectricianName}}</li>
+              <li style="width:60%">{{item.otherElectricianName}}</li>
               </ul>
         </li>
         <li style="padding-bottom:20px">
@@ -83,7 +83,7 @@
          
       </div>
       <div class="btt" v-show="ts">
-        <button @click="tocomplaint()">投诉</button>
+        <button v-if="this.orderStatus==9" @click="tocomplaint()">投诉</button>  <button v-if="this.orderStatus==8">评价</button>
       </div>
   </div>
 </template>
@@ -124,7 +124,8 @@ export default {
      show:false,
      shows:false,
      creatTime:"",
-     ts:true
+     ts:true,
+     orderStatus:""
     };
   },
     mounted() {
@@ -164,11 +165,13 @@ export default {
            console.log(res.data.resultValue.items)
            this.demo=res.data.resultValue.items
            this.creatTime=res.data.resultValue.items[0].finishTime
-           console.log(this.creatTime)
+           this.orderStatus=res.data.resultValue.items[0].orderStatus
+          //  console.log(this.orderStatus)
+          //  console.log(this.creatTime)
            let times=new Date(this.creatTime).getTime()
-            console.log(times,"结束")
+            // console.log(times,"结束")
             let toDay = (new Date()).getTime() // 今天的时间戳
-          console.log(toDay,"现在")
+          // console.log(toDay,"现在")
            if((toDay-times)/(1000*3600*24)>15){
              this.ts=false
            }
@@ -328,6 +331,5 @@ export default {
     font-size: 16px;
     // font-weight: bold;
   }
-  
 }
 </style>

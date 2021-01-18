@@ -107,14 +107,15 @@
             <div class="typebox">
                 <p><span>类别</span><span>{{item.customerDescriveTitle}}</span></p>
                 <p>{{item.orderStatus}}</p>
-                 <p v-if="item.orderStatus=='0'">上门费 {{item.customerPrice }}</p>
-                <p v-else>维修费 {{item.electricianPrice }}</p>
+                  <p>{{ item.finishTime }}</p>
             </div>
             <div class="addressbox">
                 <dl>
                     <dt @click="about(item.orderId,item.orderStatus)">
                         <p>{{ item.customerDescrive }}</p>
-                       <p>{{ item.finishTime }}</p>
+                        <p v-if="item.orderStatus=='0'">上门费 {{item.customerPrice }}</p>
+                        <p v-else>维修费 {{item.electricianPrice }}</p>
+                      
                     </dt>
                     <dd>
                         <button class="zf" @click="estimate(item.orderId)">评价</button>
