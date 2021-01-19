@@ -335,6 +335,11 @@ background: #f7fbff;
         height: 100px;
         overflow: hidden;
       }
+      /deep/ .van-uploader__preview-delete{
+            position: absolute;
+            top: 18px;
+            right: 5px;
+      }
       .loader {
         width: 240px;
         height: 100px;
