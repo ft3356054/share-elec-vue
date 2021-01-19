@@ -200,7 +200,7 @@ export default {
                 alert("您的浏览器不支持socket")
             }else{
                 // 实例化socket
-                var uid = "123";
+                var uid = "321";
                 this.socket = new WebSocket(this.path+uid)
                 // 监听socket连接
                 this.socket.onopen = this.open
@@ -254,10 +254,10 @@ box-sizing: border-box;
     }
 header{
     width: 100%;
-    height: 80px;
+    height: 60px;
     background: #87cefa;
     display: flex;
-    line-height: 80px;
+    line-height: 60px;
 
 }
 header p{
