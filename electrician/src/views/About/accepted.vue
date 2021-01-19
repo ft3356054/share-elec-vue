@@ -57,6 +57,7 @@
 </template>
 
 <script>
+import { Toast } from 'vant';
 export default {
   components: {},
   data() {
@@ -92,19 +93,35 @@ export default {
     },
     //  确认验收
      TipDialog(){
-    this.$dialog.alert({
-      // title:'标题呀',
+          this.$dialog.confirm({
       width:"80%",
-      message:'验收成功'
+      message:'确定通过验收吗？'
     }).then(()=>{
-     console.log('点击了确认')
-        this.$router.push({
-        path:"/estimate",
-        query:{
-          orderId:this.orderId
-        }
+      this.items={}
+         var fd = new FormData()
+         this.items=fd
+      this.items.append("items",
+             `{"orderId":"${this.orderId}",  
+                "orderStatus":"8",
+                }`)
+           this.$axios.post(
+                `/orderCustomer/save`,
+               this.items
+              ).then(res=>{
+                if(res.data.successful==false){
+                     console.log(res.data.resultHint)
+                       Toast.fail(res.data.resultHint)
+                  }else{
+                       Toast.success('验收通过')
+                         this.$router.push({
+                          path:"/estimate",
+                          query:{
+                            orderId:this.orderId
+                          }
+                        }) 
+                  } 
+              })  
       })
-    })
    },
      getdemo(){
         this.$api.get(`/orderCustomer/OrderDetail/${this.orderId}`,{

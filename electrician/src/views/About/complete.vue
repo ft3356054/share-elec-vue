@@ -83,7 +83,8 @@
          
       </div>
       <div class="btt" v-show="ts">
-        <button v-if="this.orderStatus==9" @click="tocomplaint()">投诉</button>  <button v-if="this.orderStatus==8">评价</button>
+        <!-- <button v-if="this.orderStatus==9" @click="tocomplaint()">投诉</button>   -->
+        <button v-if="this.orderStatus==8" @click="estimate">评价</button>
       </div>
   </div>
 </template>
@@ -148,16 +149,13 @@ export default {
     tocomplaint() {
       this.$router.push("/complaint");
     },
-    //  确认验收
-     TipDialog(){
-    this.$dialog.alert({
-      // title:'标题呀',
-      width:"80%",
-      message:'验收成功'
-    }).then(()=>{
-     console.log('点击了确认')
-     this.$router.push("/estimate")
-    })
+   estimate(){
+        this.$router.push({
+        path:"/estimate",
+        query:{
+          orderId:this.orderId
+        }
+      })
    },
       getdemo(){
         this.$api.get(`/orderCustomer/OrderDetail/${this.orderId}`,{

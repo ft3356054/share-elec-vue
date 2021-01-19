@@ -26,11 +26,6 @@
             @load="onLoad"
             :offset="10"
           >
-        <!-- 无数据时的展示
-     <div class="no-comment" v-if="this.list.length==0">
-        <img src="../../assets/images/wu.png" alt="">
-        <span>暂无消息!</span>
-     </div> -->
     <div class="contentbox" >
         <div class="content" v-show="num==0" v-for="(item,index) in list" :key="index">
             <div class="typebox">
@@ -59,7 +54,7 @@
                       </div>
                     </dt>
                     <dd v-if="item.orderStatus=='4'|| item.orderStatus=='9' || item.orderStatus=='8'">
-                        <span class="wancan">以完成</span>
+                        <span class="wancan">已完成</span>
                     </dd>
                     <dd v-else-if="item.orderStatus=='0'">
                         <button @click="cancel">取消</button> <button class="zf" @click="zf(item.orderId)">支付</button>
@@ -77,8 +72,11 @@
                              <div class="box">确定退回订单吗？退回订单后不能回复</div>
                           </van-dialog>
                     </dd>
-                    <dd v-else-if="item.orderStatus=='25'">
+                      <dd v-else-if="item.orderStatus=='25' && item.orderComplaintId===null">
                          <button @click="complaint(item.orderId)">投诉</button> <button class="zf" @click="yanshou(item.orderId)">验收</button>
+                    </dd>
+                    <dd v-else-if="item.orderStatus=='25' && item.orderComplaintId!==null">
+                         <button class="zf" @click="yanshou(item.orderId)">验收</button>
                     </dd>
                     <dd v-else-if="item.orderStatus!=='4' && item.orderStatus!='9' && item.orderStatus!=='0' && item.orderStatus!=='23'   ">
                         <span class="jinxing">进行中</span>
@@ -113,7 +111,7 @@
                       </div>
                     </dt>
                        <dd v-if="item.orderStatus=='4'|| item.orderStatus=='9' || item.orderStatus=='8'">
-                        <span class="wancan">以完成</span>
+                        <span class="wancan">已完成</span>
                     </dd>
                     <dd v-else-if="item.orderStatus=='0'">
                         <button @click="cancel">取消</button> <button class="zf" @click="zf(item.orderId)">支付</button>
@@ -131,8 +129,11 @@
                              <div class="box">确定退回订单吗？退回订单后不能回复</div>
                           </van-dialog>
                     </dd>
-                     <dd v-else-if="item.orderStatus=='25'">
+                     <dd v-else-if="item.orderStatus=='25' && item.orderComplaintId===null">
                          <button @click="complaint(item.orderId)">投诉</button> <button class="zf" @click="yanshou(item.orderId)">验收</button>
+                    </dd>
+                    <dd v-else-if="item.orderStatus=='25' && item.orderComplaintId!==null">
+                         <button class="zf" @click="yanshou(item.orderId)">验收</button>
                     </dd>
                     <dd v-else-if="item.orderStatus!=='4' && item.orderStatus!='9' && item.orderStatus!=='0' && item.orderStatus!=='23'   ">
                         <span class="jinxing">进行中</span>
@@ -505,9 +506,9 @@ export default {
             }
           })
           break;
-           case "24":  //施工中
+           case "24":  //施工中   施工完成
           this.$router.push({
-            path:"/details",
+             path:"/details",
             query:{
               orderId:this.orderId
             }

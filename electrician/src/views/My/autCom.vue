@@ -36,9 +36,9 @@ export default {
     },
     serchbtn(){
       var params=this.searchtext
-      this.$axios.get("/electricianSubCompanyInfo/findCompany?companyName="+encodeURI(params)).then(res => {
+      this.$axios.get("/electricianCompanyInfo/findCompany?companyName="+encodeURI(params)).then(res => {
          console.log(res.data)
-         this.data=res.data.resultValue.resultValue
+         this.data=res.data.resultValue.items
         });
     },
     gobackbtn(item){

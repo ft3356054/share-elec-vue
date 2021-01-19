@@ -14,7 +14,7 @@
 
             <div class="science">
 
-              <p>证明材料</p>
+              <p style="margin-top:10px"><span style="color:red">*</span>证明材料</p>
               <div class="ploader">
             <van-uploader v-model="fileList" multiple :after-read="upimgbtn">
               <van-button type="primary" class="loader">
@@ -46,6 +46,7 @@
 </template>
 <script>
 import bus from "../../libs/eventBus.js"
+import { Toast } from 'vant';
 export default {
   data () {
     return {
@@ -70,7 +71,6 @@ export default {
         this.companyName=this.$route.params.companyName
         this.companyId=this.$route.params.companyId
         this.subCompanyId=this.$route.params.subCompanyId
-        this.customerId=this.$route.params.customerId
   },
   methods: {
     goback () {
@@ -87,6 +87,7 @@ export default {
     blues (file) {
       console.log(file)
       this.files=file.file
+      
     },
     //  图片上传
     upimgbtn (file) {
@@ -94,7 +95,16 @@ export default {
       this.fd=file.file
     },
     order(){
-      this.customerId=localStorage.getItem("customerId")
+      console.log(this.companyName)
+
+      if(this.companyId===undefined){
+          Toast("未选择公司")
+      }else if(this.fileList.length==0){
+          Toast("未上传证明材料")
+      }else if(this.fileLists.length==0){
+          Toast("未上传电工证")
+      }else{
+        this.customerId=localStorage.getItem("customerId")
       var fd=new FormData()
       if(this.files===null||this.files===""){
         fd.append("myFile","")
@@ -108,12 +118,13 @@ export default {
        this.$axios.post("/customerInfo/changeToElecInfo", this.files, {headers: {'Content-Type': 'multipart/form-data'}}).then(res => {
            console.log(res)
            if(res.data.successful==true){
-             this.$router.push("/my")
+              Toast.success('提交成功')
+            //  this.$router.push("/my")
            }
         }).catch(err => {
             alert(err)
         })
-
+      }
     }
   }
 }

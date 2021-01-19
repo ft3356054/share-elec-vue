@@ -236,7 +236,6 @@ export default {
     }).then(()=>{
       this.orderId=orderId
       this.items={}
-      this.orderId=orderId
          var fd = new FormData()
          this.items=fd
       this.items.append("items",
