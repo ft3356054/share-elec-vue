@@ -76,7 +76,10 @@ export default {
     },
     // 提交
     submit(){
-          var fd = new FormData()
+        if(this.rSelect.length==0){
+          Toast('请选择投诉内容')
+        }else{
+            var fd = new FormData()
          if(this.files===null || this.files===""){
              fd.append("myFile","")
          }else{
@@ -89,14 +92,16 @@ export default {
                 "complaintDetail":"${this.rSelect}",
                  "fileName":"complaintPicture", 
                 }`)   
-        this.$axios.post(
-                `/orderComplaint/save`,
-                this.fd,{headers: {'Content-Type': 'multipart/form-data'}},
-                Toast.success('投诉成功'),
-              );   
-             this.set=setTimeout(()=>{
-                    this.$router.push("./customer")  
-              },1000)  
+                Toast.success('投诉成功')
+              this.$axios.post(
+                      `/orderComplaint/save`,
+                      this.fd,{headers: {'Content-Type': 'multipart/form-data'}},
+                      Toast.success('投诉成功'),
+                    );   
+                  this.set=setTimeout(()=>{
+                          this.$router.push("./customer")  
+                    },1000)  
+        }
     }
   },
   mounted() {
