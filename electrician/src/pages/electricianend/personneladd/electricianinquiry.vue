@@ -2,7 +2,7 @@
     <div class="contianer">
         <div class="backgroundbox">
             <div class="toptitle">
-                <p  @click="goback"><img src="../../../assets/images/jiantou.png" alt=""></p>
+                <p  @click="goback"><img src="@/assets/images/jiantou.png" alt=""></p>
                 <p>电工选择</p>
             </div>
              <div class="topinput">

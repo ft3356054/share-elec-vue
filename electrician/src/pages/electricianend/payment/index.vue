@@ -1,7 +1,7 @@
 <template>
 <div class="contianer">
     <div class="backgroundbox">
-        <p  @click="goback"><img src="../../../assets/images/jiantou.png" alt=""></p>
+        <p  @click="goback"><img src="@/assets/images/jiantou.png" alt=""></p>
         <p style="font-size:18px;padding-top:5px">支付</p>
     </div>
     <div class="contentbox" v-for="(item,index) in data" :key="index">
