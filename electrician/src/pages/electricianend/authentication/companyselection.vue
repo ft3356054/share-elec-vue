@@ -26,15 +26,21 @@ export default {
     }
   },
   mounted () {
-
+    this.getcompany()
   },
   methods: {
+    getcompany(){
+      this.$axios.get(`/electricianCompanyInfo/selectCompany`).then(res => {
+         console.log(res)
+          this.data=res.data.resultValue.items
+        });
+    },
     goback () {
       this.$router.go(-1)
     },
     serchbtn(){
       this.$axios.get(`electricianCompanyInfo/findCompany?companyName=${this.searchtext}`).then(res => {
-          this.data=res.data.resultValue.resultValue
+          this.data=res.data.resultValue.items
         });      
 
     },

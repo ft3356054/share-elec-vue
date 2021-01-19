@@ -136,7 +136,7 @@ export default {
       path:"ws://localhost:8083/websocketserver/",  //websocketserver,
       gettime:"",
       content:"",
-      cust:"customer001",
+      cust:"321",
       img:require('../../../assets/images/startorder.png'),
       img1:require('../../../assets/images/stoporders.png'),
       lay_type:0, 
@@ -392,7 +392,9 @@ export default {
                 width:"80%",
                 message: this.messages,
                 closeOnClickOverlay:true
-            });
+            }).then((res)=>{
+            location.reload()
+            })
         }
 
     },

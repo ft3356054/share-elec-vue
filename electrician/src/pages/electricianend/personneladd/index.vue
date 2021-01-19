@@ -74,10 +74,8 @@ export default {
     Order () {
         var addlists=[]
         addlists=this.addlist
-        console.log(addlists)
         var electricianId=[]
         if(addlists===null){
-            alert(11)
             var fd=new FormData()
                     var params={}
                     params=fd
@@ -87,7 +85,7 @@ export default {
                     "electricianId":"${this.electricianId}",
                     "orderElectricianStatus":"31",
                     "orderStatus":"31",
-                    "otherElectricianId":"{${electricianId}}",
+                    "otherElectricianId":"${electricianId}",
                     }`)
                 this.$axios.post("/orderElectrician/booking", params).then(res => {
                         this.$router.push("/electricianend")

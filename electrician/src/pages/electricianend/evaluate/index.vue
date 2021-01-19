@@ -7,8 +7,10 @@
         </div>
       </header>
       <section>
-            <textarea v-model="context" name="" id="" cols="51" rows="6" placeholder="评价内容"></textarea>
-
+        <div style="padding:5px;box-sizing:border-box">
+            <span style="color:red;float:left;margin-right:5px">*</span>
+            <textarea v-model="context" name="" id="" cols="47" rows="6" placeholder="评价内容"></textarea>
+        </div>
             <div class="content">
                   <div class="xuxian">
                     <dl>
@@ -52,6 +54,13 @@ export default {
         this.files=file.file
     },
     order(){
+      if(this.context===""){
+       this.$dialog.alert({
+              width:"80%",
+              message: "请输入评价内容",
+              closeOnClickOverlay:true
+        });
+      }else{
          var fd=new FormData()
          if(this.files===null|| this.files===""){
              fd.append("myFile","")
@@ -71,6 +80,8 @@ export default {
         }).catch(err => {
             alert(err)
         })
+      }
+        
 
     }
   }

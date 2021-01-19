@@ -17,7 +17,8 @@
                     <dl>
                         <dt>
                             <p>{{item.content}}</p>
-                            <!-- <p>{{item.progess}}</p> -->
+                            <p v-if="item.state==='0'" style="color:blue;margin-top:15px">已读</p>
+                            <p v-else style="color:red;margin-top:15px">未读</p>
                         </dt>
                         <dd>
                             <button class="jiedan">查看 <img src="@/assets/images/messagejiantou.png" alt=""></button>
