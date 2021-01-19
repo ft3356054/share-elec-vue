@@ -505,6 +505,14 @@ export default {
             }
           })
           break;
+           case "24":  //施工中
+          this.$router.push({
+            path:"/details",
+            query:{
+              orderId:this.orderId
+            }
+          })
+          break;
           case "26":  //现场探查完成
           this.$router.push({
             path:"/prodemo",
