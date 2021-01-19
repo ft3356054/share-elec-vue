@@ -95,8 +95,6 @@ export default {
       this.fd=file.file
     },
     order(){
-      console.log(this.companyName)
-
       if(this.companyId===undefined){
           Toast("未选择公司")
       }else if(this.fileList.length==0){
@@ -119,7 +117,7 @@ export default {
            console.log(res)
            if(res.data.successful==true){
               Toast.success('提交成功')
-            //  this.$router.push("/my")
+             this.$router.push("/my")
            }
         }).catch(err => {
             alert(err)
