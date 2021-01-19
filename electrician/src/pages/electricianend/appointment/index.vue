@@ -10,7 +10,7 @@
                 <p class="titles"><span></span>基本信息</p>
                 <p class="pswidth"><span>订单编号</span><span>{{item.orderId}}</span> </p>
                 <p class="pswidth"><span>发单人</span><span>{{item.customerName}}</span> </p>
-                <p class="pswidth del"><span>手机号</span> <span>{{item.customerPhonenumber}}</span> <span @click="godel(item)"><img src="../../../assets/images/phone.png" alt=""> 拨打电话</span></p>
+                <p class="pswidth del"><span>手机号</span> <span>{{item.customerPhonenumber.substr(0,3)+'****'+item.customerPhonenumber.substr(7)}}</span> <span @click="godel(item)"><img src="../../../assets/images/phone.png" alt=""> 拨打电话</span></p>
             </div>
              <div>
                 <p class="titles"><span></span>订单信息</p>
@@ -44,11 +44,10 @@ export default {
   data () {
     return {
       times: '',
-      phone: 13739865412,
       orderId:"",
       electricianId:'',
       data:[],
-    minDate: new Date(2020, 0, 1),
+        minDate: new Date(2020, 0, 1),
       maxDate: new Date(2025, 10, 1),
       currentDate: new Date(),
       show:false

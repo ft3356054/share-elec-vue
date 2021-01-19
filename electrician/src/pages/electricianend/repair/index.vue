@@ -10,7 +10,7 @@
                 <p class="titles"><span></span>基本信息</p>
                 <p class="pswidth"><span>订单编号</span><span>{{item.orderId}}</span> </p>
                 <p class="pswidth"><span>发单人</span><span>{{item.customerName}}</span> </p>
-                <p class="pswidth del"><span>手机号</span> <span>{{item.customerPhonenumber}}</span></p>
+                <p class="pswidth del"><span>手机号</span> <span>{{item.customerPhonenumber.substr(0,3)+'****'+item.customerPhonenumber.substr(7)}}</span></p>
             </div>
              <div>
                 <p class="titles"><span></span>订单信息</p>

@@ -129,7 +129,6 @@ export default {
     },
     getAll(){
         this.$axios.get(`/orderElectrician/?params={"pageIndex":1,"pageSize":20,"filter":"electricianId=${this.electricianId}","sorter":"DESC=createTime"}`).then(res => {
-            console.log(res)
             this.datas=res.data.resultValue.items
         }).catch(err => {
             alert(err)
@@ -137,29 +136,24 @@ export default {
     },
     getcancel(){
       this.$axios.get("/orderElectrician/queryAllHaveEsc/"+this.electricianId) .then(res => {
-          console.log(res);
+          // console.log(res);
         });
     },
     nums(index) {
       this.num = index
       if(this.num===0){
         this.$axios.get(`/orderElectrician/?params={"pageIndex":1,"pageSize":20,"filter":"electricianId=${this.electricianId}","sorter":"DESC=createTime"}`).then(res => {
-            console.log(res)
         }).catch(err => {
             alert(err)
         })
       }else if(this.num===1){
-        console.log("进行中订单")
         this.$axios.get("/orderElectrician/queryAllDoing/"+this.electricianId) .then(res => {
-          console.log(res);
           this.cancelledList=res.data.resultValue.items
         });
       }else{
          this.$axios.get(`/orderElectrician/queryAllHaveDone/${this.electricianId}?pageIndex=1&pageSize=10`) .then(res => {
-          console.log(res);
           this.completedList=res.data.resultValue.items
         });
-        console.log("已完成订单")
       }
     },
      godetail(item){

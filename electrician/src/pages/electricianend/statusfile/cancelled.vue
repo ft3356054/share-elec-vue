@@ -15,7 +15,7 @@
              <div>
                 <p class="titles"><span></span>订单信息</p>
                 <p class="pswidth"><span>电压类型</span><span>{{item.voltage}}</span></p>
-                <p class="pswidth"><span>需求类型</span><span>检修</span></p>
+                <p class="pswidth"><span>需求类型</span><span>{{item.orderTypeId}}</span></p>
                 <p class="pswidth"><span>地址</span><span>{{item.customerAddress}}</span></p>
                 <p class="pswidth"><span>上门费</span><span id="money">¥{{item.customerPrice}}</span></p>
                 <p class="pswidth"><span>状态</span><span>已取消</span></p>
@@ -72,7 +72,7 @@ overflow: auto;
     border-bottom-right-radius: 20%;
     border-bottom-left-radius: 20%;
 display: flex;
-padding-top: 42px;
+padding-top: 15px;
     box-sizing: border-box;
 }
 .contianer .backgroundbox p{
@@ -92,7 +92,7 @@ font-weight: bold;
 }
 .contentbox{
     position: absolute;
-    top: 85px;
+    top: 35px;
     left: 0;
     width: 100%;
     height: auto;

@@ -103,7 +103,7 @@
         </div>
     </div>
 </section>
-<van-overlay :show="show" @click="show = false">
+<!-- <van-overlay :show="show" @click="show = false">
   <div class="wrapper" @click.stop>
     <div class="block">
         <p><img src="../../../assets/images/close.png" alt="" @click="closebtn"></p>   
@@ -114,7 +114,7 @@
         <p style="color:#ccc;font-size:15px">2020/11/16 17:12</p>
     </div>
   </div>
-</van-overlay>
+</van-overlay> -->
 </div>
 
 </template>
@@ -132,7 +132,7 @@ export default {
       messages: [],
       electricianId:"321",
       orderId:"",
-      show:false,
+    //   show:false,
       path:"ws://localhost:8083/websocketserver/",  //websocketserver,
       gettime:"",
       content:"",
@@ -140,6 +140,7 @@ export default {
       img:require('../../../assets/images/startorder.png'),
       img1:require('../../../assets/images/stoporders.png'),
       lay_type:0, 
+      socket:""
     }
   },
   created () {
@@ -176,8 +177,8 @@ export default {
             }else{
                 this.lay_type = 0
                   var params={
-                statu:"接单中"
-                }
+                        statu:"接单中"
+                        }
                 params=qs.stringify(params)
                 this.$axios.post("/electricianInfo/changeStatus/321", params,{headers: {'Content-Type': 'application/x-www-form-urlencoded'}}) .then(res => {
                 });
@@ -186,9 +187,7 @@ export default {
       getContent(){
           this.$api.get(`/notifyAnnounceUser/notReadNum/${this.cust}`,{
                 },res=>{
-                  console.log(res)
                     this.content=res.data.resultValue
-                      // console.log(this.content)
                 })
     },
       getmessage(){
@@ -205,12 +204,13 @@ export default {
       },
       getdetail(){
         this.$api.get("/orderElectrician/orderDetails/"+this.orderId, {"electricianId":this.electricianId}, response => {
-            console.log(response.data.resultValue.items[0].orderElectricianStatus);
-            var items=response.data.resultValue.items[0]
+            if(response.data.resultValue.items==''){
+                
+            }else{
+                var items=response.data.resultValue.items[0]
                if(items.orderElectricianStatus==="8"){
                     this.$router.push({name:'Evaluate',params:{orderId:items.orderId,electricianId:this.electricianId}})
                 }else if(items.orderElectricianStatus==="9"){
-            // console.log(items)
                     this.$router.push({name:'Completed',params:{orderId:items.orderId,electricianId:this.electricianId}})
                 }else if(items.orderElectricianStatus==="0"){
                     this.$router.push({name:'Appointment',params:{orderId:items.orderId,electricianId:this.electricianId}})
@@ -233,6 +233,8 @@ export default {
                 }else if(items.orderElectricianStatus==="3"){
                     this.$router.push({name:'Personneladd',params:{orderId:items.orderId,electricianId:this.electricianId}})
                 }
+            }
+            
         });
     },
     //   消息滚屏事件
@@ -245,7 +247,6 @@ export default {
             },800)
       },
       gomessagedetail(item){
-          console.log(item)
          this.$axios.get(`/notifyAnnounce/read/?params={"filter":["announceId=${item.announceId}","announceUserId=${item.announceUserId}"]}`).then(res => {
                  this.orderId=res.data.resultValue.items[0].orderId
                 this.getdetail()
@@ -345,7 +346,14 @@ export default {
             }else{
                 // 实例化socket
                 var uid = "321";
+                if(this.socket===""){
                 this.socket = new WebSocket(this.path+uid)
+                sessionStorage.setItem("websock",JSON.stringify(this.socket))
+                console.log(this.socket,"进入if")
+                }else{
+                console.log(this.socket,"进入else")
+                }
+                // console.log(this.socket)
                 // 监听socket连接
                 this.socket.onopen = this.open
                 // 监听socket错误信息
@@ -362,9 +370,7 @@ export default {
         console.log("连接错误")
     },
     getMessage: function (msg) {   //content
-        console.log(msg)
         let obj=JSON.parse(msg.data) 
-        console.log(obj)
         this.messages=obj.content
         if(obj.orderId){
             this.$dialog.confirm({
@@ -373,8 +379,6 @@ export default {
                 confirmButtonText: "抢单",
                 })
             .then((res) => { //点击确认按钮后的调用
-                // console.log("点击了确认按钮噢")
-                console.log(obj.orderId)
                 this.$router.push({name:'Ordergrabbingdetail',params:{orderId:obj.orderId,electricianId:this.electricianId}})
 
             })
