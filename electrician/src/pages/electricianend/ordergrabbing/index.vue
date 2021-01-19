@@ -1,7 +1,7 @@
 <template>
 <div class="contianer">
     <div class="backgroundbox">
-        <p  @click="goback"><img src="../../../assets/images/jiantou.png" alt=""></p>
+        <p  @click="goback"><img src="@/assets/images/jiantou.png" alt=""></p>
         <p>待抢订单</p>
     </div>
     <div class="contentbox">

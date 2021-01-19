@@ -1,7 +1,7 @@
 <template>
 <div class="contianer">
     <div class="backgroundbox">
-        <p  @click="goback"><img src="../../../assets/images/jiantou.png" alt=""></p>
+        <p  @click="goback"><img src="@/assets/images/jiantou.png" alt=""></p>
         <p>订单详情</p>
     </div>
     <div class="contentbox">
@@ -62,24 +62,34 @@ export default {
       this.$router.push("electricianend")
     },
     Order () {
-         var fd=new FormData()
-        var params={}
-        params=fd
-      params.append("items",`{
-            "orderId":"${this.orderId}",
-            "method":"施工完成",
-            "electricianId":"${this.electricianId}",
-            "orderElectricianStatus":"24",
-            "orderStatus":"24",
-            "constructionContent":"${this.context}"
-            }`)
-     
-      this.$axios.post("/orderElectrician/booking", params).then(res => {
-            console.log(res)
-            this.$router.push({name:'Servicereport',params:{orderId:this.orderId,electricianId:this.electricianId}})
-        }).catch(err => {
-            alert(err)
-        })
+        if(this.context===""){
+             this.$dialog.alert({
+                width:"80%",
+                message: "请输入施工内容",
+                confirmButtonText: "确定",
+                confirmButtonColor:"#87cefa"
+            })
+        }else{
+             var fd=new FormData()
+             var params={}
+             params=fd
+             params.append("items",`{
+                    "orderId":"${this.orderId}",
+                    "method":"施工完成",
+                    "electricianId":"${this.electricianId}",
+                    "orderElectricianStatus":"24",
+                    "orderStatus":"24",
+                    "constructionContent":"${this.context}"
+                    }`)
+            
+             this.$axios.post("/orderElectrician/booking", params).then(res => {
+                    console.log(res)
+                    this.$router.push({name:'Servicereport',params:{orderId:this.orderId,electricianId:this.electricianId}})
+                }).catch(err => {
+                    alert(err)
+                })
+        }
+        
       
     },
     returnorder () {
@@ -162,6 +172,7 @@ margin-right: 10px;
 .contentbox .content div .pswidth{
 display: flex;
 margin-top: 5px;
+line-height: 20px;
 }
 .contentbox .content div .pswidth span:nth-child(1){
 width: 30%;

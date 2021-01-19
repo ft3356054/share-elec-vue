@@ -2,7 +2,7 @@
   <div class="contianer">
       <header>
         <div class="topserch">
-          <p @click="goback"><img src="../../../assets/images/jiantou.png" alt=""></p>
+          <p @click="goback"><img src="@/assets/images/jiantou.png" alt=""></p>
           <p><input type="text" placeholder="搜索我的订单" v-model="search"></p>
         </div>
         <div class="tabbox">

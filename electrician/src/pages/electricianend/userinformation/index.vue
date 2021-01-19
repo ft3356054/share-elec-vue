@@ -1,7 +1,7 @@
 <template>
 <div class="contianer">
     <div class="topbox">
-        <p @click="goback"><img src="../../../assets/images/jiantou.png" alt=""></p>
+        <p @click="goback"><img src="@/assets/images/jiantou.png" alt=""></p>
         <p>个人信息</p>
     </div>
     <div class="userbox" v-for="(item,index) in userdata" :key="index">
@@ -21,15 +21,15 @@
         </div>
         <div class="information">
             <p><span>实名认证</span><span>否</span></p>
-            <p><span>电工认证</span><span @click="gorenzheng"  style="color:#87cefa">高级电工></span></p>
+            <p><span>电工认证</span><span @click="gorenzheng"  style="color:#87cefa">已认证</span></p>
             <p><span>签约公司</span><span>{{item.companyName}}</span></p>
             <p><span>服务状态</span><span @click="statebtn" style="color:#87cefa">{{morenmessaage}}</span></p>
         </div>
-    <div class="btnbox"><button>退出登录</button></div>
+    <!-- <div class="btnbox"><button>退出登录</button></div> -->
     </div>
     <div class="popup">
         <div class="stateset">
-            <p @click="guanbi"><img src="../../../assets/images/close.png" alt=""></p>
+            <p @click="guanbi"><img src="@/assets/images/close.png" alt=""></p>
             <p>接抢单状态设置</p>
             <div>
                 <dl @click="stylebtn1">
@@ -183,7 +183,7 @@ overflow: auto;
     width: 100%;
     height: 350px;
     position: absolute;
-    top: 92px;
+    top: 50px;
     left: 0;
     padding: 0 15px;
     box-sizing: border-box;

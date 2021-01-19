@@ -1,7 +1,7 @@
 <template>
 <div class="contianer">
     <div class="backgroundbox">
-        <p  @click="goback"><img src="../../../assets/images/jiantou.png" alt=""></p>
+        <p  @click="goback"><img src="@/assets/images/jiantou.png" alt=""></p>
         <p>订单详情</p>
     </div>
     <div class="contentbox" v-for="(item,index) in data" :key="index">
@@ -36,7 +36,6 @@ export default {
   data () {
     return {
       times: '',
-      phone: 13739865412,
       electricianId:"",
       orderId:"",
       context:"",
@@ -124,6 +123,9 @@ position: relative;
 box-sizing: border-box;
 overflow: auto;
 }
+.contianer::-webkit-scrollbar{
+    width: 0;
+}
 .contianer .backgroundbox{
     width: 100%;
     height: 135px;
@@ -189,7 +191,7 @@ margin-right: 10px;
 .contentbox .content div .pswidth{
 display: flex;
 margin-top: 5px;
-
+line-height: 20px;
 }
 .contentbox .content div .pswidth span:nth-child(1){
 width: 55px;

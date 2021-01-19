@@ -1,7 +1,7 @@
 <template>
     <div class="contianer">
         <div class="backgroundbox">
-        <p  @click="goback"><img src="../../../assets/images/jiantou.png" alt=""></p>
+        <p  @click="goback"><img src="@/assets/images/jiantou.png" alt=""></p>
         <p>电工注册认证</p>
         </div>
         <div class="content">
@@ -9,7 +9,7 @@
             <div class="topbox" @click="choosebtn">
               <p>所属公司</p>
               <p>{{companyName}}</p>
-              <p><img src="../../../assets/images/textjiantou.png" alt=""></p>
+              <p><img src="@/assets/images/textjiantou.png" alt=""></p>
             </div>
 
             <div class="science">

@@ -2,7 +2,7 @@
   <div class="contianer">
       <header>
         <div class="topserch">
-          <p @click="goback"><img src="../../../assets/images/jiantou.png" alt=""></p>
+          <p @click="goback"><img src="@/assets/images/jiantou.png" alt=""></p>
           <p>服务评价</p>
         </div>
       </header>

@@ -1,7 +1,7 @@
 <template>
 <div class="contianer">
     <div class="backgroundbox">
-        <p  @click="goback"><img src="../../../assets/images/jiantou.png" alt=""></p>
+        <p  @click="goback"><img src="@/assets/images/jiantou.png" alt=""></p>
         <p>订单详情</p>
     </div>
     <div class="contentbox">
@@ -18,7 +18,7 @@
                 <p class="pswidth"><span>勘察情况</span> <span>{{item.electricianDescrive}}</span> </p>
             </div>
              <div>
-                <p class="add"><span></span><span>人员增加</span><span @click="addbtn"><img src="../../../assets/images/peopleadd.png" alt=""></span></p>
+                <p class="add"><span></span><span>人员增加</span><span @click="addbtn"><img src="@/assets/images/peopleadd.png" alt=""></span></p>
                 <div v-if="addlist!=undefined" style="margin-top:0;">
                         <p style="font-size:15px;margin-top:20px;display:flex"  v-for="(item,index) in addlist" :key="index">{{item.electricianName}}{{item.electricianPhonenumber}} <span @click="deletebtn(item)" style="flex:1;text-align:right;color:red">删除</span> </p>
                 </div>
@@ -51,7 +51,6 @@ export default {
           for(var i=0;i<datasA.length;i++){
                 // this.addlist.push(datasA[i])
                 newArr.push(datasA[i])
-                console.log(newArr)
           }
       } 
       this.addlist=datas
@@ -75,10 +74,31 @@ export default {
     Order () {
         var addlists=[]
         addlists=this.addlist
+        console.log(addlists)
         var electricianId=[]
-        addlists.forEach(element => {
-        electricianId.push(element.electricianId)
-        });
+        if(addlists===null){
+            alert(11)
+            var fd=new FormData()
+                    var params={}
+                    params=fd
+                    params.append("items",`{
+                    "orderId":"${this.orderId}",
+                    "method":"开始施工",
+                    "electricianId":"${this.electricianId}",
+                    "orderElectricianStatus":"31",
+                    "orderStatus":"31",
+                    "otherElectricianId":"{${electricianId}}",
+                    }`)
+                this.$axios.post("/orderElectrician/booking", params).then(res => {
+                        this.$router.push("/electricianend")
+                        sessionStorage.clear()
+                    }).catch(err => {
+                        alert(err)
+                    })
+        }else{
+            addlists.forEach(element => {
+                electricianId.push(element.electricianId)
+             });
              var fd=new FormData()
                     var params={}
                     params=fd
@@ -96,6 +116,8 @@ export default {
                     }).catch(err => {
                         alert(err)
                     })
+        }
+        
     },
     returnorder () {
       this.$router.push('/returnorder')

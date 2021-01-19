@@ -1,7 +1,7 @@
 <template>
 <div class="contianer">
     <div class="backgroundbox">
-        <p  @click="goback"><img src="../../../assets/images/jiantou.png" alt=""></p>
+        <p  @click="goback"><img src="@/assets/images/jiantou.png" alt=""></p>
         <p>订单详情</p>
     </div>
     <div class="contentbox">
@@ -67,7 +67,7 @@ export default {
         });
     },
     goback () {
-      this.$router.push('electricianend')
+      this.$router.push('/electricianend')
     },
     returnorder () {
       this.$router.push('/returnorder')
@@ -77,7 +77,7 @@ export default {
       this.files=file.file
     },
      Order () {
-      if(this.fileLists===[]){
+      if(this.fileLists.length===0){
          this.$dialog.alert({
                 width:"80%",
                 message: "请上传照片",
@@ -205,6 +205,7 @@ margin-right: 10px;
 .contentbox .content div .pswidth{
 display: flex;
 margin-top: 5px;
+line-height: 20px;
 }
 .contentbox .content div .pswidth span:nth-child(1){
 width: 30%;

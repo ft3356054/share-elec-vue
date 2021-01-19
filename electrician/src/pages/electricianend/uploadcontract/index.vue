@@ -1,7 +1,7 @@
 <template>
 <div class="contianer">
     <div class="backgroundbox">
-        <p  @click="goback"><img src="../../../assets/images/jiantou.png" alt=""></p>
+        <p  @click="goback"><img src="@/assets/images/jiantou.png" alt=""></p>
         <p>上传合同</p>
     </div>
     <div class="contentbox">
@@ -50,8 +50,6 @@
             </div>
         </div>
     <div class="buttons"><button @click="Order" v-if="status==='26'">提交</button></div>
-    <!-- <div class="buttons"><button @click="Order" v-if="status==='23'">提交</button></div> -->
-
     </div>
 </div>
 </template>
@@ -107,8 +105,8 @@ export default {
                 confirmButtonText: "确定",
                 confirmButtonColor:"#87cefa"
             })
-         }
-         if(this.fileLists===[]){
+            console.log(this.fileLists)
+         }else if(this.fileLists.length===0){
              this.$dialog.alert({
                 width:"80%",
                 message: "请上传照片",
@@ -216,6 +214,7 @@ margin-right: 10px;
 .contentbox .content div .pswidth{
 display: flex;
 margin-top: 5px;
+line-height: 20px;
 }
 .contentbox .content div .pswidth span:nth-child(1){
 width: 55px;
