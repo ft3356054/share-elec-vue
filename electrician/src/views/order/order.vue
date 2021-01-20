@@ -314,6 +314,9 @@ export default {
              this.loading = false
        })
        this.finName="已全部加载完成"
+         setTimeout(()=>{
+              this.finName=""
+         },10000)
      },
        // 下拉刷新
       onRefresh() {
