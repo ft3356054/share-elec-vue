@@ -322,6 +322,7 @@ export default {
             this.list=[]
             this.pageNumber=1
             this.getlist()
+            this.finName="已全部加载完成"
 		      }, 1000);
         },
         // 上拉加载

@@ -152,6 +152,9 @@ export default {
              this.loading = false
        })
         this.finName="已全部加载完成"
+          setTimeout(()=>{
+                 this.finName=""
+                              },5000)
       },
       // 展示消息时间
       transTime (time) {
@@ -258,6 +261,7 @@ export default {
             this.list=[]
             this.pageNumber=1
             this.getList()
+            this.finName="已全部加载完成"
 		      }, 1000);
 		    },
 		  async  onLoad() {
