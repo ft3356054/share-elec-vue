@@ -147,7 +147,7 @@ export default {
             }else {
                 this.finished = false
              }
-             this.pageNumber++
+             this.pageNumber=2
              this.isLoading = false
              this.loading = false
        })
@@ -259,7 +259,7 @@ export default {
             this.getList()
 		      }, 1000);
 		    },
-		    onLoad() {
+		  async  onLoad() {
       this.tomer=setTimeout(() => {
           this.pageIndex=this.pageNumber*this.pageSize-(this.pageSize-1)
              this.$api.get(`/notifyAnnounceUser/queryAll?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":["userId=${this.cust}","status=2"]}`,{

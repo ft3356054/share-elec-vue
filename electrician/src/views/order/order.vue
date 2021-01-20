@@ -15,13 +15,18 @@
     </div>
     </div>
     <div class="main">
-         <section>
+          <!-- 无数据时的展示 -->
+     <div class="no-comment" v-if="this.list.length==0 && this.haveList.length==0 && this.loverList.length==0">
+        <img src="../../assets/images/wu.png" alt="">
+        <span>暂无消息!</span>
+     </div>
+         <section v-else>
            <van-pull-refresh  v-model="isLoading" success-text="刷新成功" @refresh="onRefresh">
 		    	<van-list 
                 v-model="loading"
             :finished="finished"
             :immediate-check="false"
-            finished-text="已全部加载完成"
+            :finished-text="this.finName"
             error-text="请求失败，点击重新加载"
             @load="onLoad"
             :offset="10"
@@ -204,7 +209,8 @@ export default {
         pageNumber:1,
         pageSize:5,
         pageIndex:1,
-        itemCount:0,//总条数
+        itemCount:0,   //总条数
+        finName:"已全部加载完成"
     };
   },
    inject:['reload'],
@@ -303,7 +309,7 @@ export default {
             }else {
                 this.finished = false
              }
-             this.pageNumber++
+             this.pageNumber=2
              this.isLoading = false
              this.loading = false
        })
@@ -329,10 +335,15 @@ export default {
                 this.itemCount = res.data.resultValue.itemCount;  //总条数
                   // itemCount是后台返回的列表总条数
                   if(res.data.resultValue.itemCount > this.list.length){
+                             this.pageNumber++
                               this.loading = false
                           }else{
                               this.finished = true
                               this.loading = true
+                              setTimeout(()=>{
+                                 this.finName=""
+                              },2000)
+                             
                           }
                 })
                 }, 500);
