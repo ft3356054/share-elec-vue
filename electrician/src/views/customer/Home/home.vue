@@ -36,7 +36,7 @@
           :show-indicators="false"
           :width="360"
         >
-          <van-swipe-item v-for="(item,index) in messages" :key="index" @click="swipe(item.announceId,item.orderId)">
+          <van-swipe-item v-for="(item,index) in messages1" :key="index" @click="swipe(item.announceId,item.orderId)">
             系统消息:  {{item.content}}
           </van-swipe-item>
         </van-swipe>
@@ -151,9 +151,9 @@ export default {
           name: "用电资讯",
         },
       ],
-      messages: [
-        { name: "3阿打算打算打24日凌晨24:00开始停机更新3" },
-        { name: "4本系萨达四大晨24:00开始停机更新4" },
+      messages1: [
+        { content: "3阿打算打算打24日凌晨24:00开始停机更新3" },
+        { content: "4本系萨达四大晨24:00开始停机更新4" }
       ],
       activeName: "a",
       active: "0",
@@ -337,7 +337,7 @@ export default {
       this.$api.get(`/notifyAnnounceUser/queryAll?params={"pageIndex":1,"pageSize":5,"filter":["userId=${this.cust}","status=0"]}`,{
        },res=>{
           //  console.log(res)
-           this.messages=res.data.resultValue.items
+           this.messages1.push(res.data.resultValue.items)
        })
     },
     getlist(){
@@ -509,12 +509,13 @@ header {
  /deep/ .van-badge--fixed{
    position: absolute;
    top: 15%;
-    left: 30%;
-   width:15px;
+  //   left: 30%;
+  //  width:30px;
     height: 15px;
     line-height: 15px;
     background: red;
-    border: none;
+    font-size: 12px;
+    // border: none;
   }
   .badge {
     width: 25px;
