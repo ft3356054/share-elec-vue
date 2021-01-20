@@ -313,6 +313,7 @@ export default {
              this.isLoading = false
              this.loading = false
        })
+       this.finName="已全部加载完成"
      },
        // 下拉刷新
       onRefresh() {
@@ -321,7 +322,6 @@ export default {
             this.list=[]
             this.pageNumber=1
             this.getlist()
-            // this.reload()
 		      }, 1000);
         },
         // 上拉加载
@@ -339,14 +339,14 @@ export default {
                               this.loading = false
                           }else{
                               this.finished = true
-                              this.loading = true
-                              setTimeout(()=>{
-                                 this.finName=""
-                              },2000)
-                             
+                              this.loading = true 
+                               setTimeout(()=>{
+                                    this.finName=""
+                              },10000)
                           }
                 })
                 }, 500);
+                
 		    },
       // 取消
     cancel(){

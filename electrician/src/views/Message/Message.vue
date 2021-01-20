@@ -8,7 +8,7 @@
      <div class="no-comment" v-if="this.list.length==0">
         <img src="../../assets/images/wu.png" alt="">
         <span>暂无消息!</span>
-     </div>
+     </div> 
          <van-pull-refresh  v-model="isLoading" success-text="刷新成功" @refresh="onRefresh">
 		    	<van-list 
                 v-model="loading"
@@ -151,6 +151,7 @@ export default {
              this.isLoading = false
              this.loading = false
        })
+        this.finName="已全部加载完成"
       },
       // 展示消息时间
       transTime (time) {
@@ -269,11 +270,14 @@ export default {
           this.itemCount = res.data.resultValue.itemCount;  //总条数
              // itemCount是后台返回的列表总条数
              if(res.data.resultValue.itemCount > this.list.length){
+                         this.pageNumber++
                         this.loading = false
                     }else{
                         this.finished = true
                         this.loading = true
-                        // this.finName=''
+                        setTimeout(()=>{
+                                    this.finName=""
+                              },10000)
                     }
            })
           }, 2000);
