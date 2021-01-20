@@ -1,23 +1,40 @@
 <template>
     <div class="contianer">
+      
         <header>
              <p  @click="goback"><img src="@/assets/images/jiantou.png" alt=""></p>
             <p>消息列表</p>
         </header>
+               <!-- 无数据时的展示 -->
+    
         <section>
+          <div v-if="this.data.length===0" class="no-comment">
+                <img src="@/assets/images/wu.png" alt="">
+                  <span>暂无消息!</span>
+          </div>
+         <van-pull-refresh  v-model="isLoading" success-text="刷新成功" @refresh="onRefresh">
+		    	<van-list 
+                v-model="loading"
+            :finished="finished"
+            :immediate-check="false"
+            :finished-text="this.finName"
+            error-text="请求失败，点击重新加载"
+            @load="onLoad"
+            :offset="10"
+          >
              <div class="" v-for="(item,index) in data" :key="index" @click="seebtn(item)">
                  <div class="top" v-text="transTime(item.createTime)"></div>
                  <div class="content">
                        <div class="typebox">
-                    <p><span>类别</span><span>{{item.title}}</span></p>
-                    <p></p>
-                    <p>{{item.createTime}}</p>
-                </div>
+                          <p><span>类别</span><span>{{item.title}}</span></p>
+                          <p></p>
+                          <p>{{item.createTime}}</p>
+                      </div>
                 <div class="addressbox">
                     <dl>
                         <dt>
                             <p>{{item.content}}</p>
-                            <p v-if="item.state==='0'" style="color:blue;margin-top:15px">已读</p>
+                            <p v-if="item.state==='1'" style="color:blue;margin-top:15px">已读</p>
                             <p v-else style="color:red;margin-top:15px">未读</p>
                         </dt>
                         <dd>
@@ -28,10 +45,15 @@
                  </div>
               
             </div>
+            </van-list>
+            </van-pull-refresh>
         </section>
+
+        
     </div>
 </template>
 <script>
+import {Toast} from 'vant'
 export default {
   data () {
     return {
@@ -39,33 +61,81 @@ export default {
       path:"ws://localhost:8083/websocketserver/",
       socket:'',
       electricianId:"321",
-      orderId:""
+      orderId:"",
+      order_status: 1, //标签默认
+      isLoading: false, //下拉刷新
+      loading: false,    //上拉加载
+      finished: false,  //下拉完成
+      upFinished: false, //上拉加载完毕
+      offset: 20, //滚动条与底部距离小于 offset 时触发load事件
+      pageNumber:1,
+      pageSize:5,
+      pageIndex:1,
+      itemCount:0,//总条数
+      finName:"已全部加载完成",
     }
   },
+  inject:['reload'],
   mounted () {
       this.WebSocketTest()
       this.message()
   },
   methods: {
+     onRefresh() {
+		      setTimeout(() => {
+            this.isLoading = false;
+            this.data=[]
+            this.pageNumber=1
+            this.message()
+            this.finName="已全部加载完成"
+		      }, 1000);
+		    },
+    onLoad(){
+        // this.tomer=setTimeout(() => {
+          this.pageIndex=this.pageNumber*this.pageSize-(this.pageSize-1)
+             this.$api.get(`/notifyAnnounceUser/queryAll?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":["userId=${this.electricianId}","status=2"]}`,{
+       },res=>{
+           let datas= res.data.resultValue.items    //datas是列表集合
+           this.data=this.data.concat(datas)
+          this.itemCount = res.data.resultValue.itemCount;  //总条数
+             // itemCount是后台返回的列表总条数
+             if(res.data.resultValue.itemCount > this.data.length){
+               this.pageNumber++
+                        this.loading = false
+                    }else{
+                        this.finished = true
+                        this.loading = true
+                        // this.finName=''
+                    }
+           })
+          // }, 2000);
+    },
     goback () {
       this.$router.go(-1)
     },
     seebtn(item){
             this.$axios.get(`/notifyAnnounce/read/?params={"filter":["announceId=${item.announceId}","announceUserId=${item.announceUserId}"]}`).then(res => {
+              if(res.data.resultValue){
                 this.orderId=res.data.resultValue.items[0].orderId
                 this.getdetail()
+              }else{
+
+              }
             }).catch(err => {
                 alert(err)
             })
     },
     getdetail(){
         this.$api.get("/orderElectrician/orderDetails/"+this.orderId, {"electricianId":this.electricianId}, response => {
-            console.log(response.data.resultValue.items[0].orderElectricianStatus);
+          console.log(response.data)
+          if(response.data===undefined){
+            return false
+            
+          }else{
             var items=response.data.resultValue.items[0]
                if(items.orderElectricianStatus==="8"){
                     this.$router.push({name:'Evaluate',params:{orderId:items.orderId,electricianId:this.electricianId}})
                 }else if(items.orderElectricianStatus==="9"){
-            // console.log(items)
                     this.$router.push({name:'Completed',params:{orderId:items.orderId,electricianId:this.electricianId}})
                 }else if(items.orderElectricianStatus==="0"){
                     this.$router.push({name:'Appointment',params:{orderId:items.orderId,electricianId:this.electricianId}})
@@ -88,15 +158,29 @@ export default {
                 }else if(items.orderElectricianStatus==="3"){
                     this.$router.push({name:'Personneladd',params:{orderId:items.orderId,electricianId:this.electricianId}})
                 }
+          }
+             
         });
     },
     message(){
-            this.$axios.get(`/notifyAnnounceUser/queryAll?params={"pageIndex":1,"pageSize":20,"filter":["userId=${this.electricianId}","status=2"]}`).then(res => {
+            this.loading = true;
+            this.$axios.get(`/notifyAnnounceUser/queryAll?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":["userId=${this.electricianId}","status=2"]}`).then(res => {
                 console.log(res)
                 this.data=res.data.resultValue.items
-            }).catch(err => {
-                alert(err)
+                this.itemCount=res.data.resultValue.itemCount
+                if(res.data.resultValue.itemCount=== this.data.length){
+                  this.finished=true
+                }else{
+                  this.finished=false
+                }
+                this.pageNumber=2
+                this.isLoading=false
+                this.loading=false
             })
+            this.finName="加载完成"
+             setTimeout(()=>{
+                 this.finName=""
+                              },2000)
        
     },
     transTime (time) {
@@ -243,6 +327,10 @@ display: flex;
 flex-direction: column;
 padding-bottom: 20px;
 box-sizing: border-box;
+overflow: auto;
+}
+/deep/ .van-pull-refresh{
+  height: 100%;
 }
 .top{
       text-align: center;
@@ -282,9 +370,9 @@ section{
     padding: 0 10px;
     box-sizing: border-box;
 }
-section::-webkit-scrollbar{
+/* section::-webkit-scrollbar{
     width: 0;
-}
+} */
 .content{
     width: 100%;
     height: auto;
@@ -357,4 +445,18 @@ margin-left: 3px;
 width: 5;
 height: 8px;
 }
+.no-comment{
+  margin-top: 100px;
+  position: relative;
+  
+}
+.no-comment img{
+    width: 100%;
+    height: 100%;
+  }
+.no-comment  span{
+    position: absolute;
+    left: 36%;
+    bottom: 0px;
+  }
 </style>

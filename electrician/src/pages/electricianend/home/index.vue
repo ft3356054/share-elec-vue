@@ -8,7 +8,7 @@
                 <img src="@/assets/images/message.png" alt="" >
             </span>
             <span v-else @click="gomessages">
-                <van-badge  :content="this.content" max="99">
+                <van-badge  :content="this.content" max="99" style="font-size: 12px;">
                 <img src="@/assets/images/message.png" alt="" />
                 </van-badge>
             </span>
@@ -34,13 +34,38 @@
                     <dd>我的订单</dd>
                 </dl>
             </div>
-             <div class="message">
-                <p>
+             <div class="message" >
+                <p >
                     <ul id="con1" ref="con1" :class="{anim:animate==true}">
-                        <li v-for="(item,index) in messages" :key="index" @click="gomessagedetail(item)">系统消息：{{item.content}} </li>
+                        <li  v-for="(item,index) in messages" :key="index" @click="gomessagedetail(item)">系统消息：{{item.content}} </li>
                         <img src="@/assets/images/messagejiantou.png" alt="">
                     </ul>
                 </p>
+                  <!-- <van-notice-bar :scrollable="false">
+                    <van-swipe
+                    vertical
+                    class="notice-swipe"
+                    :autoplay="3000"
+                    :show-indicators="false"
+                    :width="360"
+                    >
+                    <van-swipe-item v-for="(item,index) in messages" :key="index" @click="swipe(item.announceId,item.orderId)">
+                        系统消息:  {{item.content}}
+                    </van-swipe-item>
+                    </van-swipe>
+                    <img src="@/assets/images/messagejiantou.png" alt="">
+                </van-notice-bar> -->
+
+
+
+
+
+
+
+
+
+
+
             </div>
         </div>
     </div>
@@ -103,18 +128,6 @@
         </div>
     </div>
 </section>
-<!-- <van-overlay :show="show" @click="show = false">
-  <div class="wrapper" @click.stop>
-    <div class="block">
-        <p><img src="../../../assets/images/close.png" alt="" @click="closebtn"></p>   
-        <p>插座跳闸(<span>15s</span>)</p>
-        <p>天津市东丽区国网客服中心北方园区</p>
-        <p>插座跳闸，需要检修下</p>
-        <p>10kv 抢修 < 5KM </p>
-        <p style="color:#ccc;font-size:15px">2020/11/16 17:12</p>
-    </div>
-  </div>
-</van-overlay> -->
 </div>
 
 </template>
@@ -140,32 +153,35 @@ export default {
       img:require('../../../assets/images/startorder.png'),
       img1:require('../../../assets/images/stoporders.png'),
       lay_type:0, 
-      socket:""
+      socket:"",
+      messages1:""
     }
   },
   created () {
     setInterval(this.scroll, 3000)
   },
   mounted(){
+        this.getdetail()
+        this.getuserinfo()
         this.gettodo(),
         this.getevaluate(),
         this.getmessage()
         this.WebSocketTest()  //websocketserver
         this.getContent()
-        this.getdetail()
-    this.getuserinfo()
+       
   },
   methods: {
+    //   获取电工信息展示接单中或者休息中
        getuserinfo(){
-      var params="321"
-      this.$axios.get("/orderElectrician/queryElectricianInfo/"+params).then(res => {
-          if(res.data.resultValue.items[0].electricianStatus=='1'){
-            this.lay_type=0
-          }else{
-            this.lay_type=1
-          }
-        });
-    },
+            this.$axios.get("/orderElectrician/queryElectricianInfo/"+this.electricianId).then(res => {
+                if(res.data.resultValue.items[0].electricianStatus=='1'){
+                    this.lay_type=0
+                }else{
+                    this.lay_type=1
+                }
+                });
+        },
+         //   点击开始接单或者暂停接单
       stylebtn(){
            if(this.lay_type == 0){
                this.lay_type = 1
@@ -184,23 +200,24 @@ export default {
                 });
             }
       },
+    //   获取未读消息条数
       getContent(){
-          this.$api.get(`/notifyAnnounceUser/notReadNum/${this.cust}`,{
+          this.$api.get(`/notifyAnnounceUser/notReadNum/${this.electricianId}`,{
                 },res=>{
                     this.content=res.data.resultValue
+                    console.log(res)
                 })
     },
+    // 消息滚屏
       getmessage(){
-            var params={
-                "pageIndex":1,
-                "pageSize":20,
-                "filter":["userId=321","status=2"]
-                }
-            this.$axios.get(`/notifyAnnounceUser/queryAll?params={"pageIndex":1,"pageSize":5,"filter":["userId=${this.electricianId}","status=0"]}`).then(res => {
+            this.$api.get(`/notifyAnnounceUser/queryAll?params={"pageIndex":1,"pageSize":5,"filter":["userId=${this.electricianId}","status=0"]}`,{
+            },res=>{
+                //  console.log(res)
                 this.messages=res.data.resultValue.items
-            }).catch(err => {
-                alert(err)
+                console.log(this.messages)
             })
+
+
       },
       getdetail(){
         this.$api.get("/orderElectrician/orderDetails/"+this.orderId, {"electricianId":this.electricianId}, response => {
@@ -242,7 +259,7 @@ export default {
             this.animate=true;    // 因为在消息向上滚动的时候需要添加css3过渡动画，所以这里需要设置true
             setTimeout(()=>{      //  这里直接使用了es6的箭头函数，省去了处理this指向偏移问题，代码也比之前简化了很多
                     if(this.messages){
-                        this.messages.push(this.messages[0]);  // 将数组的第一个元素添加到数组的
+                    this.messages.push(this.messages[0]);  // 将数组的第一个元素添加到数组的
                     this.messages.shift();              //删除数组的第一个元素
                     this.animate=false;  // margin-top 为0 的时候取消过渡动画，实现无缝滚动
                     }else{
@@ -376,11 +393,11 @@ export default {
     },
     getMessage: function (msg) {   //content
         let obj=JSON.parse(msg.data) 
-        this.messages=obj.content
+        this.messages1=obj.content
         if(obj.orderId){
             this.$dialog.confirm({
                 width:"80%",
-                message: this.messages,
+                message: this.messages1,
                 confirmButtonText: "抢单",
                 })
             .then((res) => { //点击确认按钮后的调用
@@ -390,7 +407,7 @@ export default {
         }else{
            this.$dialog.alert({
                 width:"80%",
-                message: this.messages,
+                message: this.messages1,
                 closeOnClickOverlay:true
             }).then((res)=>{
             location.reload()
@@ -409,6 +426,9 @@ export default {
 </script>
 
 <style scoped>
+/deep/ .notice-swipe .van-swipe{
+  width: 100%;
+}
 .anim{
     transition: all 0.7s;
     margin-top: -30px;
@@ -516,7 +536,7 @@ header .positionbox{
 }
 header .positionbox .contentbox{
     width:100%;
-    height:100%;
+    height:auto;
     background:#ffffff;
     border-radius: 10px;
 }
@@ -702,5 +722,9 @@ color: #52aae1;
 box-sizing: border-box;
 font-size: 15px;
 }
-
+/deep/ .van-badge  {
+  /* display: block; */
+  font-size: 10px;
+  /* line-height: 16px; */
+}
 </style>>
