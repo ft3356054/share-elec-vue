@@ -154,7 +154,7 @@ export default {
         this.finName="已全部加载完成"
           setTimeout(()=>{
                  this.finName=""
-                              },5000)
+             },2000)
       },
       // 展示消息时间
       transTime (time) {
@@ -281,7 +281,7 @@ export default {
                         this.loading = true
                         setTimeout(()=>{
                                     this.finName=""
-                              },10000)
+                              },5000)
                     }
            })
           }, 2000);
@@ -452,5 +452,8 @@ main{
             // bottom: 50px;
             // left: 33%;
             transition-duration: 0;
+}
+/deep/ .van-pull-refresh{
+  height: 100%;
 }
 </style>

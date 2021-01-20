@@ -316,7 +316,7 @@ export default {
        this.finName="已全部加载完成"
          setTimeout(()=>{
               this.finName=""
-         },10000)
+         },2000)
      },
        // 下拉刷新
       onRefresh() {
@@ -346,7 +346,7 @@ export default {
                               this.loading = true 
                                setTimeout(()=>{
                                     this.finName=""
-                              },10000)
+                              },5000)
                           }
                 })
                 }, 500);
@@ -786,6 +786,9 @@ font-size: 14px;
     bottom: 0px;
     font-size: 13px;
   }
+}
+/deep/ .van-pull-refresh{
+  height: 100%;
 }
 </style>
 
