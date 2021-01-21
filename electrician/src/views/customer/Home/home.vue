@@ -151,10 +151,7 @@ export default {
           name: "用电资讯",
         },
       ],
-      messages1: [
-        { content: "3阿打算打算打24日凌晨24:00开始停机更新3" },
-        { content: "4本系萨达四大晨24:00开始停机更新4" }
-      ],
+      messages1: [],
       activeName: "a",
       active: "0",
       content:"",
@@ -337,7 +334,7 @@ export default {
       this.$api.get(`/notifyAnnounceUser/queryAll?params={"pageIndex":1,"pageSize":5,"filter":["userId=${this.cust}","status=0"]}`,{
        },res=>{
           //  console.log(res)
-           this.messages1.push(res.data.resultValue.items)
+           this.messages1=res.data.resultValue.items
        })
     },
     getlist(){

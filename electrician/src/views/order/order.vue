@@ -16,11 +16,11 @@
     </div>
     <div class="main">
           <!-- 无数据时的展示 -->
-     <div class="no-comment" v-if="this.list.length==0 && this.haveList.length==0 && this.loverList.length==0">
+     <!-- <div class="no-comment" v-if="this.list.length==0 && this.haveList.length==0 && this.loverList.length==0">
         <img src="../../assets/images/wu.png" alt="">
         <span>暂无消息!</span>
-     </div>
-         <section v-else>
+     </div> -->
+         <section >
            <van-pull-refresh  v-model="isLoading" success-text="刷新成功" @refresh="onRefresh">
 		    	<van-list 
                 v-model="loading"
