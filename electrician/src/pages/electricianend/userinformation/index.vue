@@ -21,7 +21,7 @@
         </div>
         <div class="information">
             <p><span>实名认证</span><span>否</span></p>
-            <p><span>电工认证</span><span @click="gorenzheng"  style="color:#87cefa">已认证</span></p>
+            <p><span>电工认证</span><span  style="color:#87cefa">已认证</span></p>
             <p><span>签约公司</span><span>{{item.companyName}}</span></p>
             <p><span>服务状态</span><span @click="statebtn" style="color:#87cefa">{{morenmessaage}}</span></p>
         </div>
