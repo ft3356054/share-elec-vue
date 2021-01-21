@@ -166,7 +166,7 @@
                       </div>
                     </dt>
                     <dd>
-                      <span class="wancan">以完成</span>
+                      <span class="wancan">已完成</span>
                     </dd>
                 </dl>
             </div>
