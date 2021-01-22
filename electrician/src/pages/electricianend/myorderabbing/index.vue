@@ -89,7 +89,8 @@
                         <p>{{item2.voltage}} 抢修 {{item2.distance}}</p>
                     </dt>
                     <dd>
-                        <p style="color:orange">已完成</p>
+                        <p v-show="item2.orderElectricianStatus==='9'" style="color:orange">已完成</p>
+                        <p v-show="item2.orderElectricianStatus==='8'" style="color:red">待评价</p>
                     </dd>
                 </dl>
             </div>
@@ -126,6 +127,11 @@ export default {
       console.log(item)
       // this.$router.push('/statusfile/completed')
       this.$router.push({name:'Completed',params:{orderId:item.orderId,electricianId:this.electricianId}})
+       if(item.orderElectricianStatus==="8"){
+            this.$router.push({name:'Evaluate',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }else if(item.orderElectricianStatus==="9"){
+            this.$router.push({name:'Completed',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }
     },
     getAll(){
         this.$axios.get("/orderElectrician/queryAllDoing/"+this.electricianId) .then(res => {

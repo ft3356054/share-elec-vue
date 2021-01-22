@@ -48,8 +48,12 @@ export default {
                 "electricianId":"${this.electricianId}"
                 }`)
       this.$axios.post("/orderElectrician/booking", params).then(res => {
-            console.log(res)
-      this.$router.push({name:'Payment',params:{orderId:this.orderId,electricianId:this.electricianId}})
+            // console.log(res.data.resultValue.items[0].orderFrom)
+            if(res.data.resultValue.items[0].orderFrom === "来源APP端"){
+              this.$router.push('/electricianend')
+            }else{  
+              this.$router.push({name:'Payment',params:{orderId:this.orderId,electricianId:this.electricianId}})
+            }
         }).catch(err => {
             alert(err)
         })
