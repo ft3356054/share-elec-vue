@@ -29,16 +29,18 @@ export default {
     }
   },
   mounted () {
-    //   this.getelectri()
+      
     this.electricianId=this.$route.params.electricianId
     this.orderId=this.$route.params.orderID
+    this.getelectri()
   },
   methods: {
-    //   getelectri(){
-    //       this.$axios.get(`/orderElectrician/queryElectrician?electricianId=&electricianName=`).then(res => {
-    //       console.log(res)
-    //     });
-    //   },
+      getelectri(){
+          this.$axios.get(`/orderElectrician/queryAllElectrician/`+this.electricianId).then(res => {
+          console.log(res)
+          this.data=res.data.resultValue.items
+        });
+      },
     goback () {
       this.$router.go(-1)
     },

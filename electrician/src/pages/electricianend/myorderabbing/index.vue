@@ -106,7 +106,7 @@ export default {
   data () {
     return {
       tabs: ['全部订单', '进行中订单', '已完成订单'],
-      num: 0,
+      num: 1,
       cancelledList: [],
       completedList: [],
       datas: [],
@@ -128,11 +128,9 @@ export default {
       this.$router.push({name:'Completed',params:{orderId:item.orderId,electricianId:this.electricianId}})
     },
     getAll(){
-        this.$axios.get(`/orderElectrician/?params={"pageIndex":1,"pageSize":20,"filter":"electricianId=${this.electricianId}","sorter":"DESC=createTime"}`).then(res => {
-            this.datas=res.data.resultValue.items
-        }).catch(err => {
-            alert(err)
-        })
+        this.$axios.get("/orderElectrician/queryAllDoing/"+this.electricianId) .then(res => {
+          this.cancelledList=res.data.resultValue.items
+        });
     },
     getcancel(){
       this.$axios.get("/orderElectrician/queryAllHaveEsc/"+this.electricianId) .then(res => {
@@ -143,6 +141,7 @@ export default {
       this.num = index
       if(this.num===0){
         this.$axios.get(`/orderElectrician/?params={"pageIndex":1,"pageSize":20,"filter":"electricianId=${this.electricianId}","sorter":"DESC=createTime"}`).then(res => {
+            this.datas=res.data.resultValue.items
         }).catch(err => {
             alert(err)
         })

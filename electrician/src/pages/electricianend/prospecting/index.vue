@@ -82,8 +82,8 @@ export default {
                         "electricianId":"${this.electricianId}"
                         }`)
             this.$axios.post("/orderElectrician/booking", params).then(res => {
-                //  this.$router.push({name:'Uploadcontract',params:{orderId:this.orderId,electricianId:this.electricianId}})
-                this.$router.push('/electricianend')
+                 this.$router.push({name:'Uploadcontract',params:{orderId:this.orderId,electricianId:this.electricianId}})
+                // this.$router.push('/Uploadcontract')
                 }).catch(err => {
                     alert(err)
                 })
