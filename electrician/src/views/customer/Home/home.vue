@@ -384,6 +384,46 @@ export default {
           console.log(res.data.resultValue.items[0])
          let orderStatus=res.data.resultValue.items[0].orderStatus
         switch (orderStatus) {
+        case "4":   //以取消
+          this.$router.push({
+            path:"/cancelled",
+            query:{
+              orderId:this.orderId
+            }
+          })
+          break;
+        case "9":  //以完成
+          this.$router.push({
+            path:"/complete",
+            query:{
+              orderId:this.orderId
+            }
+          })
+          break;
+        case "8":  //待评价
+          this.$router.push({
+            path:"/complete",
+            query:{
+              orderId:this.orderId
+            }
+          })
+          break;
+        case "21":  //未到达现场
+          this.$router.push({
+            path:"/noArrived",
+            query:{
+              orderId:this.orderId
+            }
+          })
+          break;
+        case "2":   //待维修
+          this.$router.push({
+            path:"/stayRepair",
+            query:{
+              orderId:this.orderId
+            }
+          })
+          break;
         case "20":   //待预约
           this.$router.push({
             path:"/stayMake",
@@ -392,11 +432,80 @@ export default {
             }
           })
           break;
+        case "25":   //待验收
+          this.$router.push({
+            path:"/accepted",
+            query:{
+              orderId:this.orderId
+            }
+          })
+          break;
+        case "1":  //待接单
+          this.$router.push({
+            path:"/stayOrder",
+            query:{
+              orderId:this.orderId
+            }
+          })
+          break;
+        case "11": //待接单
+          this.$router.push({
+            path:"/stayOrder",
+            query:{
+              orderId:this.orderId
+            }
+          })
+          break;
+        case "22":  //待现场勘查察
+          this.$router.push({
+            path:"/stayScene",
+            query:{
+              orderId:this.orderId
+            }
+          })
+          break;
+        case "0":  //待支付
+           this.$router.push({
+           path: `/Pay/${this.orderId}`,
+          })
+          break;
         case "23":  //待现场勘查察
             this.$router.push({
            path: `/Pay/${this.orderId}`,
           })
           break;                
+        case "3":  // 施工中
+          this.$router.push({
+            path:"/details",
+            query:{
+              orderId:this.orderId
+            }
+          })
+          break;
+        case "31":  //施工中
+          this.$router.push({
+            path:"/details",
+            query:{
+              orderId:this.orderId
+            }
+          })
+          break;
+           case "24":  //施工中   施工完成
+          this.$router.push({
+             path:"/details",
+            query:{
+              orderId:this.orderId
+            }
+          })
+          break;
+          case "26":  //现场探查完成
+          this.$router.push({
+            path:"/prodemo",
+            query:{
+              orderId:this.orderId
+            }
+          })
+          break;
         default:
           break;
       }
