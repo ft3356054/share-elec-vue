@@ -82,9 +82,9 @@
           </div>
          
       </div>
-      <div class="btt" v-show="ts">
+      <div class="btt" v-show="ts" v-if="this.orderStatus==8">
         <!-- <button v-if="this.orderStatus==9" @click="tocomplaint()">投诉</button>   -->
-        <button v-if="this.orderStatus==8" @click="estimate">评价</button>
+        <button  @click="estimate">评价</button>
       </div>
   </div>
 </template>
