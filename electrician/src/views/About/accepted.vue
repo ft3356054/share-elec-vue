@@ -49,10 +49,11 @@
       </div>
       
     </div>
-     <div class="btt">
-        <button @click="tocomplaint()">投诉</button>
+     <div class="btt"  >
+        <button v-if="this.orderComplaintId==null" @click="tocomplaint()">投诉</button>
          <button @click="TipDialog">确认验收</button>
       </div>
+     
   </div>
 </template>
 
@@ -66,7 +67,8 @@ export default {
       fileList: [],
       demo: {},
       orderId:"",
-      show:false
+      show:false,
+      orderComplaintId:null
     };
   },
    mounted() {
@@ -122,12 +124,16 @@ export default {
                   } 
               })  
       })
+      .catch(() => {
+       
+        });
    },
      getdemo(){
         this.$api.get(`/orderCustomer/OrderDetail/${this.orderId}`,{
        },res=>{
            console.log(res.data.resultValue.items)
            this.demo=res.data.resultValue.items
+           this.orderComplaintId=res.data.resultValue.items[0].orderComplaintId
        })
     },
   },
@@ -140,6 +146,7 @@ export default {
   width: 100%;
   height: 100%;
   background: #f3f8fe;
+  overflow-x: hidden;
 }
 .head {
   width: 100%;
@@ -252,10 +259,10 @@ export default {
     font-size: 16px;
     // font-weight: bold;
   }
-  :nth-child(1){
-    background: none;
-    color: #6b6c6c;
-    border: 1px solid #c0c2c4;
-  }
+  // :nth-child(1){
+  //   background: none;
+  //   color: #6b6c6c;
+  //   border: 1px solid #c0c2c4;
+  // }
 }
 </style>

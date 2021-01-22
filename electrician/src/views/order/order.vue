@@ -189,7 +189,7 @@ export default {
   data() {
     return {
       tabs: ['全部订单', '进行中订单', '已完成订单'],
-      num: 0,
+      num: 1,
       staus:"",
       active: 0,
       value:"",
@@ -217,6 +217,7 @@ export default {
   mounted() {
     this.cust = this.$route.query.cust;
      this.getlist()
+     this.shousui(this.num)
   },
   methods: {
     fh(){
@@ -316,7 +317,7 @@ export default {
        this.finName="已全部加载完成"
          setTimeout(()=>{
               this.finName=""
-         },2000)
+         },5000)
      },
        // 下拉刷新
       onRefresh() {
@@ -771,7 +772,7 @@ font-size: 14px;
   }
 }
 /deep/ .van-overlay{
-  background-color: rgba(0,0,0,.4);
+  background-color: rgba(0,0,0,.1);
 }
 .no-comment{
   margin-top: 100px;

@@ -737,9 +737,10 @@ box-sizing: border-box;
 font-size: 14px;
 }
 /deep/ .show{
-  width: 80%;
+    width: 80%;
+  
    .box{
-   width: 100%;
+    width: 100%;
     font-size: 13px;
     height: 80px;
     text-align: center;
@@ -750,7 +751,7 @@ font-size: 14px;
   }
 }
 /deep/ .van-overlay{
-  background-color: rgba(0,0,0,.3);
+  background-color: rgba(0,0,0,.1);
 }
 /deep/ .van-sticky{
   background: #f3f8fe;
