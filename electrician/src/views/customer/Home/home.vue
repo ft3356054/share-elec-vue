@@ -184,12 +184,23 @@ export default {
     },
     nalist(index) {
       if (index === 0) {
-        this.$router.push({
-          path:"/demand",
-          query:{
-            cust:this.cust
-          }
-        });
+        　let date=new Date();
+        // console.log(date.getHours())
+            　　if( date.getHours()>=9 && date.getHours() <=18 ){
+                    this.$router.push({
+                        path:"/demand",
+                        query:{
+                          cust:this.cust
+                        }
+                      });
+            　　}else{
+                  　this.$dialog.alert({
+                        width:"80%",
+                        message: "现在是下班时间，不可发单",
+                        closeOnClickOverlay:true
+                  });
+            }
+       
       } else if (index === 1) {
         this.$router.push({
           path:"/order",
@@ -578,7 +589,10 @@ export default {
               width:"80%",
               message: this.messages,
               closeOnClickOverlay:true
-            });
+            }).then(()=>{
+              //  this.$router.push("/customer")
+               this.reload() 
+            })
     },
     send: function () {
         this.socket.send(params)

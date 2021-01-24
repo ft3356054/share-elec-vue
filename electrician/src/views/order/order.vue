@@ -89,10 +89,10 @@
                 </dl>
             </div>
         </div>
-        <div class="content" v-show="num==1" v-for="(item,index) in haveList" :key="'in'+index">
+        <div class="content" v-show="num==1" v-for="(item,index) in list" :key="'in'+index">
             <div class="typebox">
                 <p><span>类别</span><span>{{item.customerDescriveTitle}}</span></p>
-                <p></p>
+                <p>{{item.orderStatus}}</p>
                 <p v-if="item.orderStatus=='0'">上门费 {{item.customerPrice }}</p>
                 <p v-else-if="item.orderStatus=='23'">维修费 {{item.electricianPrice }}</p>
                 <p v-else-if="item.orderStatus!=='0'|| item.orderStatus!=='23' ">{{item.createTime }}</p>
@@ -146,7 +146,7 @@
                 </dl>
             </div>
         </div>
-        <div class="content" v-show="num==2" v-for="(item,index) in loverList" :key="'info2'+index">
+        <div class="content" v-show="num==2" v-for="(item,index) in list" :key="'info2'+index">
             <div class="typebox">
                 <p><span>类别</span><span>{{item.customerDescriveTitle}}</span></p>
                 <p>{{item.orderStatus}}</p>
@@ -216,7 +216,6 @@ export default {
    inject:['reload'],
   mounted() {
     this.cust = this.$route.query.cust;
-     this.getlist()
      this.shousui(this.num)
   },
   methods: {
@@ -224,9 +223,11 @@ export default {
       this.$router.go(-1)
     },
     nums(index){
-        this.num=index
-        // console.log(this.num)
-       this.shousui()
+       this.pageIndex=1
+        console.log(this.pageIndex,"111+11")
+        console.log(index,111111)
+             this.list=[]
+       this.shousui(index)
     },
     ipt(e){
       var that = this;
@@ -279,29 +280,73 @@ export default {
     },
     // 搜索
     shousui(index){
-      this.$api.get(`/orderCustomer/searchBox?params={"filter":["customerId=${this.cust}","tagType=${this.num}","searchContent=${this.value}"]}`,{},
+      this.num=index
+      console.log(this.num,3333)
+      if(this.num===0){
+        console.log(this.pageIndex,"111+11")
+       this.$api.get(`/orderCustomer/searchBox?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":["customerId=${this.cust}","tagType=${this.num}","searchContent=${this.value}"]}`,{},
          res=>{
-          //  console.log(res)
-            this.list=res.data.resultValue.items
-            this.haveList=res.data.resultValue.items
-            this.loverList=res.data.resultValue.items
+           console.log(res.data)
+             this.list = res.data.resultValue.items    //datas是列表集合
+          this.itemCount = res.data.resultValue.itemCount;  //总条数
+          console.log(this.itemCount,"zong")
+             // itemCount是后台返回的列表总条数
+             if(res.data.resultValue.itemCount === this.list.length){
+                 this.finished = true
+            }else {
+                this.finished = false
+             }
+             this.pageNumber=2
+             this.isLoading = false
+             this.loading = false
+            
          })
+      }else if(this.num===2){
+        console.log(this.pageIndex,"222+11")
+          this.$api.get(`/orderCustomer/searchBox?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":["customerId=${this.cust}","tagType=${this.num}","searchContent=${this.value}"]}`,{},
+         res=>{
+            this.list = res.data.resultValue.items    //datas是列表集合
+          this.itemCount = res.data.resultValue.itemCount;  //总条数
+             // itemCount是后台返回的列表总条数
+             if(res.data.resultValue.itemCount === this.list.length){
+                 this.finished = true
+            }else {
+                this.finished = false
+             }
+             this.pageNumber=2
+             this.isLoading = false
+             this.loading = false
+         })
+      }else if(this.num===1){
+         console.log(this.pageIndex,"441+11")
+         console.log(this.pageIndex,"331+11")
+        this.$api.get(`/orderCustomer/searchBox?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":["customerId=${this.cust}","tagType=${this.num}","searchContent=${this.value}"]}`,{},
+         res=>{
+             this.list = res.data.resultValue.items    //datas是列表集合
+          this.itemCount = res.data.resultValue.itemCount;  //总条数
+             // itemCount是后台返回的列表总条数
+             if(res.data.resultValue.itemCount === this.list.length){
+                 this.finished = true
+            }else {
+                this.finished = false
+             }
+             this.pageNumber=2
+             this.isLoading = false
+             this.loading = false
+         })
+      }
+       this.finName="已全部加载完成"
+         setTimeout(()=>{
+              this.finName=""
+         },5000)
     },
     // 获取数据
     async getlist(){
        this.pageIndex=this.pageNumber*this.pageSize-(this.pageSize-1)
-       this.$api.get(`/orderCustomer/queryAll?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":"customerId=${this.cust}"}`,{
+      //  this.$api.get(`/orderCustomer/queryAll?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":"customerId=${this.cust}"}`,{
+          this.$api.get(`/orderCustomer/searchBox?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":["customerId=${this.cust}","tagType=${this.num}","searchContent=${this.value}"]}`,{
        },res=>{
          console.log(res)
-        //  this.list=res.data.resultValue.items
-        //   res.data.resultValue.items.forEach(item => {
-        //    if(item.orderStatus=="4" || item.orderStatus=="9" || item.orderStatus=="8" ){
-        //        this.loverList.push(item)
-        //       //  console.log( this.loverList,"8")
-        //    }else  if(item.orderStatus!=="4"|| item.orderStatus!=="9" || item.orderStatus!=="8" ){
-        //       this.haveList.push(item)
-        //    }
-        //  });
          this.list = res.data.resultValue.items    //datas是列表集合
           this.itemCount = res.data.resultValue.itemCount;  //总条数
              // itemCount是后台返回的列表总条数
@@ -324,17 +369,19 @@ export default {
 		      setTimeout(() => {
             this.isLoading = false;
             this.list=[]
-            this.pageNumber=1
-            this.getlist()
+            this.pageIndex=1
+            this.shousui(this.num)
             this.finName="已全部加载完成"
 		      }, 1000);
         },
         // 上拉加载
 		    onLoad() {
              setTimeout(() => {
-                this.pageIndex=this.pageNumber*this.pageSize-(this.pageSize-1)
-                  this.$api.get(`/orderCustomer/queryAll?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":"customerId=${this.cust}"}`,{
+                 this.pageIndex=this.pageNumber*this.pageSize-(this.pageSize-1)
+               this.$api.get(`/orderCustomer/searchBox?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":["customerId=${this.cust}","tagType=${this.num}","searchContent=${this.value}"]}`,{
             },res=>{
+               console.log(res.data)
+                console.log(this.itemCount,"zong")
                 let datas= res.data.resultValue.items    //datas是列表集合
                 this.list=this.list.concat(datas)
                 this.itemCount = res.data.resultValue.itemCount;  //总条数
@@ -349,8 +396,8 @@ export default {
                                     this.finName=""
                               },5000)
                           }
-                })
-                }, 500);
+              })
+         }, 500);
                 
 		    },
       // 取消
