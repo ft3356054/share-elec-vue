@@ -92,6 +92,7 @@
                         <p>{{item.voltage}} 抢修 {{item.distance}}</p>
                     </dt>
                     <dd>
+                         <p v-show="item.orderElectricianStatus==='1'" style="color:red">拒接订单</p>
                         <p v-show="item.orderElectricianStatus==='3'" style="color:red">人员增加</p>
                         <p v-show="item.orderElectricianStatus==='8'" style="color:red">待评价</p>
                         <p v-show="item.orderElectricianStatus==='0'" style="color:red">待预约</p>
@@ -128,12 +129,24 @@
         </div>
     </div>
 </section>
+        <div class="iframe" v-if="shows">
+            <div class="content" v-for="(item,index) in getifream" :key="index">
+                <p>
+                    <span>{{item.orderTypeId}}</span><span  @click="guanbi">×</span>
+                </p>
+                <p>{{item.customerAddress}}</p>
+                <p>{{item.customerDescrive}}</p>
+                <p>{{item.voltage}}  抢修  {{item.distance}}</p>
+                <p>{{item.createTime}}</p>
+                <p><button @click="guanbi">关闭</button><button  @click="qiangdan(item)">抢单</button></p>
+            </div>
+        </div>
 </div>
 
 </template>
 
 <script>
-import { Toast } from 'vant'
+import { Toast,Dialog} from 'vant'
 import qs from 'qs'
 export default {
   data () {
@@ -154,7 +167,9 @@ export default {
       img1:require('../../../assets/images/stoporders.png'),
       lay_type:0, 
       socket:"",
-      messages1:""
+      messages1:"",
+      getifream:[],
+      shows:false
     }
   },
   created () {
@@ -171,6 +186,29 @@ export default {
        
   },
   methods: {
+      guanbi(){
+          this.shows=false
+      },
+      qiangdan(item){
+          var params={
+          "orderId":item.orderId,
+          "electricianId":this.electricianId
+      }
+        this.$axios.get("/orderElectrician/qiangdanrecept", {params}) .then(res => {
+            if(res.data.successful==false){
+                Toast.fail(`${res.data.resultHint}`,3000)
+               
+            }else{
+                Dialog.alert({
+                    message: '抢单成功',
+                    width:'300px',
+                    confirmButtonColor:"#87cefa"
+                }).then(() => {
+                    this.$router.push({name:'Appointment',params:{orderId:params.orderId,electricianId:this.electricianId}})
+                });
+            }
+    });
+      },
     //   获取电工信息展示接单中或者休息中
        getuserinfo(){
             this.$axios.get("/orderElectrician/queryElectricianInfo/"+this.electricianId).then(res => {
@@ -295,7 +333,7 @@ export default {
         });
      },
      quxiao(item){
-        this.$axios.get(`/orderElectrician/esc?orderElectricianId=${this.electricianId}&orderElectricianStatus=5`).then(res => {
+        this.$axios.get(`/orderElectrician/esc?orderElectricianId=${item.orderElectricianId}&orderElectricianStatus=5`).then(res => {
             console.log(res)
         }).catch(err => {
             alert(err)
@@ -329,6 +367,10 @@ export default {
             this.$router.push({name:'Completion',params:{orderId:item.orderId,electricianId:this.electricianId}})
          }else if(item.orderElectricianStatus==="3"){
             this.$router.push({name:'Personneladd',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }else if(item.orderElectricianStatus==="4"){
+             this.$router.push({name:'Cancelled',params:{orderId:items.orderId,electricianId:this.electricianId}})
+         }else if(item.orderElectricianStatus==="1"){
+             this.$router.push({name:'Cancelled',params:{orderId:items.orderId,electricianId:this.electricianId}})
          }
      },
      gopingjia(item){
@@ -368,14 +410,7 @@ export default {
             }else{
                 // 实例化socket
                 var uid = "321";
-                if(this.socket===""){
                 this.socket = new WebSocket(this.path+uid)
-                sessionStorage.setItem("websock",JSON.stringify(this.socket))
-                console.log(this.socket,"进入if")
-                }else{
-                console.log(this.socket,"进入else")
-                }
-                // console.log(this.socket)
                 // 监听socket连接
                 this.socket.onopen = this.open
                 // 监听socket错误信息
@@ -395,22 +430,28 @@ export default {
         let obj=JSON.parse(msg.data) 
         this.messages1=obj.content
         if(obj.orderId){
-            this.$dialog.confirm({
-                width:"80%",
-                message: this.messages1,
-                confirmButtonText: "抢单",
-                cancelButtonText: "关闭"
-                })
-            .then((res) => { //点击确认按钮后的调用
-                this.$router.push({name:'Ordergrabbingdetail',params:{orderId:obj.orderId,electricianId:this.electricianId}})
-            })
+             this.$api.get("/orderElectrician/orderDetails/"+obj.orderId, {"electricianId":this.electricianId}, response => {
+                console.log(response.data);
+                this.shows=true
+                this.getifream=response.data.resultValue.items
+                console.log(this.getifream)
+            });
+            // this.$dialog.confirm({
+            //     width:"80%",
+            //     message: this.messages1,
+            //     confirmButtonText: "抢单",
+            //     cancelButtonText: "关闭"
+            //     })
+            // .then((res) => { //点击确认按钮后的调用
+            //     this.$router.push({name:'Ordergrabbingdetail',params:{orderId:obj.orderId,electricianId:this.electricianId}})
+            // })
         }else{
            this.$dialog.alert({
                 width:"80%",
                 message: this.messages1,
                 closeOnClickOverlay:true
             }).then((res)=>{
-            location.reload()
+                location.reload()
             })
         }
 
@@ -426,9 +467,7 @@ export default {
 </script>
 
 <style scoped>
-/deep/ .notice-swipe .van-swipe{
-  width: 100%;
-}
+
 .anim{
     transition: all 0.7s;
     margin-top: -30px;
@@ -493,6 +532,7 @@ height: 100%;
 background: #f0f6fd;
 display: flex;
 flex-direction: column;
+position: relative;
 }
 header{
     width: 100%;
@@ -726,5 +766,54 @@ font-size: 15px;
   /* display: block; */
   font-size: 10px;
   /* line-height: 16px; */
+}
+.iframe{
+    width: 100%;
+    height: 100%;
+    position:absolute;
+    top: 0;
+    left: 0;
+    display: flex;
+    background:rgba(0, 0, 0, 0.4);
+}
+.iframe .content{
+    width: 80%;
+    margin: auto;
+    height: auto;
+    border-radius: 15px;
+    background: #fff;
+    font-size: 10px;
+    padding: 10px;
+    box-sizing: border-box;
+}
+.iframe .content p:nth-child(1){
+    display: flex;
+    margin-top: 0;
+    font-size: 12px;
+}
+.iframe .content p:nth-child(1) span:nth-child(2){
+flex: 1;
+text-align: right;
+}
+.iframe .content p{
+margin-top: 5px;
+}
+.iframe .content p:nth-child(6) button{
+    width: 50px;
+    text-align: center;
+    margin-left: 50px;
+    border: 0;
+    outline: none;
+    background: #fff;
+    font-size: 13px;
+}
+.iframe .content p:nth-child(6){
+    margin-top: 10px;
+}
+.iframe .content p:nth-child(6) button:nth-child(1){
+    color:gray
+}
+.iframe .content p:nth-child(6) button:nth-child(2){
+    color:blue
 }
 </style>>

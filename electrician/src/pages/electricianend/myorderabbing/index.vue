@@ -28,6 +28,7 @@
                     </dt>
                     <dd>
                         <p v-show="item.orderElectricianStatus==='3'" style="color:red">人员增加</p>
+                         <p v-show="item.orderElectricianStatus==='4'" style="color:red">用户退单</p>
                         <p v-show="item.orderElectricianStatus==='5'" style="color:red">已取消</p>
                         <p v-show="item.orderElectricianStatus==='9'" style="color:red">已完成</p>
                         <p v-show="item.orderElectricianStatus==='8'" style="color:red">待评价</p>
@@ -39,7 +40,8 @@
                         <p v-show="item.orderElectricianStatus==='25'" style="color:red">待验收</p>
                         <p v-show="item.orderElectricianStatus==='26'" style="color:red">待填写维修费</p>
                         <p v-show="item.orderElectricianStatus==='31'" style="color:red">施工中</p>
-                        <p v-show="item.orderElectricianStatus==='1'" style="line-height:0"><button @click="quxiao(item)">取消</button> <button class="jiedan" @click="jiedan(item)">接单</button></p>
+                         <p v-show="item.orderElectricianStatus==='1'" style="color:red">拒接订单</p>
+                        <p v-show="item.orderElectricianStatus==='2'" style="line-height:0"><button @click="quxiao(item)">取消</button> <button class="jiedan" @click="jiedan(item)">接单</button></p>
                     </dd>
                 </dl>
             </div>
@@ -58,19 +60,21 @@
                         <p>{{item1.voltage}} 抢修 {{item1.distance}}</p>
                     </dt>
                     <dd>
-                        <p v-show="item1.orderElectricianStatus==='3'" style="color:red">人员增加</p>
-                        <p v-show="item1.orderElectricianStatus==='5'" style="color:red">已取消</p>
-                        <p v-show="item1.orderElectricianStatus==='9'" style="color:red">已完成</p>
-                        <p v-show="item1.orderElectricianStatus==='8'" style="color:red">待评价</p>
-                        <p v-show="item1.orderElectricianStatus==='0'" style="color:red">待预约</p>
-                        <p v-show="item1.orderElectricianStatus==='21'" style="color:red">待维修</p>
-                        <p v-show="item1.orderElectricianStatus==='22'" style="color:red">待现场勘察</p>
-                        <p v-show="item1.orderElectricianStatus==='23'" style="color:red">待支付维修费</p>
-                        <p v-show="item1.orderElectricianStatus==='24'" style="color:red">施工完成</p>
-                        <p v-show="item1.orderElectricianStatus==='25'" style="color:red">待验收</p>
-                        <p v-show="item1.orderElectricianStatus==='26'" style="color:red">待填写维修费</p>
-                        <p v-show="item1.orderElectricianStatus==='31'" style="color:red">施工中</p>
-                        <p v-show="item1.orderElectricianStatus==='1'" style="line-height:0"><button @click="quxiao(item1)">取消</button> <button class="jiedan" @click="jiedan(item)">接单</button></p>
+                         <p v-show="item.orderElectricianStatus==='3'" style="color:red">人员增加</p>
+                         <p v-show="item.orderElectricianStatus==='4'" style="color:red">用户退单</p>
+                        <p v-show="item.orderElectricianStatus==='5'" style="color:red">已取消</p>
+                        <p v-show="item.orderElectricianStatus==='9'" style="color:red">已完成</p>
+                        <p v-show="item.orderElectricianStatus==='8'" style="color:red">待评价</p>
+                        <p v-show="item.orderElectricianStatus==='0'" style="color:red">待预约</p>
+                        <p v-show="item.orderElectricianStatus==='21'" style="color:red">待维修</p>
+                        <p v-show="item.orderElectricianStatus==='22'" style="color:red">待现场勘察</p>
+                        <p v-show="item.orderElectricianStatus==='23'" style="color:red">待支付维修费</p>
+                        <p v-show="item.orderElectricianStatus==='24'" style="color:red">施工完成</p>
+                        <p v-show="item.orderElectricianStatus==='25'" style="color:red">待验收</p>
+                        <p v-show="item.orderElectricianStatus==='26'" style="color:red">待填写维修费</p>
+                        <p v-show="item.orderElectricianStatus==='31'" style="color:red">施工中</p>
+                         <p v-show="item.orderElectricianStatus==='1'" style="color:red">拒接订单</p>
+                        <p v-show="item.orderElectricianStatus==='2'" style="line-height:0"><button @click="quxiao(item)">取消</button> <button class="jiedan" @click="jiedan(item)">接单</button></p>
                     </dd>
                 </dl>
             </div>
@@ -158,6 +162,16 @@ export default {
         });
       }
     },
+     quxiao(item){
+        this.$axios.get(`/orderElectrician/esc?orderElectricianId=${item.orderElectricianId}&orderElectricianStatus=5`).then(res => {
+            console.log(res)
+        }).catch(err => {
+            alert(err)
+        })
+     },
+      jiedan (item) {
+      this.$router.push({name:'Ordergrabbingdetail',params:{orderId:item.orderId,electricianId:this.electricianId}})
+    },
      godetail(item){
          if(item.orderElectricianStatus==="8"){
             this.$router.push({name:'Evaluate',params:{orderId:item.orderId,electricianId:this.electricianId}})
@@ -185,6 +199,10 @@ export default {
             this.$router.push({name:'Personneladd',params:{orderId:item.orderId,electricianId:this.electricianId}})
          }else if(item.orderElectricianStatus==="5"){
             this.$router.push({name:'Cancelled',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }else if(item.orderElectricianStatus==="4"){
+             this.$router.push({name:'Cancelled',params:{orderId:items.orderId,electricianId:this.electricianId}})
+         }else if(item.orderElectricianStatus==="1"){
+             this.$router.push({name:'Cancelled',params:{orderId:items.orderId,electricianId:this.electricianId}})
          }
      },
      godetail1(item){
@@ -210,6 +228,10 @@ export default {
             this.$router.push({name:'Completion',params:{orderId:item.orderId,electricianId:this.electricianId}})
          }else if(item.orderElectricianStatus==="3"){
             this.$router.push({name:'Personneladd',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }else if(item.orderElectricianStatus==="4"){
+             this.$router.push({name:'Cancelled',params:{orderId:items.orderId,electricianId:this.electricianId}})
+         }else if(item.orderElectricianStatus==="1"){
+             this.$router.push({name:'Cancelled',params:{orderId:items.orderId,electricianId:this.electricianId}})
          }
      },
   },
@@ -402,6 +424,7 @@ display: -webkit-box;
 line-clamp: 2;
 -webkit-box-orient: vertical;
 }
+
 section .contentbox .content .addressbox dd{
 text-align: right;
 padding-left: 10px;
@@ -410,7 +433,7 @@ line-height: 70px;
 font-size: 12px;
 }
 section .contentbox .content .addressbox dd button{
-width: 50px;
+width: 40px;
 height: 20px;
 border-radius: 20px;
 outline: none;
