@@ -190,7 +190,7 @@ export default {
     },
     fh() {
       //返回上一级
-      this.$router.go(-1);
+        this.$router.push("/customer")
     },
     select() {    //获取类型
       this.$api.get(

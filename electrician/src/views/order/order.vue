@@ -224,7 +224,6 @@ export default {
     },
     nums(index){
        this.pageIndex=1
-        console.log(this.pageIndex,"111+11")
         console.log(index,111111)
              this.list=[]
        this.shousui(index)
@@ -281,12 +280,23 @@ export default {
     // 搜索
     shousui(index){
       this.num=index
-      console.log(this.num,3333)
+      // console.log(this.num,3333)
       if(this.num===0){
-        console.log(this.pageIndex,"111+11")
+        this.getlist()
+      }else if(this.num===2){
+       this.getlist()
+      }else if(this.num===1){
+       this.getlist()
+      }
+       this.finName="已全部加载完成"
+         setTimeout(()=>{
+              this.finName=""
+         },5000)
+    },
+    // 获取数据
+    async getlist(){
        this.$api.get(`/orderCustomer/searchBox?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":["customerId=${this.cust}","tagType=${this.num}","searchContent=${this.value}"]}`,{},
          res=>{
-           console.log(res.data)
              this.list = res.data.resultValue.items    //datas是列表集合
           this.itemCount = res.data.resultValue.itemCount;  //总条数
           console.log(this.itemCount,"zong")
@@ -299,70 +309,7 @@ export default {
              this.pageNumber=2
              this.isLoading = false
              this.loading = false
-            
          })
-      }else if(this.num===2){
-        console.log(this.pageIndex,"222+11")
-          this.$api.get(`/orderCustomer/searchBox?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":["customerId=${this.cust}","tagType=${this.num}","searchContent=${this.value}"]}`,{},
-         res=>{
-            this.list = res.data.resultValue.items    //datas是列表集合
-          this.itemCount = res.data.resultValue.itemCount;  //总条数
-             // itemCount是后台返回的列表总条数
-             if(res.data.resultValue.itemCount === this.list.length){
-                 this.finished = true
-            }else {
-                this.finished = false
-             }
-             this.pageNumber=2
-             this.isLoading = false
-             this.loading = false
-         })
-      }else if(this.num===1){
-         console.log(this.pageIndex,"441+11")
-         console.log(this.pageIndex,"331+11")
-        this.$api.get(`/orderCustomer/searchBox?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":["customerId=${this.cust}","tagType=${this.num}","searchContent=${this.value}"]}`,{},
-         res=>{
-             this.list = res.data.resultValue.items    //datas是列表集合
-          this.itemCount = res.data.resultValue.itemCount;  //总条数
-             // itemCount是后台返回的列表总条数
-             if(res.data.resultValue.itemCount === this.list.length){
-                 this.finished = true
-            }else {
-                this.finished = false
-             }
-             this.pageNumber=2
-             this.isLoading = false
-             this.loading = false
-         })
-      }
-       this.finName="已全部加载完成"
-         setTimeout(()=>{
-              this.finName=""
-         },5000)
-    },
-    // 获取数据
-    async getlist(){
-       this.pageIndex=this.pageNumber*this.pageSize-(this.pageSize-1)
-      //  this.$api.get(`/orderCustomer/queryAll?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":"customerId=${this.cust}"}`,{
-          this.$api.get(`/orderCustomer/searchBox?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":["customerId=${this.cust}","tagType=${this.num}","searchContent=${this.value}"]}`,{
-       },res=>{
-         console.log(res)
-         this.list = res.data.resultValue.items    //datas是列表集合
-          this.itemCount = res.data.resultValue.itemCount;  //总条数
-             // itemCount是后台返回的列表总条数
-             if(res.data.resultValue.itemCount === this.list.length){
-                 this.finished = true
-            }else {
-                this.finished = false
-             }
-             this.pageNumber=2
-             this.isLoading = false
-             this.loading = false
-       })
-       this.finName="已全部加载完成"
-         setTimeout(()=>{
-              this.finName=""
-         },5000)
      },
        // 下拉刷新
       onRefresh() {
@@ -380,8 +327,7 @@ export default {
                  this.pageIndex=this.pageNumber*this.pageSize-(this.pageSize-1)
                this.$api.get(`/orderCustomer/searchBox?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":["customerId=${this.cust}","tagType=${this.num}","searchContent=${this.value}"]}`,{
             },res=>{
-               console.log(res.data)
-                console.log(this.itemCount,"zong")
+              //  console.log(res.data)
                 let datas= res.data.resultValue.items    //datas是列表集合
                 this.list=this.list.concat(datas)
                 this.itemCount = res.data.resultValue.itemCount;  //总条数
