@@ -124,9 +124,6 @@ export default {
       this.$router.go(-1)
     },
     gocomlete (item) {
-      console.log(item)
-      // this.$router.push('/statusfile/completed')
-      this.$router.push({name:'Completed',params:{orderId:item.orderId,electricianId:this.electricianId}})
        if(item.orderElectricianStatus==="8"){
             this.$router.push({name:'Evaluate',params:{orderId:item.orderId,electricianId:this.electricianId}})
          }else if(item.orderElectricianStatus==="9"){

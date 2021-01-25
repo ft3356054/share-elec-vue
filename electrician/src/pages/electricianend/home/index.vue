@@ -399,10 +399,10 @@ export default {
                 width:"80%",
                 message: this.messages1,
                 confirmButtonText: "抢单",
+                cancelButtonText: "关闭"
                 })
             .then((res) => { //点击确认按钮后的调用
                 this.$router.push({name:'Ordergrabbingdetail',params:{orderId:obj.orderId,electricianId:this.electricianId}})
-
             })
         }else{
            this.$dialog.alert({
