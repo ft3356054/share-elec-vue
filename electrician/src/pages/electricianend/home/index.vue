@@ -78,7 +78,7 @@
         </ul>
     </div>
     <div class="contentbox">
-        <div class="content" v-show="num==0" v-for="(item,index) in data" :key="'content'+index" @click="godetail(item)">
+        <div class="content" v-show="num==0" v-for="(item,index) in data" :key="'content'+index">
             <div class="typebox">
                 <p><span>类别</span><span>{{item.orderTypeId}}</span></p>
                 <p></p>
@@ -86,7 +86,7 @@
             </div>
             <div class="addressbox">
                 <dl>
-                    <dt>
+                    <dt @click="godetail(item)">
                         <p>{{item.customerAddress}}</p>
                         <p>{{item.customerDescrive}}</p>
                         <p>{{item.voltage}} 抢修 {{item.distance}}</p>
@@ -391,7 +391,24 @@ export default {
             }
     },
     jiedan (item) {
-      this.$router.push({name:'Ordergrabbingdetail',params:{orderId:item.orderId,electricianId:this.electricianId}})
+      var params={
+          "orderId":item.orderId,
+          "electricianId":this.electricianId
+      }
+        this.$axios.get("/orderElectrician/qiangdanrecept", {params}) .then(res => {
+            if(res.data.successful==false){
+                Toast.fail(`${res.data.resultHint}`,3000)
+               
+            }else{
+                Dialog.alert({
+                    message: '抢单成功',
+                    width:'300px',
+                    confirmButtonColor:"#87cefa"
+                }).then(() => {
+                    this.$router.push({name:'Appointment',params:{orderId:params.orderId,electricianId:this.electricianId}})
+                });
+            }
+    });
     },
     closebtn(){
         this.show=false
