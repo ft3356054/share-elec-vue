@@ -229,10 +229,9 @@ export default {
        this.shousui(index)
     },
     ipt(e){
-      var that = this;
        this.value=e.target.value;
         console.log(this.value);
-        this.shousui()
+        this.shousui(this.num)
     },
       // 验收通过
     yanshou(orderId){

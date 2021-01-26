@@ -34,7 +34,7 @@
         </li>
         <li>
           <div class="left">状态</div>
-          <span class="zt"  v-if="item.orderStatus">以完成</span>
+          <span class="zt"  v-if="item.orderStatus">已完成</span>
         </li>
         <li>
           <div class="left">完成时间</div>
