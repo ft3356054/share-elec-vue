@@ -3,7 +3,7 @@
       <header>
         <div class="topserch">
           <p @click="goback"><img src="@/assets/images/jiantou.png" alt=""></p>
-          <p><input type="text" placeholder="搜索我的订单" v-model="search" @change="ipt($event)"></p>
+          <p><input type="text" placeholder="搜索我的订单"  @change="ipt($event)"></p>
         </div>
         <div class="tabbox">
           <ul>
@@ -122,8 +122,7 @@ export default {
     }
   },
   mounted(){
-    this.getAll(),
-    this.getcancel()
+    // this.getAll(),
     this.shousui(this.num)
   },
   methods: {
@@ -136,8 +135,12 @@ export default {
        this.shousui(index)
     },
     ipt(e){
+      if(this.search===''){
+        this.getAll()
+      }
        this.search=e.target.value;
-       this.shousui()
+       console.log(this.search)
+       this.shousui(this.num)
     },
      // 搜索
     shousui(index){
@@ -170,11 +173,6 @@ export default {
             //  this.pageNumber=2
             //  this.isLoading = false
             //  this.loading = false
-        });
-    },
-    getcancel(){
-      this.$axios.get("/orderElectrician/queryAllHaveEsc/"+this.electricianId) .then(res => {
-          // console.log(res);
         });
     },
      quxiao(item){
