@@ -3,7 +3,7 @@
       <header>
         <div class="topserch">
           <p @click="goback"><img src="@/assets/images/jiantou.png" alt=""></p>
-          <p><input type="text" placeholder="搜索我的订单" v-model="search"></p>
+          <p><input type="text" placeholder="搜索我的订单" v-model="search" @change="ipt($event)"></p>
         </div>
         <div class="tabbox">
           <ul>
@@ -13,7 +13,7 @@
       </header>
       <section>
          <div class="contentbox">
-        <div class="content"  v-for="(item,index) in searchData"  v-show="num==0" :key="'content'+index" @click="godetail(item)">
+        <div class="content"  v-for="(item,index) in list"  v-show="num==0" :key="'content'+index" @click="godetail(item)">
              <div class="typebox">
                 <p><span>类别</span><span>{{item.orderTypeId}}</span></p>
                 <p></p>
@@ -46,7 +46,7 @@
                 </dl>
             </div>
         </div>
-        <div class="content"  v-for="(item1,index) in doingData" :key="index" v-show="num==1" @click="godetail1(item1)">
+        <div class="content"  v-for="(item1,index) in list" :key="index" v-show="num==1" @click="godetail1(item1)">
             <div class="typebox">
                 <p><span>类别</span><span>{{item1.orderTypeId}}</span></p>
                 <p></p>
@@ -79,7 +79,7 @@
                 </dl>
             </div>
         </div>
-         <div class="content context"  v-for="(item2,index) in calledData" :key="'context'+index" @click="gocomlete(item2)" v-show="num==2">
+         <div class="content context"  v-for="(item2,index) in list" :key="'context'+index" @click="gocomlete(item2)" v-show="num==2">
             <div class="typebox">
                 <p><span>类别</span><span>{{item2.orderTypeId}}</span></p>
                 <p></p>
@@ -112,20 +112,43 @@ export default {
     return {
       tabs: ['全部订单', '进行中订单', '已完成订单'],
       num: 1,
-      cancelledList: [],
-      completedList: [],
-      datas: [],
       search: '',
-      electricianId:"321"
+      electricianId:"321",
+      pageNumber:1,
+      pageSize:5,
+      pageIndex:1,
+      itemCount:0,   //总条数
+      list:[]
     }
   },
   mounted(){
     this.getAll(),
     this.getcancel()
+    this.shousui(this.num)
   },
   methods: {
     goback () {
       this.$router.go(-1)
+    },
+     nums(index){
+       this.pageIndex=1
+       this.list=[]
+       this.shousui(index)
+    },
+    ipt(e){
+       this.search=e.target.value;
+       this.shousui()
+    },
+     // 搜索
+    shousui(index){
+      this.num=index
+      if(this.num===0){
+        this.getAll()
+      }else if(this.num===2){
+       this.getAll()
+      }else if(this.num===1){
+       this.getAll()
+      }
     },
     gocomlete (item) {
        if(item.orderElectricianStatus==="8"){
@@ -135,32 +158,24 @@ export default {
          }
     },
     getAll(){
-        this.$axios.get("/orderElectrician/queryAllDoing/"+this.electricianId) .then(res => {
-          this.cancelledList=res.data.resultValue.items
+        this.$axios.get(`/orderElectrician/searchBox?params={"pageIndex":1,"pageSize":20,"filter":["electricianId=321","searchContent=${this.search}","tagType=${this.num}"]}`) .then(res => {
+           this.list = res.data.resultValue.items    //datas是列表集合
+          // this.itemCount = res.data.resultValue.itemCount;  //总条数
+             // itemCount是后台返回的列表总条数
+            //  if(res.data.resultValue.itemCount === this.list.length){
+            //      this.finished = true
+            // }else {
+            //     this.finished = false
+            //  }
+            //  this.pageNumber=2
+            //  this.isLoading = false
+            //  this.loading = false
         });
     },
     getcancel(){
       this.$axios.get("/orderElectrician/queryAllHaveEsc/"+this.electricianId) .then(res => {
           // console.log(res);
         });
-    },
-    nums(index) {
-      this.num = index
-      if(this.num===0){
-        this.$axios.get(`/orderElectrician/?params={"pageIndex":1,"pageSize":20,"filter":"electricianId=${this.electricianId}","sorter":"DESC=createTime"}`).then(res => {
-            this.datas=res.data.resultValue.items
-        }).catch(err => {
-            alert(err)
-        })
-      }else if(this.num===1){
-        this.$axios.get("/orderElectrician/queryAllDoing/"+this.electricianId) .then(res => {
-          this.cancelledList=res.data.resultValue.items
-        });
-      }else{
-         this.$axios.get(`/orderElectrician/queryAllHaveDone/${this.electricianId}?pageIndex=1&pageSize=10`) .then(res => {
-          this.completedList=res.data.resultValue.items
-        });
-      }
     },
      quxiao(item){
         this.$axios.get(`/orderElectrician/esc?orderElectricianId=${item.orderElectricianId}&orderElectricianStatus=5`).then(res => {
@@ -200,9 +215,9 @@ export default {
          }else if(item.orderElectricianStatus==="5"){
             this.$router.push({name:'Cancelled',params:{orderId:item.orderId,electricianId:this.electricianId}})
          }else if(item.orderElectricianStatus==="4"){
-             this.$router.push({name:'Cancelled',params:{orderId:items.orderId,electricianId:this.electricianId}})
+             this.$router.push({name:'Cancelled',params:{orderId:item.orderId,electricianId:this.electricianId}})
          }else if(item.orderElectricianStatus==="1"){
-             this.$router.push({name:'Cancelled',params:{orderId:items.orderId,electricianId:this.electricianId}})
+             this.$router.push({name:'Cancelled',params:{orderId:item.orderId,electricianId:this.electricianId}})
          }
      },
      godetail1(item){
@@ -229,49 +244,11 @@ export default {
          }else if(item.orderElectricianStatus==="3"){
             this.$router.push({name:'Personneladd',params:{orderId:item.orderId,electricianId:this.electricianId}})
          }else if(item.orderElectricianStatus==="4"){
-             this.$router.push({name:'Cancelled',params:{orderId:items.orderId,electricianId:this.electricianId}})
+             this.$router.push({name:'Cancelled',params:{orderId:item.orderId,electricianId:this.electricianId}})
          }else if(item.orderElectricianStatus==="1"){
-             this.$router.push({name:'Cancelled',params:{orderId:items.orderId,electricianId:this.electricianId}})
+             this.$router.push({name:'Cancelled',params:{orderId:item.orderId,electricianId:this.electricianId}})
          }
      },
-  },
-  computed: {
-    // 全部订单
-    searchData: function () {
-      var serch = this.search
-      if (serch) {
-        return this.datas.filter(function (product) {
-          return Object.keys(product).some(function (key) {
-            return String(product[key]).toLowerCase().indexOf(serch) > -1
-          })
-        })
-      }
-      return this.datas
-    },
-    // 进行中订单
-     doingData: function () {
-      var serch = this.search
-      if (serch) {
-        return this.cancelledList.filter(function (product) {
-          return Object.keys(product).some(function (key) {
-            return String(product[key]).toLowerCase().indexOf(serch) > -1
-          })
-        })
-      }
-      return this.cancelledList
-    },
-    // 已完成
-     calledData: function () {
-      var serch = this.search
-      if (serch) {
-        return this.completedList.filter(function (product) {
-          return Object.keys(product).some(function (key) {
-            return String(product[key]).toLowerCase().indexOf(serch) > -1
-          })
-        })
-      }
-      return this.completedList
-    }
   }
 }
 </script>
