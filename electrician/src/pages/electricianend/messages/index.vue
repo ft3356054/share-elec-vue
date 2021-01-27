@@ -334,7 +334,11 @@ box-sizing: border-box;
 overflow: auto;
 }
 /deep/ .van-pull-refresh{
+  overflow: auto;
   height: 100%;
+}
+/deep/ .van-pull-refresh::-webkit-scrollbar{
+  width: 0;
 }
 .top{
       text-align: center;

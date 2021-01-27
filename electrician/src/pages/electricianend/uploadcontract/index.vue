@@ -24,7 +24,7 @@
             <div class="prices">
                 <span>*</span>
                 <span>维修价格</span>
-                <span v-if="status==='26'"><input type="text" v-model="price" placeholder="请输入服务内容报价"></span>
+                <span v-if="status==='26'"><input type="number" v-model.number="price" placeholder="请输入服务内容报价"></span>
                 <span v-if="status==='23'">{{electricianPrice}}</span>
             </div>
             <div class="uploudimg">
@@ -35,7 +35,7 @@
                         <img :src="imgst" alt="" style="width: 100%;height: 4rem;display:block;" >
                     </p>
                     <p v-if="status==='26'">
-                        <van-uploader v-model="fileLists" :after-read="onRead" :max-count="1">
+                        <van-uploader v-model="fileLists" :after-read="onRead" :max-count="1" v-if="statu">
                             <dl>
                                 <dt style="margin-top:0">
                                 <img :src="imgs" alt="" style="width:34px;height:24px;margin-top: -10px;">
@@ -43,6 +43,7 @@
                                 <dd>上传图片</dd>
                             </dl>
                        </van-uploader> 
+                        <img :src="imgst" alt="" style="width: 100%;height: 4rem;display:block;" v-else>
                     </p>
                      
               
@@ -69,7 +70,8 @@ export default {
       data:[],
       status:"",
       imgst:"",
-      electricianPrice:""
+      electricianPrice:"",
+      statu:true,
     }
   },
   mounted(){
@@ -86,6 +88,15 @@ export default {
             this.status=response.data.resultValue.items[0].orderElectricianStatus
             this.imgst=response.data.resultValue.items[0].orderContract
             this.electricianPrice=response.data.resultValue.items[0].electricianPrice
+            this.price=response.data.resultValue.items[0].electricianPrice
+            // this.imgs=response.data.resultValue.items[0].orderContract
+            if(response.data.resultValue.items[0].orderElectricianStatus==='26'&&response.data.resultValue.items[0].orderContract){
+                this.imgst=response.data.resultValue.items[0].orderContract
+                 this.fileLists=response.data.resultValue.items[0].orderContract
+                this.statu=false
+            }else{
+                 this.statu=true
+            }
         });
     },
     goback () {

@@ -8,7 +8,11 @@
         <div class="content">
             <div>
                 <p style="font-weight:bold;margin-bottom:20px">退回原因:</p>
-                <textarea v-model="returncontext" name="" id="" cols="30" rows="10" placeholder="请输入退回原因"></textarea>
+                <textarea v-model="returncontext" name="" id="" cols="30" rows="5" placeholder="请输入退回原因"></textarea>
+            </div>
+            <div>
+                <p style="font-weight:bold;margin-bottom:20px">勘察原因:</p>
+                <textarea v-model="returncontext1" name="" id="" cols="30" rows="5" placeholder="请输入勘察原因"></textarea>
             </div>
         </div>
     <div class="buttons"><button @click="Order">确定</button></div>
@@ -20,9 +24,8 @@
 export default {
   data () {
     return {
-      times: '',
-      phone: 13739865412,
       returncontext:"",
+      returncontext1:'',
       orderId:"",
       electricianId:""
     }
@@ -36,7 +39,14 @@ export default {
       this.$router.go(-1)
     },
     Order () {
-      var fd=new FormData()
+      if(this.returncontext===''){
+        this.$dialog.alert({
+                width:"80%",
+                message: '请输入退回原因',
+                closeOnClickOverlay:true
+            })
+      }else{
+         var fd=new FormData()
         var params={}
         params=fd
          params.append("items",`{
@@ -58,6 +68,8 @@ export default {
             alert(err)
         })
  
+      }
+     
     }
   }
 }
@@ -71,6 +83,7 @@ background: #f0f6fd;
 position: relative;
 padding-bottom: 20px;
 box-sizing: border-box;
+overflow: auto;
 }
 .contianer .backgroundbox{
     width: 100%;
