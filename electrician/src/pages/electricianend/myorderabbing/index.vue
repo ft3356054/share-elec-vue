@@ -46,7 +46,7 @@
                 </dl>
             </div>
         </div>
-        <div class="content"  v-for="(item1,index) in list" :key="index" v-show="num==1" @click="godetail1(item1)">
+        <div class="content"  v-for="(item1,index) in list" :key="index" v-show="num==1" @click="godetail(item1)">
             <div class="typebox">
                 <p><span>类别</span><span>{{item1.orderTypeId}}</span></p>
                 <p></p>
@@ -183,73 +183,53 @@ export default {
         })
      },
       jiedan (item) {
-      this.$router.push({name:'Ordergrabbingdetail',params:{orderId:item.orderId,electricianId:this.electricianId}})
+        this.$router.push({name:'Ordergrabbingdetail',params:{orderId:item.orderId,electricianId:this.electricianId}})
     },
      godetail(item){
-         if(item.orderElectricianStatus==="8"){
+        var orderElectricianStatus=""
+          this.$api.get("/orderElectrician/orderDetails/"+item.orderId, {"electricianId":this.electricianId}, response => {
+              orderElectricianStatus=response.data.resultValue.items[0].orderElectricianStatus
+        if(orderElectricianStatus==="8"){
             this.$router.push({name:'Evaluate',params:{orderId:item.orderId,electricianId:this.electricianId}})
          }else if(item.orderElectricianStatus==="9"){
             this.$router.push({name:'Completed',params:{orderId:item.orderId,electricianId:this.electricianId}})
-         }else if(item.orderElectricianStatus==="0"){
+         }else if(orderElectricianStatus==="0"){
             this.$router.push({name:'Appointment',params:{orderId:item.orderId,electricianId:this.electricianId}})
-         }else if(item.orderElectricianStatus==="21"){
+         }else if(orderElectricianStatus==="21"){
             this.$router.push({name:'Repair',params:{orderId:item.orderId,electricianId:this.electricianId}})
-         }else if(item.orderElectricianStatus==="22"){
+         }else if(orderElectricianStatus==="22"){
             this.$router.push({name:'Prospecting',params:{orderId:item.orderId,electricianId:this.electricianId}})
-         }else if(item.orderElectricianStatus==="23"){
+         }else if(orderElectricianStatus==="23"){
+             if(item.orderFrom==="来源APP端"){
             this.$router.push({name:'Uploadcontract',params:{orderId:item.orderId,electricianId:this.electricianId}})
-         }else if(item.orderElectricianStatus==="24"){
+             }else{
+            this.$router.push({name:'Payment',params:{orderId:item.orderId,electricianId:this.electricianId}})
+             }
+         }else if(orderElectricianStatus==="24"){
             this.$router.push({name:'Servicereport',params:{orderId:item.orderId,electricianId:this.electricianId}})
-         }else if(item.orderElectricianStatus==="25"){
+         }else if(orderElectricianStatus==="25"){
             //  如果电工上传完待验收 改为只读状态
             // this.$router.push({name:'Servicereport',params:{orderId:item.orderId,electricianId:this.electricianId}})
             Toast.fail("待用户验收完成")
-         }else if(item.orderElectricianStatus==="26"){
+         }else if(orderElectricianStatus==="26"){
             this.$router.push({name:'Uploadcontract',params:{orderId:item.orderId,electricianId:this.electricianId}})
-         }else if(item.orderElectricianStatus==="31"){
+         }else if(orderElectricianStatus==="31"){
             this.$router.push({name:'Completion',params:{orderId:item.orderId,electricianId:this.electricianId}})
-         }else if(item.orderElectricianStatus==="3"){
+         }else if(orderElectricianStatus==="3"){
             this.$router.push({name:'Personneladd',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }else if(orderElectricianStatus==="4"){
+             this.$router.push({name:'Cancelled',params:{orderId:items.orderId,electricianId:this.electricianId}})
          }else if(item.orderElectricianStatus==="5"){
             this.$router.push({name:'Cancelled',params:{orderId:item.orderId,electricianId:this.electricianId}})
-         }else if(item.orderElectricianStatus==="4"){
-             this.$router.push({name:'Cancelled',params:{orderId:item.orderId,electricianId:this.electricianId}})
-         }else if(item.orderElectricianStatus==="1"){
-             this.$router.push({name:'Cancelled',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }else if(orderElectricianStatus==="1"){
+             this.$router.push({name:'Cancelled',params:{orderId:items.orderId,electricianId:this.electricianId}})
          }
-     },
-     godetail1(item){
-         if(item.orderElectricianStatus==="8"){
-            this.$router.push({name:'Evaluate',params:{orderId:item.orderId,electricianId:this.electricianId}})
-         }else if(item.orderElectricianStatus==="0"){
-            this.$router.push({name:'Appointment',params:{orderId:item.orderId,electricianId:this.electricianId}})
-         }else if(item.orderElectricianStatus==="21"){
-            this.$router.push({name:'Repair',params:{orderId:item.orderId,electricianId:this.electricianId}})
-         }else if(item.orderElectricianStatus==="22"){
-            this.$router.push({name:'Prospecting',params:{orderId:item.orderId,electricianId:this.electricianId}})
-         }else if(item.orderElectricianStatus==="23"){
-            this.$router.push({name:'Uploadcontract',params:{orderId:item.orderId,electricianId:this.electricianId}})
-         }else if(item.orderElectricianStatus==="24"){
-            this.$router.push({name:'Servicereport',params:{orderId:item.orderId,electricianId:this.electricianId}})
-         }else if(item.orderElectricianStatus==="25"){
-            //  如果电工上传完待验收 改为只读状态
-            // this.$router.push({name:'Servicereport',params:{orderId:item.orderId,electricianId:this.electricianId}})
-            Toast.fail("待用户验收完成")
-         }else if(item.orderElectricianStatus==="26"){
-            this.$router.push({name:'Uploadcontract',params:{orderId:item.orderId,electricianId:this.electricianId}})
-         }else if(item.orderElectricianStatus==="31"){
-            this.$router.push({name:'Completion',params:{orderId:item.orderId,electricianId:this.electricianId}})
-         }else if(item.orderElectricianStatus==="3"){
-            this.$router.push({name:'Personneladd',params:{orderId:item.orderId,electricianId:this.electricianId}})
-         }else if(item.orderElectricianStatus==="4"){
-             this.$router.push({name:'Cancelled',params:{orderId:item.orderId,electricianId:this.electricianId}})
-         }else if(item.orderElectricianStatus==="1"){
-             this.$router.push({name:'Cancelled',params:{orderId:item.orderId,electricianId:this.electricianId}})
-         }
-     },
+         });
+     }
   }
 }
 </script>
+
 
 <style scoped>
 .contianer{
