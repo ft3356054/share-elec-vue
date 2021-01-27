@@ -457,32 +457,64 @@ export default {
         this.messages1=obj.content
         if(obj.orderId){
              this.$api.get("/orderElectrician/orderDetails/"+obj.orderId, {"electricianId":this.electricianId}, response => {
-                console.log(response.data);
-                this.shows=true
+               
+                // this.shows=true
                 this.getifream=response.data.resultValue.items
-                 const TIME_COUNT = 15;
+                this.orderId=this.getifream[0].orderId
+                if(this.getifream[0].distance===null){
+                    this.getifream[0].distance=''
+                }
+                const TIME_COUNT = 15;
                 if (!this.timer) {
                 this.count = TIME_COUNT;
                 this.timer = setInterval(() => {
                 if (this.count > 0 && this.count <= TIME_COUNT) {
-                         this.count--;
+                   this.count--;
+                   this.$dialog.confirm({
+                    width:"80%",
+                    title: `${this.getifream[0].orderTypeId}(${this.count}s)`,
+                    message: `${this.getifream[0].customerAddress} \n${this.getifream[0].customerDescrive}\n${this.getifream[0].voltage} 抢修 ${this.getifream[0].distance}\n${this.getifream[0].createTime}`,
+                    confirmButtonText: "抢单",
+                    closeOnClickOverlay:true,
+                    messageAlign:"left",
+                    cancelButtonText:"关闭",
+                    confirmButtonColor:"#2a93e9",
+                    allowHtml:true
+                })
+                .then((res) => { //点击确认按钮后的调用
+                            var params={
+                                    "orderId":this.orderId,
+                                    "electricianId":this.electricianId
+                                }
+                            this.$axios.get("/orderElectrician/qiangdanrecept", {params}) .then(res => {
+                                if(res.data.successful==false){
+                                    Toast.fail(`${res.data.resultHint}`,3000)
+                                }else{
+                                    Dialog.alert({
+                                        message: '抢单成功',
+                                        width:'300px',
+                                        confirmButtonColor:"#87cefa"
+                                    }).then(() => {
+                                        this.$router.push({name:'Appointment',params:{orderId:params.orderId,electricianId:this.electricianId}})
+                                    });
+                                }
+                        });
+                                    clearInterval(this.timer);
+                                    this.timer = null;
+                                    Dialog.close()
+                }).catch(() => {
+                                    clearInterval(this.timer);
+                                    this.timer = null;
+                                    Dialog.close()
+                    });
                 } else {
                         clearInterval(this.timer);
                         this.timer = null;
-                        this.shows=false
+                        Dialog.close()
                 }
                 }, 1000)
                 }
             });
-            // this.$dialog.confirm({
-            //     width:"80%",
-            //     message: this.messages1,
-            //     confirmButtonText: "抢单",
-            //     cancelButtonText: "关闭"
-            //     })
-            // .then((res) => { //点击确认按钮后的调用
-            //     this.$router.push({name:'Ordergrabbingdetail',params:{orderId:obj.orderId,electricianId:this.electricianId}})
-            // })
         }else{
            this.$dialog.alert({
                 width:"80%",
@@ -504,8 +536,10 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+/deep/ .van-dialog__header{
+    padding-top:0 !important;
+}
 .anim{
     transition: all 0.7s;
     margin-top: -30px;
