@@ -132,13 +132,13 @@
         <div class="iframe" v-if="shows">
             <div class="content" v-for="(item,index) in getifream" :key="index">
                 <p>
-                    <span>{{item.orderTypeId}}</span><span  @click="guanbi">×</span>
+                    <span>{{item.orderTypeId}}(<span style="font-size:15px;color:red">{{count}}</span><span style="font-size:12px;color:red">S</span>)</span><span  @click="guanbi">×</span>
                 </p>
                 <p>{{item.customerAddress}}</p>
                 <p>{{item.customerDescrive}}</p>
                 <p>{{item.voltage}}  抢修  {{item.distance}}</p>
-                <p>{{item.createTime}}</p>
-                <p><button @click="guanbi">关闭</button><button  @click="qiangdan(item)">抢单</button></p>
+                <p style="color:#ccc">{{item.createTime}}</p>
+                <p><button  @click="qiangdan(item)">抢单</button></p>
             </div>
         </div>
 </div>
@@ -169,7 +169,9 @@ export default {
       socket:"",
       messages1:"",
       getifream:[],
-      shows:false
+      shows:false,
+      count: '',
+      timer: null,
     }
   },
   created () {
@@ -458,7 +460,19 @@ export default {
                 console.log(response.data);
                 this.shows=true
                 this.getifream=response.data.resultValue.items
-                console.log(this.getifream)
+                 const TIME_COUNT = 15;
+                if (!this.timer) {
+                this.count = TIME_COUNT;
+                this.timer = setInterval(() => {
+                if (this.count > 0 && this.count <= TIME_COUNT) {
+                         this.count--;
+                } else {
+                        clearInterval(this.timer);
+                        this.timer = null;
+                        this.shows=false
+                }
+                }, 1000)
+                }
             });
             // this.$dialog.confirm({
             //     width:"80%",
@@ -823,21 +837,16 @@ text-align: right;
 margin-top: 5px;
 }
 .iframe .content p:nth-child(6) button{
-    width: 50px;
+    width: 100%;
     text-align: center;
-    margin-left: 50px;
     border: 0;
     outline: none;
     background: #fff;
     font-size: 13px;
+    color:#2a93e9
 }
 .iframe .content p:nth-child(6){
     margin-top: 10px;
 }
-.iframe .content p:nth-child(6) button:nth-child(1){
-    color:gray
-}
-.iframe .content p:nth-child(6) button:nth-child(2){
-    color:blue
-}
+
 </style>>
