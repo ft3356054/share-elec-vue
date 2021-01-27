@@ -59,7 +59,7 @@
             </div>
             <div class="addressbox">
                 <dl>
-                    <dt @click="about(item.orderId,item.orderStatus)">
+                    <dt @click="about(item.orderId)">
                        <p>{{ item.customerDescrive }}</p>
                        <p>{{ item.createTime }}</p>
                     </dt>
@@ -90,7 +90,7 @@
             </div>
             <div class="addressbox">
                 <dl>
-                    <dt @click="about(item.orderId,item.orderStatus)">
+                    <dt @click="about(item.orderId)">
                         <p>{{ item.customerDescrive }}</p>
                        <p>电工完工的情况描述</p>
                     </dt>
@@ -111,7 +111,7 @@
             </div>
             <div class="addressbox">
                 <dl>
-                    <dt @click="about(item.orderId,item.orderStatus)">
+                    <dt @click="about(item.orderId)">
                         <p>{{ item.customerDescrive }}</p>
                         <p v-if="item.orderStatus=='0'">上门费 {{item.customerPrice }}</p>
                         <p v-else>维修费 {{item.electricianPrice }}</p>
@@ -523,36 +523,8 @@ export default {
         })
       },
     // 详情
-    about(orderId,orderStatus){
-      this.orderId=orderId
-       switch (orderStatus) {
-        case "8":  //待评价
-          this.$router.push({
-            path:"/complete",
-            query:{
-              orderId:this.orderId
-            }
-          })
-          break;
-        case "25":   //待验收
-          this.$router.push({
-            path:"/accepted",
-            query:{
-              orderId:this.orderId
-            }
-          })
-          break;
-        case "0":  //待支付
-           this.$router.push({
-           path: `/Pay/${this.orderId}`,
-          })
-          break;
-          case "23":  //待维修费
-           this.$router.push({
-           path: `/Pay/${this.orderId}`,
-          })
-          break;
-      }
+    about(orderId){
+      this.getdetails(orderId)
     },
     // websocketserver
        WebSocketTest(){

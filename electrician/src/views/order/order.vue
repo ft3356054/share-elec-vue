@@ -43,7 +43,7 @@
             </div>
             <div class="addressbox">
                 <dl>
-                    <dt @click="about(item.orderId,item.orderStatus)">
+                    <dt @click="about(item.orderId)">
                        <div v-if="item.orderStatus!=='0'&&item.orderStatus!='23'">
                         <p>{{ item.customerAddress }}</p>
                         <p>{{ item.customerDescrive }}</p>
@@ -100,7 +100,7 @@
             </div>
             <div class="addressbox" >
                 <dl>
-                    <dt @click="about(item.orderId,item.orderStatus)">
+                    <dt @click="about(item.orderId)">
                         <div v-if="item.orderStatus!=='0'&&item.orderStatus!='23'">
                         <p>{{ item.customerAddress }}</p>
                         <p>{{ item.customerDescrive }}</p>
@@ -154,7 +154,7 @@
             </div>
             <div class="addressbox">
                 <dl>
-                    <dt @click="about(item.orderId,item.orderStatus)">
+                    <dt @click="about(item.orderId)">
                       <div v-if="item.orderStatus!='0'|| item.orderStatus!='23'">
                         <p>{{ item.customerAddress }}</p>
                         <p>{{ item.customerDescrive }}</p>
@@ -405,9 +405,17 @@ export default {
       Toast("等待支付的接口")
     },
     // 详情
-    about(orderId,orderStatus){
-      this.orderId=orderId
-      switch (orderStatus) {
+    about(orderId){
+      this.getdetails(orderId) 
+    },
+           // 点击获取详情数据
+      getdetails(orderId){
+        this.orderId=orderId
+        this.$api.get(`/orderCustomer/OrderDetail/${this.orderId}`,{   
+        },res=>{
+          console.log(res.data.resultValue.items[0])
+         let orderStatus=res.data.resultValue.items[0].orderStatus
+        switch (orderStatus) {
         case "4":   //以取消
           this.$router.push({
             path:"/cancelled",
@@ -533,8 +541,8 @@ export default {
         default:
           break;
       }
-    },
-  
+        })
+      },
   },
 }
 </script>
