@@ -91,14 +91,19 @@
             <div class="addressbox">
                 <dl>
                     <dt @click="about(item.orderId)">
+                        <p>{{ item.customerAddress }}</p>
                         <p>{{ item.customerDescrive }}</p>
-                       <p>电工完工的情况描述</p>
+                        <p v-show="item.orderTypeId=='0'">{{ item.voltage }} 故障抢修</p>
+                        <p v-show="item.orderTypeId=='1'">{{ item.voltage }} 检修</p>
+                        <p v-show="item.orderTypeId=='2'">{{ item.voltage }} 巡视</p>
+                        <p v-show="item.orderTypeId=='3'">{{ item.voltage }} 试验</p>
+                        <p v-show="item.orderTypeId=='4'">{{ item.voltage }} 其他</p>
                     </dt>
                     <dd v-if="item.orderComplaintId==null">
-                       <button @click="complaint(item.orderId)">投诉</button> <button class="zf" @click="yanshou(item.orderId)">验收通过</button>
+                       <button @click="complaint(item.orderId)">投诉</button> <button class="zf" @click="yanshou(item.orderId)">验收</button>
                     </dd>
                      <dd v-else>
-                       <button class="zf" @click="yanshou(item.orderId)">验收通过</button>
+                       <button class="zf" @click="yanshou(item.orderId)">验收</button>
                     </dd>
                 </dl>
             </div>
@@ -113,9 +118,8 @@
                 <dl>
                     <dt @click="about(item.orderId)">
                         <p>{{ item.customerDescrive }}</p>
-                        <p v-if="item.orderStatus=='0'">上门费 {{item.customerPrice }}</p>
-                        <p v-else>维修费 {{item.electricianPrice }}</p>
-                      
+                        <p>上门费 {{item.customerPrice }}</p>
+                        <p>维修费 {{item.electricianPrice }}</p>
                     </dt>
                     <dd>
                         <button class="zf" @click="estimate(item.orderId)">评价</button>
