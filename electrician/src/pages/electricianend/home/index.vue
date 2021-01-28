@@ -146,6 +146,7 @@
 </template>
 
 <script>
+import { loadBMap } from '../../../apiconfig/location'
 import { Toast,Dialog} from 'vant'
 import qs from 'qs'
 export default {
@@ -172,6 +173,8 @@ export default {
       shows:false,
       count: '',
       timer: null,
+      log:'',
+      lat:''
     }
   },
   created () {
@@ -185,7 +188,10 @@ export default {
         this.getmessage()
         this.WebSocketTest()  //websocketserver
         this.getContent()
-       
+      window.initBaiduMapScript = () =>{
+        this.getlocation();
+    }
+    loadBMap('initBaiduMapScript');
   },
   methods: {
       guanbi(){
@@ -245,7 +251,6 @@ export default {
           this.$api.get(`/notifyAnnounceUser/notReadNum/${this.electricianId}`,{
                 },res=>{
                     this.content=res.data.resultValue
-                    console.log(res)
                 })
     },
     // 消息滚屏
@@ -254,7 +259,6 @@ export default {
             },res=>{
                 //  console.log(res)
                 this.messages=res.data.resultValue.items
-                console.log(this.messages)
             })
 
 
@@ -534,6 +538,23 @@ export default {
     close: function () {
         console.log("socket已经关闭")
     },
+    getlocation(){
+           const geolocation =new BMap.Geolocation();
+        //    geolocation.getCurrentPosition(function(r){
+            //  this.log=r.point.ln
+            //  this.lat=r.point.lat
+        //     });
+            geolocation.getCurrentPosition((r)=>{
+                    this.log=r.point.lng+""
+                    this.lat=r.point.lat+""
+                    console.log(this.log)
+                    console.log(this.lat)
+                    var params={"items":[{"electricianId":this.electricianId,"lon":this.log,"lat":this.lat}]}
+                    this.$axios.post("/elecPosition/save", params) .then(res => {
+
+                    });
+            })
+        },
   }
 }
 </script>

@@ -31,15 +31,16 @@
         </div>
     </div>
 </template>
+
 <script>
-import { location } from '../../../apiconfig/location'
+import { loadBMap } from '../../../apiconfig/location'
 // import AMap from 'vue-amap'
 export default {
   data () {
     let vm = this
     return {
       zoom: 16,
-      center: ['39.17','117.15'],
+      center: ['39.15734030335556','117.38959396833259'],
       lng: '',
       lat: '',
       radius: 100,
@@ -81,12 +82,19 @@ export default {
         electricianId:""
     }
   },
+  created() {
+    window.initBaiduMapScript = () =>{
+        console.log(BMap);
+        this.getlocation();
+    }
+    loadBMap('initBaiduMapScript');
+},
   mounted () {
-    console.log(this.$route.params)
+
     this.orderId=this.$route.params.orderId
     this.electricianId=this.$route.params.electricianId,
-    this.getdetail(),
-    this.getLocation()
+    this.getdetail()
+    // this.getLocation()
   },
   methods: {
     goback () {
@@ -94,8 +102,8 @@ export default {
     },
     getdetail(){
         this.$api.get("/orderElectrician/orderDetails/"+this.orderId, {"electricianId":this.electricianId}, response => {
-            this.center.splice(0,1,response.data.resultValue.items[0].addressLatitude)
-            this.center.splice(1,2,response.data.resultValue.items[0].addressLongitude)
+            // this.center.splice(0,1,response.data.resultValue.items[0].addressLatitude)
+            // this.center.splice(1,2,response.data.resultValue.items[0].addressLongitude)
         });
     },
     goaddress () {
@@ -116,15 +124,20 @@ export default {
             alert(err)
         })
     },
-    getLocation () {
-       
-      let _that = this
-      let geolocation = location.initMap('map-container') // 定位
-      console.log(geolocation)
-      // AMap.event.addListener(geolocation, 'complete', result => {
-      //   console.log(result)
-      // })
-    }
+     getlocation(){this.$nextTick(function(){
+        try{
+           const geolocation =new BMap.Geolocation();
+           geolocation.getCurrentPosition(function(r){
+              console.log(r,"aaaa");
+              if(this.getStatus() == BMAP_STATUS_SUCCESS){
+                 const{lat =null, lng=null} = r.point;
+              }
+           });
+        }catch(e){
+           console.log(e)
+        }
+      })
+   }
   }
 }
 </script>

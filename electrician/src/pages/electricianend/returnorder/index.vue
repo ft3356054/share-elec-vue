@@ -41,22 +41,28 @@ export default {
     Order () {
       if(this.returncontext===''){
         this.$dialog.alert({
-                width:"80%",
-                message: '请输入退回原因',
-                closeOnClickOverlay:true
-            })
+            width:"80%",
+            message: '请输入退回原因',
+            closeOnClickOverlay:true
+        })
+      }else if(this.returncontext1===''){
+        this.$dialog.alert({
+            width:"80%",
+            message: '请输入勘察原因',
+            closeOnClickOverlay:true
+        })
       }else{
          var fd=new FormData()
         var params={}
         params=fd
          params.append("items",`{
-                "orderId":"${this.orderId}",
-                "orderElectricianStatus":"5",
-                "method":"abc",
-                "orderStatus":"11",
-                "electricianDescrive":"${this.returncontext}",
-                "electricianId":"${this.electricianId}"
-                }`)
+           "orderId":"${this.orderId}",
+           "orderElectricianStatus":"5",
+           "method":"abc",
+           "orderStatus":"11",
+           "electricianDescrive":"${this.returncontext1}",
+           "chargebackReason":"${this.returncontext}",
+           "electricianId":"${this.electricianId}"}`)
       this.$axios.post("/orderElectrician/booking", params).then(res => {
             // console.log(res.data.resultValue.items[0].orderFrom)
             if(res.data.resultValue.items[0].orderFrom === "来源APP端"){

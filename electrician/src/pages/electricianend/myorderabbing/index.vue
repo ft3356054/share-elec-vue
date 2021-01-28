@@ -218,11 +218,11 @@ export default {
          }else if(orderElectricianStatus==="3"){
             this.$router.push({name:'Personneladd',params:{orderId:item.orderId,electricianId:this.electricianId}})
          }else if(orderElectricianStatus==="4"){
-             this.$router.push({name:'Cancelled',params:{orderId:items.orderId,electricianId:this.electricianId}})
+             this.$router.push({name:'Cancelled',params:{orderId:item.orderId,electricianId:this.electricianId}})
          }else if(item.orderElectricianStatus==="5"){
             this.$router.push({name:'Cancelled',params:{orderId:item.orderId,electricianId:this.electricianId}})
          }else if(orderElectricianStatus==="1"){
-             this.$router.push({name:'Cancelled',params:{orderId:items.orderId,electricianId:this.electricianId}})
+             this.$router.push({name:'Cancelled',params:{orderId:item.orderId,electricianId:this.electricianId}})
          }
          });
      }
