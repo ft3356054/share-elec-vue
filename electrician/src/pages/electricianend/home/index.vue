@@ -384,6 +384,8 @@ export default {
              this.$router.push({name:'Cancelled',params:{orderId:items.orderId,electricianId:this.electricianId}})
          }else if(orderElectricianStatus==="1"){
              this.$router.push({name:'Cancelled',params:{orderId:items.orderId,electricianId:this.electricianId}})
+         }else if(orderElectricianStatus==="2"){
+             this.$router.push({name:'Ordergrabbingdetail',params:{orderId:items.orderId,electricianId:this.electricianId}})
          }
          });
        
