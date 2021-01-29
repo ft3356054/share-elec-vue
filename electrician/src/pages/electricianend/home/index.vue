@@ -73,10 +73,14 @@
 <section>
     <div class="tab-box">
         <ul>
-            <li @click="num=0" :class="{active:num==0}">待办</li>
-            <li @click="num=1" :class="{active:num==1}">待评价</li>
+             <li v-for="(item,index) in tabs" :key="index" :class="{active:num==index}" @click="nums(index)">{{item}}</li>
         </ul>
     </div>
+                    <!-- 无数据时的展示 -->
+     <div class="no-comment" v-if="this.data.length===0">
+        <img src="../../../assets/images/wu.png" alt="">
+        <span>暂无消息!</span>
+     </div>
     <div class="contentbox">
         <div class="content" v-show="num==0" v-for="(item,index) in data" :key="'content'+index">
             <div class="typebox">
@@ -108,7 +112,7 @@
                 </dl>
             </div>
         </div>
-        <div class="content context" v-show="num==1" v-for="(item,index1) in datas" :key="'context'+index1" @click="gopingjia(item)">
+        <div class="content context" v-show="num==1" v-for="(item,index1) in data" :key="'context'+index1" @click="gopingjia(item)">
             <div class="typebox">
                 <p><span>类别</span><span>{{item.orderTypeId}}</span></p>
                 <p></p>
@@ -153,6 +157,7 @@ export default {
   data () {
     return {
       num: 0,
+      tabs: ['待办', '待评价'],
       animate:false,
       data: [],
       datas:[],
@@ -184,7 +189,6 @@ export default {
         this.getdetail()
         this.getuserinfo()
         this.gettodo(),
-        this.getevaluate(),
         this.getmessage()
         this.WebSocketTest()  //websocketserver
         this.getContent()
@@ -324,23 +328,24 @@ export default {
                 alert(err)
             })
       },
+        nums(index){
+       this.pageIndex=1
+       this.data=[]
+       console.log(index)
+       this.num=index
+       if(index===0){
+           this.gettodo()
+       }else{
+             this.$axios.get(`/orderElectrician/queryWaitToDo?params={"pageIndex":1,"pageSize":10,"filter":["orderElectricianStatus=9"]}&electricianId=${this.electricianId}&tagtips=1`) .then(res => {
+              this.data=res.data.resultValue.items
+            });
+       }
+    },
     //   待办
     gettodo(){
-        var params={
-            "pageIndex":1,"pageSize":10,"filter":["orderElectricianStatus=9"]
-        }
-        this.$api.get("/orderElectrician/queryMore", {params,electricianId:this.electricianId}, response => {
-            this.data=response.data.resultValue.items
-            });
-     },
-    //  待评价
-     getevaluate(){
-        var params={
-            "pageIndex":1,"pageSize":10,"filter":["orderElectricianStatus=8"]
-        }
-        this.$api.get("/orderElectrician/queryWaitToDo", {params,electricianId:this.electricianId}, response => {
-            this.datas=response.data.resultValue.items
-        });
+          this.$axios.get(`/orderElectrician/queryWaitToDo?params={"pageIndex":1,"pageSize":10,"filter":["orderElectricianStatus=9"]}&electricianId=${this.electricianId}&tagtips=${this.num}`) .then(res => {
+              this.data=res.data.resultValue.items
+        })
      },
      quxiao(item){
         this.$axios.get(`/orderElectrician/esc?orderElectricianId=${item.orderElectricianId}&orderElectricianStatus=5`).then(res => {
@@ -542,10 +547,6 @@ export default {
     },
     getlocation(){
            const geolocation =new BMap.Geolocation();
-        //    geolocation.getCurrentPosition(function(r){
-            //  this.log=r.point.ln
-            //  this.lat=r.point.lat
-        //     });
             geolocation.getCurrentPosition((r)=>{
                     this.log=r.point.lng+""
                     this.lat=r.point.lat+""
@@ -907,5 +908,17 @@ margin-top: 5px;
 .iframe .content p:nth-child(6){
     margin-top: 10px;
 }
-
+.no-comment{
+  position: relative;
+  img{
+    width: 100%;
+    height: 100%;
+  }
+  span{
+    position: absolute;
+    left: 40%;
+    bottom: 0px;
+    font-size: 13px;
+  }
+}
 </style>>

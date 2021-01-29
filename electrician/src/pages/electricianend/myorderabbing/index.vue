@@ -11,8 +11,15 @@
           </ul>
         </div>
       </header>
-      <section>
+       <div>
+
+          <div class="no-comment" v-if="this.list.length==0">
+        <img src="@/assets/images/wu.png" alt="">
+        <span>暂无消息!</span>
+     </div>
+        <section>
          <div class="contentbox">
+           
         <div class="content"  v-for="(item,index) in list"  v-show="num==0" :key="'content'+index" @click="godetail(item)">
              <div class="typebox">
                 <p><span>类别</span><span>{{item.orderTypeId}}</span></p>
@@ -101,6 +108,8 @@
         </div>
     </div>
       </section>
+       </div>
+      
   </div>
 </template>
 
@@ -231,7 +240,7 @@ export default {
 </script>
 
 
-<style scoped>
+<style lang="scss" scoped>
 .contianer{
 width: 100%;
 height: 100%;
@@ -403,5 +412,19 @@ font-size: 10px;
 section .contentbox .content .addressbox dd .jiedan{
 border-color: #52aae1;
 color: #52aae1;
+}
+.no-comment{
+  margin-top: 100px;
+  position: relative;
+  img{
+    width: 100%;
+    height: 100%;
+  }
+  span{
+    position: absolute;
+    left: 40%;
+    bottom: 0px;
+    font-size: 13px;
+  }
 }
 </style>
