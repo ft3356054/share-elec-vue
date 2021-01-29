@@ -34,7 +34,7 @@
           class="notice-swipe"
           :autoplay="3000"
           :show-indicators="false"
-          :width="360"
+           width="96%"
         >
           <van-swipe-item v-for="(item,index) in messages1" :key="index" @click="swipe(item.announceId,item.orderId)">
             系统消息:  {{item.content}}
@@ -193,6 +193,7 @@ export default {
   },
   methods: {
     nums(index){
+
      this.getlist(index)
     },
     nalist(index) {
@@ -363,10 +364,10 @@ export default {
     },
     getlist(index){
         this.num=index
-      console.log(this.num,"sss")
+             this.list=[]
        this.$api.get(`/orderCustomer/queryAllToBegin?params={"pageIndex":1,"pageSize":20,"filter":["customerId=${this.cust}","tagType=${this.num}"]}`,{
        },res=>{
-         console.log(res.data,"sss")
+        //  console.log(res.data,"sss")
          this.list=res.data.resultValue.items
        })
     },
