@@ -16,10 +16,10 @@
     </div>
     <div class="main">
           <!-- 无数据时的展示 -->
-     <!-- <div class="no-comment" v-if="this.list.length==0 && this.haveList.length==0 && this.loverList.length==0">
+     <div class="no-comment" v-if="this.list.length==0">
         <img src="../../assets/images/wu.png" alt="">
         <span>暂无消息!</span>
-     </div> -->
+     </div>
          <section >
            <van-pull-refresh  v-model="isLoading" success-text="刷新成功" @refresh="onRefresh">
 		    	<van-list 
@@ -66,7 +66,7 @@
                         <van-dialog v-model="show" title="" show-cancel-button class="show" 
                         @confirm="confirm(item.orderId)" @cancel="cancels"
                         >
-                             <div class="box">确定取消订单吗？取消订单后不能回复</div>
+                             <div class="box">确定取消订单吗？</div>
                           </van-dialog>
                     </dd>
                     <dd v-else-if="item.orderStatus=='23'">
@@ -74,7 +74,7 @@
                          <van-dialog v-model="ths" title="" show-cancel-button class="show" 
                         @confirm="th(item.orderId)" @cancel="cancels"
                         >
-                             <div class="box">确定退回订单吗？退回订单后不能回复</div>
+                             <div class="box">确定退回订单吗？退回订单后不能恢复</div>
                           </van-dialog>
                     </dd>
                       <dd v-else-if="item.orderStatus=='25' && item.orderComplaintId===null">
@@ -123,7 +123,7 @@
                         <van-dialog v-model="show" title="" show-cancel-button class="show" 
                         @confirm="confirm(item.orderId)" @cancel="cancels"
                         >
-                             <div class="box">确定取消订单吗？取消订单后不能回复</div>
+                             <div class="box">确定取消订单吗？</div>
                           </van-dialog>
                     </dd>
                     <dd v-else-if="item.orderStatus=='23'">
@@ -131,7 +131,7 @@
                          <van-dialog v-model="ths" title="" show-cancel-button class="show" 
                         @confirm="th(item.orderId)" @cancel="cancels"
                         >
-                             <div class="box">确定退回订单吗？退回订单后不能回复</div>
+                             <div class="box">确定退回订单吗？退回订单后不能恢复</div>
                           </van-dialog>
                     </dd>
                      <dd v-else-if="item.orderStatus=='25' && item.orderComplaintId===null">

@@ -260,7 +260,7 @@ export default {
                   "voltage":"${this.voltage}", 
                   "identityId":"${this.sele}",  
                   "registeredNumber":"${this.registeredNumber}", 
-                  "provinceId":"1",
+                  "areaId":"120110",
                   "customerAddress":"${this.customerAddress}", 
                   "appointmentTime":"${this.appointmentTime}", 
                   "addressLongitude":"${this.addressLongitude}",

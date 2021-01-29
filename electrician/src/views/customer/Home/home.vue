@@ -49,8 +49,19 @@
               <li v-for="(item,index) in tabs" :key="index" :class="{active:num==index}" @click="nums(index)">{{item}}</li>
         </ul>
     </div>
-    <div class="contentbox">
-        <div class="content" v-show="num==0" v-for="(item,index) in toPay" :key="index">
+                     <!-- 无数据时的展示
+     <div class="no-comment" v-if="this.toPay.length===0">
+        <img src="../../../assets/images/wu.png" alt="">
+        <span>暂无消息!</span>
+     </div> -->
+    <div  class="contentbox">
+        <div  class="content" v-show="num==0" v-for="(item,index) in toPay" :key="index">
+                 <!-- 无数据时的展示 -->
+          <div class="no-comment" v-if="toPay==[]">
+              <img src="../../../assets/images/wu.png" alt="">
+              <span>暂无消息!</span>
+          </div>
+          <div class="tab" v-else>
             <div class="typebox">
                 <p><span>类别</span><span>{{item.customerDescriveTitle}}</span></p>
                 <p></p>
@@ -68,7 +79,7 @@
                          <van-dialog v-model="show" title="" show-cancel-button class="show" 
                         @confirm="confirm(item.orderId)" @cancel="cancels"
                         >
-                             <div class="box">确定取消订单吗？取消订单后不能回复</div>
+                             <div class="box">确定取消订单吗？</div>
                           </van-dialog>
                     </dd>
                     <dd v-else>
@@ -76,14 +87,21 @@
                          <van-dialog v-model="ths" title="" show-cancel-button class="show" 
                         @confirm="th(item.orderId)" @cancel="cancels"
                         >
-                             <div class="box">确定退回订单吗？退回订单后不能回复</div>
+                             <div class="box">确定退回订单吗？退回订单后不能恢复</div>
                           </van-dialog>
                     </dd>
                 </dl>
             </div>
+          </div>
         </div>
         <div class="content" v-show="num==1" v-for="(item,index) in toAccepted" :key="'in'+index">
-            <div class="typebox">
+               <!-- 无数据时的展示 -->
+          <div class="no-comment" v-if="toAccepted==[]">
+              <img src="../../../assets/images/wu.png" alt="">
+              <span>暂无消息!</span>
+          </div>
+           <div class="tab" v-else>
+               <div class="typebox">
                 <p><span>类别</span><span>{{item.customerDescriveTitle}}</span></p>
                 <p></p>
                 <p>{{item.finishTime}}</p>
@@ -107,8 +125,15 @@
                     </dd>
                 </dl>
             </div>
+           </div>
         </div>
         <div class="content" v-show="num==2" v-for="(item,index) in toEvaluated" :key="'info2'+index">
+                 <!-- 无数据时的展示 -->
+          <div class="no-comment" v-if="toEvaluated.length==0">
+              <img src="../../../assets/images/wu.png" alt="">
+              <span>暂无消息!</span>
+          </div>
+          <div class="tab" v-else>
             <div class="typebox">
                 <p><span>类别</span><span>{{item.customerDescriveTitle}}</span></p>
                 <p>{{item.orderStatus}}</p>
@@ -126,6 +151,7 @@
                     </dd>
                 </dl>
             </div>
+          </div>
         </div>
     </div>
 </section>
@@ -357,14 +383,14 @@ export default {
        },res=>{
          console.log(res.data)
          res.data.resultValue.items.forEach(item => {
-           this.orderId=item.orderId
+           this.orderId=[item.orderId]
            if(item.orderStatus==="0" ||item.orderStatus==="23" ){
               this.toPay.push(item)
            }else if(item.orderStatus==="25" ){
-               this.toAccepted.push(item)
+               this.toAccepted.push()
               //  console.log( "25",this.toAccepted )
            }else if(item.orderStatus==="8" ){
-               this.toEvaluated.push(item)
+               this.toEvaluated.push()
               //  console.log( this.toEvaluated,"8")
            }
          });
@@ -854,5 +880,18 @@ font-size: 14px;
 }
 /deep/ .van-sticky{
   background: #f3f8fe;
+}
+.no-comment{
+  position: relative;
+  img{
+    width: 100%;
+    height: 100%;
+  }
+  span{
+    position: absolute;
+    left: 40%;
+    bottom: 0px;
+    font-size: 13px;
+  }
 }
 </style>

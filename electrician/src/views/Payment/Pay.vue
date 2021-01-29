@@ -25,13 +25,13 @@
                <van-dialog v-model="show" title="" show-cancel-button class="show" 
                         @confirm="confirm(item.orderId)" @cancel="cancels"
                         >
-                             <div class="box">确定取消订单吗？取消订单后不能回复</div>
+                             <div class="box">确定取消订单吗？</div>
                           </van-dialog>
          </div>
            <van-dialog v-model="ths" title="" show-cancel-button class="show" 
                         @confirm="th(item.orderId)" @cancel="cancels"
                         >
-                             <div class="box">确定退回订单吗？退回订单后不能回复</div>
+                             <div class="box">确定退回订单吗？退回订单后不能恢复</div>
                           </van-dialog>
    </div>
 </template>

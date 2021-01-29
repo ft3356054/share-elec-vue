@@ -563,6 +563,6 @@ main{
             transition-duration: 0;
 }
 /deep/ .van-pull-refresh{
-  height: 100%;
+  height: auto;
 }
 </style>
