@@ -23,7 +23,7 @@
                 <p class="pswidth"><span>发单时间</span><span>{{item.createTime}}</span></p>
             </div>
         </div>
-            <div class="buttons"><button @click="Order(item)">立即抢单</button></div>
+            <div class="buttons"><button @click="Order(item)">立即接单</button></div>
     </div>
 </div>
 </template>
