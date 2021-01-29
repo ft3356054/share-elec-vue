@@ -49,19 +49,14 @@
               <li v-for="(item,index) in tabs" :key="index" :class="{active:num==index}" @click="nums(index)">{{item}}</li>
         </ul>
     </div>
-                     <!-- 无数据时的展示
-     <div class="no-comment" v-if="this.toPay.length===0">
+                     <!-- 无数据时的展示 -->
+     <div class="no-comment" v-if="this.list.length===0">
         <img src="../../../assets/images/wu.png" alt="">
         <span>暂无消息!</span>
-     </div> -->
+     </div>
     <div  class="contentbox">
-        <div  class="content" v-show="num==0" v-for="(item,index) in toPay" :key="index">
-                 <!-- 无数据时的展示 -->
-          <div class="no-comment" v-if="toPay==[]">
-              <img src="../../../assets/images/wu.png" alt="">
-              <span>暂无消息!</span>
-          </div>
-          <div class="tab" v-else>
+        <div  class="content" v-show="num==0" v-for="(item,index) in list" :key="index">
+          <div class="tab">
             <div class="typebox">
                 <p><span>类别</span><span>{{item.customerDescriveTitle}}</span></p>
                 <p></p>
@@ -94,13 +89,8 @@
             </div>
           </div>
         </div>
-        <div class="content" v-show="num==1" v-for="(item,index) in toAccepted" :key="'in'+index">
-               <!-- 无数据时的展示 -->
-          <div class="no-comment" v-if="toAccepted==[]">
-              <img src="../../../assets/images/wu.png" alt="">
-              <span>暂无消息!</span>
-          </div>
-           <div class="tab" v-else>
+        <div class="content" v-show="num==1" v-for="(item,index) in list" :key="'in'+index">
+           <div class="tab">
                <div class="typebox">
                 <p><span>类别</span><span>{{item.customerDescriveTitle}}</span></p>
                 <p></p>
@@ -127,13 +117,8 @@
             </div>
            </div>
         </div>
-        <div class="content" v-show="num==2" v-for="(item,index) in toEvaluated" :key="'info2'+index">
-                 <!-- 无数据时的展示 -->
-          <div class="no-comment" v-if="toEvaluated.length==0">
-              <img src="../../../assets/images/wu.png" alt="">
-              <span>暂无消息!</span>
-          </div>
-          <div class="tab" v-else>
+        <div class="content" v-show="num==2" v-for="(item,index) in list" :key="'info2'+index">
+          <div class="tab">
             <div class="typebox">
                 <p><span>类别</span><span>{{item.customerDescriveTitle}}</span></p>
                 <p>{{item.orderStatus}}</p>
@@ -166,7 +151,7 @@ export default {
   data() {
     return {
       tabs: ['待支付', '待验收', '待评价'],
-      num: "",
+      num: 0,
       navlist: [
         {
           img: require("@/assets/images/woyaofadan.png"),
@@ -185,9 +170,7 @@ export default {
       activeName: "a",
       active: "0",
       content:"",
-      toPay:[],
-      toAccepted:[],
-      toEvaluated:[],
+      list:[],
       cust:"customer001",
       orderId:"",
       items:{},
@@ -205,12 +188,12 @@ export default {
   mounted() {
     this.getContent(),  //获取未读消息数量
     this.getGunlist()   // 获取滚动数据
-    this.getlist()   //获取订单数据
+    this.getlist(this.num)   //获取订单数据
      this.WebSocketTest()  //websocketserver
   },
   methods: {
     nums(index){
-     this.num=index
+     this.getlist(index)
     },
     nalist(index) {
       if (index === 0) {
@@ -378,22 +361,13 @@ export default {
            this.messages1=res.data.resultValue.items
        })
     },
-    getlist(){
-       this.$api.get(`/orderCustomer/queryAllToBegin?params={"pageIndex":1,"pageSize":20,"filter":"customerId=${this.cust}"}`,{
+    getlist(index){
+        this.num=index
+      console.log(this.num,"sss")
+       this.$api.get(`/orderCustomer/queryAllToBegin?params={"pageIndex":1,"pageSize":20,"filter":["customerId=${this.cust}","tagType=${this.num}"]}`,{
        },res=>{
-         console.log(res.data)
-         res.data.resultValue.items.forEach(item => {
-           this.orderId=[item.orderId]
-           if(item.orderStatus==="0" ||item.orderStatus==="23" ){
-              this.toPay.push(item)
-           }else if(item.orderStatus==="25" ){
-               this.toAccepted.push()
-              //  console.log( "25",this.toAccepted )
-           }else if(item.orderStatus==="8" ){
-               this.toEvaluated.push()
-              //  console.log( this.toEvaluated,"8")
-           }
-         });
+         console.log(res.data,"sss")
+         this.list=res.data.resultValue.items
        })
     },
     getContent(){
@@ -734,6 +708,8 @@ nav {
 section{
     flex: 1;
     overflow: auto;
+        display: flex;
+    flex-direction: column;
 }
 section::-webkit-scrollbar{
     width: 0;
