@@ -50,7 +50,10 @@
       </div>
       
     </div>
-     <div class="btt"><button @click="tocomplaint">催单</button> <button @click="tous">投诉</button></div>
+     <div class="btt"  v-if="this.orderComplaintId==null"><button @click="tocomplaint">催单</button> <button @click="tous">投诉</button></div>
+      <div class="btt" v-else >
+         <button @click="tsxp">投诉详情</button>
+      </div>
   </div>
 </template>
 
@@ -63,7 +66,8 @@ export default {
       fileList: [],
        demo: {},
        orderId:"",
-       shows:false
+       shows:false,
+       orderComplaintId:""
     };
   },
    mounted() {
@@ -78,11 +82,21 @@ export default {
     imgs(){
      this.shows=true
     },
+        // 投诉详情
+    tsxp(){
+      this.$router.push({
+          name:"compla",
+          params:{
+            orderId:this.orderComplaintId
+          }
+      })
+    },
     getdemo(){
         this.$api.get(`/orderCustomer/OrderDetail/${this.orderId}`,{
        },res=>{
            console.log(res.data.resultValue.items)
            this.demo=res.data.resultValue.items
+           this.orderComplaintId=res.data.resultValue.items[0].orderComplaintId
        })
     },
     // 催单

@@ -49,11 +49,13 @@
       </div>
       
     </div>
-     <div class="btt"  >
-        <button v-if="this.orderComplaintId==null" @click="tocomplaint()">投诉</button>
+     <div class="btt" v-if="this.orderComplaintId==null" >
+        <button  @click="tocomplaint()">投诉</button>
          <button @click="TipDialog">确认验收</button>
       </div>
-     
+     <div class="btt" v-else >
+         <button @click="tsxp">投诉详情</button>
+      </div>
   </div>
 </template>
 
@@ -128,12 +130,22 @@ export default {
        
         });
    },
+    // 投诉详情
+    tsxp(){
+      this.$router.push({
+          name:"compla",
+          params:{
+            orderComplaintId:this.orderComplaintId
+          }
+      })
+    },
      getdemo(){
         this.$api.get(`/orderCustomer/OrderDetail/${this.orderId}`,{
        },res=>{
            console.log(res.data.resultValue.items)
            this.demo=res.data.resultValue.items
            this.orderComplaintId=res.data.resultValue.items[0].orderComplaintId
+           console.log(this.orderComplaintId,"aaa")
        })
     },
   },

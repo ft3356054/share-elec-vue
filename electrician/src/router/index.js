@@ -118,9 +118,13 @@ const routes = [
       name: 'prodemo',
       component: () => import("../views/About/prodemo.vue")
     },{
-      path: '/map', //消息详情   探查完成
+      path: '/map', //地图
       name: 'map',
       component: () => import("../views/map/map.vue")
+    },{
+      path: '/compla/:orderComplaintId', //地图
+      name: 'compla',
+      component: () => import("../views/complaint/compla.vue")
     },
    // 电工端
     // 首页

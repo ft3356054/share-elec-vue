@@ -48,7 +48,7 @@
             <van-image-preview v-model="shows" :images="[item.orderContract]" >
        </van-image-preview>
       </div>
-      
+       <div class="btt"  v-if="this.orderComplaintId!=null"> <button @click="tsxp">投诉详情</button></div>
     </div>
   </div>
 </template>
@@ -65,7 +65,8 @@ export default {
       announceUserId:"",
       demo: "",
       orderId:"",
-      shows:false
+      shows:false,
+      orderComplaintId:""
     };
   },
   mounted() {
@@ -80,11 +81,21 @@ export default {
     imgs(){
      this.shows=true
     },
+            // 投诉详情
+    tsxp(){
+      this.$router.push({
+          name:"compla",
+          params:{
+            orderId:this.orderComplaintId
+          }
+      })
+    },
     getdemo(){
         this.$api.get(`/orderCustomer/OrderDetail/${this.orderId}`,{
        },res=>{
            console.log(res.data.resultValue.items)
            this.demo=res.data.resultValue.items
+           this.orderComplaintId=res.data.resultValue.items[0].orderComplaintId
        })
     },
   },
@@ -188,5 +199,31 @@ export default {
     }
   }
 }
-
+.btt {
+  width: 100%;
+  height: 80px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+  margin-top: 7px;
+  button {
+    margin-left: 10px;
+    width: 85px;
+    height: 37px;
+   background: -webkit-linear-gradient(#83ccfa,#7bcbf7,#6ec1f5,#61bbf3,#57b6f0);
+    border-radius: 20px;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 16px;
+    // font-weight: bold;
+  }
+  // :nth-child(1){
+  //   background: none;
+  //   color: #6b6c6c;
+  //   border: 1px solid #c0c2c4;
+  // }
+}
 </style>

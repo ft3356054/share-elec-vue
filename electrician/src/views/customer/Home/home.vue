@@ -50,7 +50,7 @@
         </ul>
     </div>
                      <!-- 无数据时的展示 -->
-     <div class="no-comment" v-if="this.list.length===0">
+     <div class="no-comment" v-if="this.list.length===0 || this.list===[]">
         <img src="../../../assets/images/wu.png" alt="">
         <span>暂无消息!</span>
      </div>
@@ -111,7 +111,7 @@
                        <button @click="complaint(item.orderId)">投诉</button> <button class="zf" @click="yanshou(item.orderId)">验收</button>
                     </dd>
                      <dd v-else>
-                       <button class="zf" @click="yanshou(item.orderId)">验收</button>
+                         <span class="jinxing">投诉处理中</span> 
                     </dd>
                 </dl>
             </div>
@@ -432,7 +432,7 @@ export default {
             }
           })
           break;
-        case "2":   //待维修
+        case "3":   //待维修
           this.$router.push({
             path:"/stayRepair",
             query:{
@@ -490,14 +490,6 @@ export default {
            path: `/Pay/${this.orderId}`,
           })
           break;                
-        case "3":  // 施工中
-          this.$router.push({
-            path:"/details",
-            query:{
-              orderId:this.orderId
-            }
-          })
-          break;
         case "31":  //施工中
           this.$router.push({
             path:"/details",
@@ -870,5 +862,11 @@ font-size: 14px;
     bottom: 0px;
     font-size: 13px;
   }
+}
+.jinxing{
+   display:block;
+  color: #abd6f0;
+   margin-top: 50%;
+  font-size: 14px;
 }
 </style>

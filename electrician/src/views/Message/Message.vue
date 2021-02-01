@@ -147,7 +147,7 @@ export default {
             }
           })
           break;
-        case "2":   //待维修
+        case "3":   //待维修
           this.$router.push({
             path:"/stayRepair",
             query:{
@@ -205,14 +205,6 @@ export default {
            path: `/Pay/${this.orderId}`,
           })
           break;                
-        case "3":  // 施工中
-          this.$router.push({
-            path:"/details",
-            query:{
-              orderId:this.orderId
-            }
-          })
-          break;
         case "31":  //施工中
           this.$router.push({
             path:"/details",

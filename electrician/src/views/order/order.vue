@@ -16,7 +16,7 @@
     </div>
     <div class="main">
           <!-- 无数据时的展示 -->
-     <div class="no-comment" v-if="this.list.length==0">
+     <div class="no-comment" v-if="this.list.length==0 || this.list===[]">
         <img src="../../assets/images/wu.png" alt="">
         <span>暂无消息!</span>
      </div>
@@ -138,7 +138,7 @@
                          <button @click="complaint(item.orderId)">投诉</button> <button class="zf" @click="yanshou(item.orderId)">验收</button>
                     </dd>
                     <dd v-else-if="item.orderStatus=='25' && item.orderComplaintId!==null">
-                         <button class="zf" @click="yanshou(item.orderId)">验收</button>
+                        <span class="jinxing">投诉处理中</span> 
                     </dd>
                     <dd v-else-if="item.orderStatus!=='4' && item.orderStatus!='9' && item.orderStatus!=='0' && item.orderStatus!=='23'   ">
                         <span class="jinxing">进行中</span>
@@ -298,7 +298,7 @@ export default {
          res=>{
              this.list = res.data.resultValue.items    //datas是列表集合
           this.itemCount = res.data.resultValue.itemCount;  //总条数
-          console.log(this.itemCount,"zong")
+          // console.log(this.itemCount,"zong")
              // itemCount是后台返回的列表总条数
              if(res.data.resultValue.itemCount === this.list.length){
                  this.finished = true
@@ -448,7 +448,7 @@ export default {
             }
           })
           break;
-        case "2":   //待维修
+        case "3":   //待维修
           this.$router.push({
             path:"/stayRepair",
             query:{
@@ -506,14 +506,6 @@ export default {
            path: `/Pay/${this.orderId}`,
           })
           break;                
-        case "3":  // 施工中
-          this.$router.push({
-            path:"/details",
-            query:{
-              orderId:this.orderId
-            }
-          })
-          break;
         case "31":  //施工中
           this.$router.push({
             path:"/details",
