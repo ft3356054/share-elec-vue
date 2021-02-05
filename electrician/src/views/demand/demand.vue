@@ -27,7 +27,7 @@
         </li>
         <li>
           <span>*</span><b>需求类型</b>
-          <select v-model="selected" >
+          <select v-model="selected">
             <option disabled value="">请选择</option>
             <option  v-for="(item,index) in selectList" :key="index" v-bind:value="item.orderTypeId">{{item.orderTypeName}}</option>
           </select>
@@ -494,4 +494,5 @@ export default {
   // background: red;
   height: 80px !important;
 }
+
 </style>

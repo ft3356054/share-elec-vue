@@ -311,7 +311,7 @@ export default {
      this.show=false
      this.ths=false
     },
-    // 点击确认时
+    //  取消弹框  点击确认时
     confirm(orderId){
         this.orderId=orderId
          var fd = new FormData()

@@ -5,9 +5,24 @@ import VueRouter from 'vue-router'
 Vue.use(VueRouter)
 
 const routes = [
-  //用户端
   {
-    path: '/customer',
+    path:"/",
+    redirect: "/login"
+  },
+  {
+    path: '/login', //登陆
+    name: 'login',
+    component: () => import("../views/login/login.vue")
+  },{
+    path: '/register', //注册
+    name: 'register',
+    component: () => import("../views/login/register.vue")
+  },{
+    path: '/Reset', //重置密码
+    name: 'Reset',
+    component: () => import("../views/login/Reset.vue")
+  },{
+    path: '/customer',//用户端
     name: 'home',
     component: () => import("../views/customer/Home/home.vue"),
   },
@@ -126,6 +141,7 @@ const routes = [
       name: 'compla',
       component: () => import("../views/complaint/compla.vue")
     },
+    
    // 电工端
     // 首页
     {
