@@ -49,23 +49,28 @@ export default {
   },
   methods: {
     onSubmit(values) {
-      console.log('submit', values);
-          // console.log(this.items)
-          // var fd=new FormData()
-          // this.items={}
-          // this.items.append("items",`[{"userAccount":"${this.phone}","userPsw":"${this.password}"}]`)
-          //  this.$axios.post(
-          //       `/userLogin/login`,
-          //      this.items
-          //     ).then(res=>{
-          //       if(res.data.successful==false){
-          //           //  console.log(res.data.resultHint)
-          //              Toast.fail("失败")
-          //         }else{
-          //              Toast.success('登陆成功')
-                
-          //         } 
-          //     })  
+      // console.log('submit', values);
+           this.$axios.post(
+                `/userLogin/login`,
+               `{"items":[{"userAccount":"${this.phone}","userPsw":"${this.password}"}]}`,{headers: { "Content-Type": "application/json" }} 
+              ).then(res=>{
+                if(res.data.successful==false){
+                    //  console.log(res.data.resultHint)
+                       Toast.fail(res.data.resultHint)
+                  }else{
+                       Toast.success('登陆成功')
+                       console.log(res.data)
+                       if(res.data.resultValue.items[0].userType==0){
+                           localStorage.setItem("customerId",res.data.resultValue.items[0].userId)
+                           localStorage.setItem("realNameAuth",res.data.resultValue.items[0].realNameAuth)
+                         this.$router.push("/customer")
+                       }else if(res.data.resultValue.items[0].userType==1){
+                          localStorage.setItem("customerId",res.data.resultValue.items[0].userId)
+                         this.$router.push("/electricianend")
+                       }
+                       
+                  } 
+              })  
     },
      //点击图标看密码
     changeSeen(){

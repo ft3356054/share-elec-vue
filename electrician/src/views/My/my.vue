@@ -12,14 +12,15 @@
          <div class="dian">用户</div>
      </div>
      <div class="head-bottom">
-           <div class="box" >实名认证
+           <div class="box" @click="goshim">实名认证
                <span v-if="this.list.realNameAuth=='0'">是</span>
-               <span v-else>否</span>
+               <span v-if="this.list.realNameAuth=='1'">否</span>
+               <span v-if="this.list.realNameAuth=='2'">待审核</span>
             </div>
-               <div class="box">电工认证
-                   <span @click="gorenzheng" style="color:#87cefa" v-if="this.list.auditStatus=='0'">未认证</span>
-                   <span @click="gorenzheng" style="color:#87cefa" v-else-if="this.list.auditStatus=='1'">待审核</span>
-                   <span @click="gorenzheng" style="color:#87cefa" v-else-if="this.list.auditStatus=='2'">已审核</span>
+               <div class="box"  @click="gorenzheng">电工认证
+                   <span style="color:#87cefa" v-if="this.list.auditStatus=='0'">未认证</span>
+                   <span  style="color:#87cefa" v-else-if="this.list.auditStatus=='1'">待审核</span>
+                   <span style="color:#87cefa" v-else-if="this.list.auditStatus=='2'">已审核</span>
                 </div>
             <!-- <div class="box">电工认证<span @click="gorenzheng"  style="color:#87cefa">高级电工></span></div> -->
             <div class="box">常用户号<span>{{this.list.registeredNumber}}</span></div>
@@ -36,10 +37,29 @@ export default {
             customerId:"",
             list:"",
         }
-    },
+    }, 
+    mounted() {
+      this.customerId=this.$route.query.customerId
+      console.log( this.customerId)
+       this.$api.get(`/customerInfo/${this.customerId}`,{
+       },res=>{
+           console.log(res.data)
+           this.list=res.data.resultValue
+       })
+  },
   methods: {
       fh(){
           this.$router.push("/customer")
+      },
+    //   实名认证
+      goshim(){
+           if(this.list.realNameAuth=="0"){
+                   Toast('已认证');
+            }else if(this.list.realNameAuth=="2"){
+                Toast('正在审核中，请稍等');
+            }else if(this.list.realNameAuth=="1"){
+                // 跳转到实名认证页面
+            } 
       },
     //   电工认证
        gorenzheng () {
@@ -47,25 +67,18 @@ export default {
                Toast("您还没有实名认证，请实名认证")
            }else{
                 console.log(this.list.realNameAuth)
-               if(this.list.auditStatus=="0"){
-                    console.log(this.customerId,"a1")
-             this.$router.push('/autation')
-           }else if(this.list.auditStatus=="1"){
-               Toast('正在审核中，请稍等');
-           }else if(this.list.auditStatus=="2"){
-                 Toast('已审核');
-           }
+                if(this.list.auditStatus=="0"){
+                        console.log(this.customerId,"a1")
+                this.$router.push('/autation')
+            }else if(this.list.auditStatus=="1"){
+                Toast('正在审核中，请稍等');
+            }else if(this.list.auditStatus=="2"){
+                    Toast('已审核');
+            }
            }
     }
   },
-  mounted() {
-      this.customerId=localStorage.getItem("customerId")
-       this.$api.get(`/customerInfo/${this.customerId}`,{
-       },res=>{
-           console.log(res.data)
-           this.list=res.data.resultValue
-       })
-  },
+ 
 }
 </script>
 

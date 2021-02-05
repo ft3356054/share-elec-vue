@@ -54,19 +54,22 @@ export default {
             seen1:"password",
             eye1:true,
             img:require("../../assets/images/yc.png"),
-            imgs:require("../../assets/images/yc.png")        
+            imgs:require("../../assets/images/yc.png"),
+            phone:"",
+            sms:""        
         }
+    },
+    mounted() {
+      this.phone=this.$route.params.phone
+       this.sms=this.$route.params.sms
     },
     methods: {
         fh(){
            this.$router.go(-1)
         },
           onSubmit(values) {
-             if(this.password===this.password1){
-                     Toast({
-                    message: '设置成功',
-                    position: 'top',
-                    });
+             if(this.password===this.password1){ 
+                    this.postpass()
               }else{
                 Toast({
                     message: '两次输入的密码不相同',
@@ -75,6 +78,22 @@ export default {
               }
             console.log('submit', values);
             },
+      // 请求修改密码
+      postpass(){
+           this.$axios.post(
+                `/authorityUser/save`,
+               `{"items":[{"userPsw":"${this.password}","phonenumber":"${this.phone}","authCode":"${this.sms}"}]}`,{headers: { "Content-Type": "application/json" }} 
+              ).then(res=>{
+                if(res.data.successful==false){
+                    //  console.log(res.data.resultHint)
+                       Toast.fail(res.data.resultHint)
+                  }else{
+                       Toast.success('设置成功')
+                       console.log(res.data)
+                       this.$router.push("/login")
+                  } 
+              })  
+      },
      //点击图标看密码
     changeSeen(){
       var boo=this.type = this.seen ? 'password' : 'text';

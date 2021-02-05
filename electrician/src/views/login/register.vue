@@ -52,12 +52,12 @@ export default {
    },
    mounted() {
        this.list=this.$route.query.list
-       console.log(this.list)
    },
      methods: {
          fh(){
             this.$router.go(-1)
          },
+        //  下一步
         onSubmit() {
             if(this.phone==""){
                Toast({
@@ -70,7 +70,25 @@ export default {
                     position: 'top',
                     });
             }else{
-                  // this.$router.push("/Reset")
+                   this.$axios.post(
+                    `/userLogin/authCodeVerify`,
+                `{"items":[{"phonenumber":"${this.phone}","authCode":"${this.sms}"}]}`,{headers: { "Content-Type": "application/json" }} 
+                ).then(res=>{
+                    if(res.data.successful==false){
+                        //  console.log(res.data.resultHint)
+                        Toast(res.data.resultHint)
+                    }else{
+                        Toast.success('验证成功')
+                        // console.log(res.data)
+                        this.$router.push({
+                            name:"Reset",
+                            params:{
+                                phone:this.phone,
+                                sms:this.sms
+                            }
+                        })
+                    } 
+              })  
             }
         },
         // 点击发送验证码
@@ -82,8 +100,16 @@ export default {
                     });
             }else{
                 this.getCodes()
+                this.getdx()
             }
             
+        },
+        // 短信验证码
+        getdx(){
+            this.$api.get(`/userLogin/authCode/${this.phone}`,{
+       },res=>{
+         console.log(res.data,"sss")
+       })
         },
           // 60倒计时
         getCodes(){

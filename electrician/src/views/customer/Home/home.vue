@@ -171,42 +171,62 @@ export default {
       active: "0",
       content:"",
       list:[],
-      cust:"customer001",
+      cust:"",
       orderId:"",
       items:{},
       show:false,
       ths:false,
       path:"ws://localhost:8083/websocketserver/",  //websocketserver
-      messages:""
+      messages:"",
+      realNameAuth:""
     };
   },
   inject:['reload'],
   created () {
-    localStorage.setItem("customerId",this.cust)
-    
+   
   },
   mounted() {
+     this.realNameAuth=localStorage.getItem("realNameAuth")
+    this.cust=localStorage.getItem("customerId")
     this.getContent(),  //获取未读消息数量
     this.getGunlist()   // 获取滚动数据
     this.getlist(this.num)   //获取订单数据
      this.WebSocketTest()  //websocketserver
+  
   },
   methods: {
     nums(index){
-
+      
      this.getlist(index)
     },
     nalist(index) {
       if (index === 0) {
-        　let date=new Date();
+               　let date=new Date();
         // console.log(date.getHours())
             　　if( date.getHours()>=9 && date.getHours() <=18 ){
-                    this.$router.push({
+                   if(this.realNameAuth==1){
+                            　this.$dialog.alert({
+                              width:"80%",
+                                title: '未实名认证',
+                              message: "请到个人信息进行认证",
+                              closeOnClickOverlay:true
+                        }).then(() => {
+                               this.$router.push({
+                                  path:"/My",
+                                  query:{
+                                    customerId:this.cust
+                                  }
+                                });
+                            });
+                   }else{
+                      this.$router.push({
                         path:"/demand",
                         query:{
                           cust:this.cust
                         }
                       });
+                   }
+                   
             　　}else{
                   　this.$dialog.alert({
                         width:"80%",
@@ -231,7 +251,7 @@ export default {
       this.$router.push({
         path:"/My",
         query:{
-          cust:this.cust
+          customerId:this.cust
         }
       });
     },
@@ -374,7 +394,7 @@ export default {
     getContent(){
           this.$api.get(`/notifyAnnounceUser/notReadNum/${this.cust}`,{
                 },res=>{
-                  // console.log(res)
+                  // console.log(res.data)
                     this.content=res.data.resultValue
                       // console.log(this.content)
                 })
