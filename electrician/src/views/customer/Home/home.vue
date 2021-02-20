@@ -50,7 +50,7 @@
         </ul>
     </div>
                      <!-- 无数据时的展示 -->
-     <div class="no-comment" v-if="this.list.length===0 || this.list===[]">
+      <div class="no-comment" v-if="this.list==[]||this.list.length===0">
         <img src="../../../assets/images/wu.png" alt="">
         <span>暂无消息!</span>
      </div>
@@ -195,8 +195,7 @@ export default {
   
   },
   methods: {
-    nums(index){
-      
+    nums(index){  
      this.getlist(index)
     },
     nalist(index) {
@@ -342,7 +341,7 @@ export default {
                 }`)
            this.$axios.post(
                 `/orderCustomer/save`,
-                this.items).then(res=>{
+                this.items,{withCredentials: true}).then(res=>{
                   if(res.data.successful==false){
                      console.log(res.data.resultHint)
                        Toast.fail(res.data.resultHint)
@@ -365,7 +364,7 @@ export default {
              `{"orderId":"${this.orderId}",  
                 "orderStatus":"26",
                 }`)
-          this.$axios.post("/orderCustomer/save",this.items).then(res=>{
+          this.$axios.post("/orderCustomer/save",this.items,{withCredentials: true}).then(res=>{
             if(res.data.successful==false){
                      console.log(res.data.resultHint)
                        Toast.fail(res.data.resultHint)
@@ -376,8 +375,8 @@ export default {
      },
     // 获取滚动消息数据
     getGunlist(orderId){
-      this.$api.get(`/notifyAnnounceUser/queryAll?params={"pageIndex":1,"pageSize":5,"filter":["userId=${this.cust}","status=0"]}`,{
-       },res=>{
+      this.$axios.get(`/notifyAnnounceUser/queryAll?params={"pageIndex":1,"pageSize":5,"filter":["userId=${this.cust}","status=0"]}`,{withCredentials: true},{
+       }).then(res=>{
           //  console.log(res)
            this.messages1=res.data.resultValue.items
        })
@@ -385,15 +384,15 @@ export default {
     getlist(index){
         this.num=index
              this.list=[]
-       this.$api.get(`/orderCustomer/queryAllToBegin?params={"pageIndex":1,"pageSize":20,"filter":["customerId=${this.cust}","tagType=${this.num}"]}`,{
-       },res=>{
+       this.$axios.get(`/orderCustomer/queryAllToBegin?params={"pageIndex":1,"pageSize":20,"filter":["customerId=${this.cust}","tagType=${this.num}"]}`,{withCredentials: true},{
+       }).then(res=>{
         //  console.log(res.data,"sss")
          this.list=res.data.resultValue.items
        })
     },
     getContent(){
-          this.$api.get(`/notifyAnnounceUser/notReadNum/${this.cust}`,{
-                },res=>{
+          this.$axios.get(`/notifyAnnounceUser/notReadNum/${this.cust}`,{withCredentials: true},{
+                }).then(res=>{
                   // console.log(res.data)
                     this.content=res.data.resultValue
                       // console.log(this.content)
@@ -407,16 +406,15 @@ export default {
      // 点击未读变已读
       dawd(announceId){
          this.announceId=announceId
-          this.$axios.get(`/notifyAnnounce/read/?params={"filter":["announceId=${this.announceId}","announceUserId=${this.cust}"]}`,{
-       },res=>{
+          this.$axios.get(`/notifyAnnounce/read/?params={"filter":["announceId=${this.announceId}","announceUserId=${this.cust}"]}`,{withCredentials: true},{
+       }).then(res=>{
           //  console.log(res.data)
        })
       },
       // 点击获取详情数据
       getdetails(orderId){
         this.orderId=orderId
-        this.$api.get(`/orderCustomer/OrderDetail/${this.orderId}`,{   
-        },res=>{
+        this.$axios.get(`/orderCustomer/OrderDetail/${this.orderId}`,{withCredentials: true}).then(res=>{
           console.log(res.data.resultValue.items[0])
          let orderStatus=res.data.resultValue.items[0].orderStatus
         switch (orderStatus) {
@@ -865,7 +863,7 @@ font-size: 14px;
   }
 }
 /deep/ .van-overlay{
-  background-color: rgba(0,0,0,.1);
+  background-color: rgba(0,0,0,.5);
 }
 /deep/ .van-sticky{
   background: #f3f8fe;

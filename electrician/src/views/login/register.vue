@@ -84,7 +84,8 @@ export default {
                             name:"Reset",
                             params:{
                                 phone:this.phone,
-                                sms:this.sms
+                                sms:this.sms,
+                                list:this.list
                             }
                         })
                     } 

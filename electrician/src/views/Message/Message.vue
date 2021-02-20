@@ -5,7 +5,7 @@
     </div>
      <main>
         <!-- 无数据时的展示 -->
-     <div class="no-comment" v-if="this.list.length==0">
+    <div class="no-comment" v-if="this.list==[]||this.list.length===0">
         <img src="../../assets/images/wu.png" alt="">
         <span>暂无消息!</span>
      </div> 
@@ -102,16 +102,14 @@ export default {
       // 点击未读变已读
       dawd(announceId){
          this.announceId=announceId
-          this.$axios.get(`/notifyAnnounce/read/?params={"filter":["announceId=${this.announceId}","announceUserId=${this.cust}"]}`,{
-       },res=>{
+          this.$axios.get(`/notifyAnnounce/read/?params={"filter":["announceId=${this.announceId}","announceUserId=${this.cust}"]}`,{withCredentials: true}).then(res=>{
           //  console.log(res.data)
        })
       },
       // 点击获取详情数据
       getdetails(orderId){
         this.orderId=orderId
-        this.$api.get(`/orderCustomer/OrderDetail/${this.orderId}`,{   
-        },res=>{
+        this.$axios.get(`/orderCustomer/OrderDetail/${this.orderId}`,{withCredentials: true}).then(res=>{
           console.log(res.data.resultValue.items[0])
          let orderStatus=res.data.resultValue.items[0].orderStatus
        switch (orderStatus) {
@@ -237,11 +235,13 @@ export default {
       // 获取消息列表
     async  getList(){
       this.pageIndex=this.pageNumber*this.pageSize-(this.pageSize-1)
-          this.$api.get(`/notifyAnnounceUser/queryAll?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":["userId=${this.cust}","status=2"]}`,{
-       },res=>{
+          this.$axios.get(`/notifyAnnounceUser/queryAll?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":["userId=${this.cust}","status=2"]}`,{withCredentials: true}).then(res=>{
            console.log(res.data)
-          this.list = res.data.resultValue.items    //datas是列表集合
-          this.itemCount = res.data.resultValue.itemCount;  //总条数
+             if(res.data.successful==false){
+              this.list=[]
+          }else{
+              this.list = res.data.resultValue.items    //datas是列表集合
+              this.itemCount = res.data.resultValue.itemCount;  //总条数
              // itemCount是后台返回的列表总条数
              if(res.data.resultValue.itemCount === this.list.length){
                  this.finished = true
@@ -251,6 +251,8 @@ export default {
              this.pageNumber=2
              this.isLoading = false
              this.loading = false
+          }
+         
        })
         this.finName="已全部加载完成"
           setTimeout(()=>{
@@ -368,23 +370,23 @@ export default {
 		  async  onLoad() {
       this.tomer=setTimeout(() => {
           this.pageIndex=this.pageNumber*this.pageSize-(this.pageSize-1)
-             this.$api.get(`/notifyAnnounceUser/queryAll?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":["userId=${this.cust}","status=2"]}`,{
-       },res=>{
-           let datas= res.data.resultValue.items    //datas是列表集合
-           this.list=this.list.concat(datas)
-          this.itemCount = res.data.resultValue.itemCount;  //总条数
-             // itemCount是后台返回的列表总条数
-             if(res.data.resultValue.itemCount > this.list.length){
-                         this.pageNumber++
-                        this.loading = false
-                    }else{
-                        this.finished = true
-                        this.loading = true
-                        setTimeout(()=>{
-                                    this.finName=""
-                              },5000)
-                    }
-           })
+             this.$axios.get(`/notifyAnnounceUser/queryAll?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":["userId=${this.cust}","status=2"]}`,
+              {withCredentials: true}).then(res=>{
+                  let datas= res.data.resultValue.items    //datas是列表集合
+                  this.list=this.list.concat(datas)
+                  this.itemCount = res.data.resultValue.itemCount;  //总条数
+                    // itemCount是后台返回的列表总条数
+                    if(res.data.resultValue.itemCount > this.list.length){
+                                this.pageNumber++
+                                this.loading = false
+                            }else{
+                                this.finished = true
+                                this.loading = true
+                                setTimeout(()=>{
+                                            this.finName=""
+                                      },5000)
+                            }
+                  })
           }, 2000);
 		    }
   },

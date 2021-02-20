@@ -16,7 +16,7 @@
     </div>
     <div class="main">
           <!-- 无数据时的展示 -->
-     <div class="no-comment" v-if="this.list.length==0 || this.list===[]">
+      <div class="no-comment" v-if="this.list==[]||this.list.length===0">
         <img src="../../assets/images/wu.png" alt="">
         <span>暂无消息!</span>
      </div>
@@ -224,7 +224,7 @@ export default {
     },
     nums(index){
        this.pageIndex=1
-        console.log(index,111111)
+        // console.log(index,111111)
              this.list=[]
        this.shousui(index)
     },
@@ -294,20 +294,26 @@ export default {
     },
     // 获取数据
     async getlist(){
-       this.$api.get(`/orderCustomer/searchBox?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":["customerId=${this.cust}","tagType=${this.num}","searchContent=${this.value}"]}`,{},
-         res=>{
-             this.list = res.data.resultValue.items    //datas是列表集合
-          this.itemCount = res.data.resultValue.itemCount;  //总条数
-          // console.log(this.itemCount,"zong")
-             // itemCount是后台返回的列表总条数
-             if(res.data.resultValue.itemCount === this.list.length){
-                 this.finished = true
-            }else {
-                this.finished = false
-             }
-             this.pageNumber=2
-             this.isLoading = false
-             this.loading = false
+       this.$axios.get(`/orderCustomer/searchBox?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":["customerId=${this.cust}","tagType=${this.num}","searchContent=${this.value}"]}`,{withCredentials: true})
+        .then(res=>{
+           console.log(res.data)
+          if(res.data.successful==false){
+              this.list=[]
+          }else{
+                this.list = res.data.resultValue.items    //datas是列表集合
+                    this.itemCount = res.data.resultValue.itemCount;  //总条数
+                    // console.log(this.itemCount,"zong")
+                      // itemCount是后台返回的列表总条数
+                      if(res.data.resultValue.itemCount === this.list.length){
+                          this.finished = true
+                      }else {
+                          this.finished = false
+                      }
+                      this.pageNumber=2
+                      this.isLoading = false
+                      this.loading = false
+          }
+         
          })
      },
        // 下拉刷新
@@ -324,8 +330,7 @@ export default {
 		    onLoad() {
              setTimeout(() => {
                  this.pageIndex=this.pageNumber*this.pageSize-(this.pageSize-1)
-               this.$api.get(`/orderCustomer/searchBox?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":["customerId=${this.cust}","tagType=${this.num}","searchContent=${this.value}"]}`,{
-            },res=>{
+               this.$api.get(`/orderCustomer/searchBox?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":["customerId=${this.cust}","tagType=${this.num}","searchContent=${this.value}"]}`,{withCredentials: true}).then(res=>{
               //  console.log(res.data)
                 let datas= res.data.resultValue.items    //datas是列表集合
                 this.list=this.list.concat(datas)
@@ -365,7 +370,7 @@ export default {
                 }`)
          this.$axios.post(
                 `/orderCustomer/save`,
-                this.items).then(res=>{
+                this.items,{withCredentials: true}).then(res=>{
                   if(res.data.successful==false){
                      console.log(res.data.resultHint)
                        Toast.fail(res.data.resultHint)
@@ -388,7 +393,7 @@ export default {
              `{"orderId":"${this.orderId}",  
                 "orderStatus":"26",
                 }`)
-          this.$axios.post("/orderCustomer/save",this.items).then(res=>{
+          this.$axios.post("/orderCustomer/save",this.items,{withCredentials: true}).then(res=>{
             if(res.data.successful==false){
                      console.log(res.data.resultHint)
                        Toast.fail(res.data.resultHint)
@@ -411,8 +416,7 @@ export default {
            // 点击获取详情数据
       getdetails(orderId){
         this.orderId=orderId
-        this.$api.get(`/orderCustomer/OrderDetail/${this.orderId}`,{   
-        },res=>{
+        this.$axios.get(`/orderCustomer/OrderDetail/${this.orderId}`,{withCredentials: true}).then(res=>{
           console.log(res.data.resultValue.items[0])
          let orderStatus=res.data.resultValue.items[0].orderStatus
         switch (orderStatus) {

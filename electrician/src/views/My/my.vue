@@ -13,9 +13,9 @@
      </div>
      <div class="head-bottom">
            <div class="box" @click="goshim">实名认证
-               <span v-if="this.list.realNameAuth=='0'">是</span>
-               <span v-if="this.list.realNameAuth=='1'">否</span>
-               <span v-if="this.list.realNameAuth=='2'">待审核</span>
+               <span v-if="this.realNameAuth=='0'">是</span>
+               <span v-if="this.realNameAuth=='1'">否</span>
+               <span v-if="this.realNameAuth=='2'">待审核</span>
             </div>
                <div class="box"  @click="gorenzheng">电工认证
                    <span style="color:#87cefa" v-if="this.list.auditStatus=='0'">未认证</span>
@@ -23,7 +23,7 @@
                    <span style="color:#87cefa" v-else-if="this.list.auditStatus=='2'">已审核</span>
                 </div>
             <!-- <div class="box">电工认证<span @click="gorenzheng"  style="color:#87cefa">高级电工></span></div> -->
-            <div class="box">常用户号<span>{{this.list.registeredNumber}}</span></div>
+            <div class="box" @click="goaccount">常用户号<span>{{this.list.registeredNumber}}</span></div>
      </div>
      <!-- <button>退出登录</button> -->
     </div>
@@ -36,13 +36,16 @@ export default {
         return {
             customerId:"",
             list:"",
+            realNameAuth:""
         }
     }, 
     mounted() {
-      this.customerId=this.$route.query.customerId
-      console.log( this.customerId)
-       this.$api.get(`/customerInfo/${this.customerId}`,{
-       },res=>{
+      this.customerId=localStorage.getItem("customerId")
+       this.realNameAuth=localStorage.getItem("realNameAuth")
+    //    console.log(localStorage.getItem("realNameAuth"),"111")
+    //   console.log( this.customerId,"222")
+       this.$axios.get(`/customerInfo/${this.customerId}`,{withCredentials: true},{
+       }).then(res=>{
            console.log(res.data)
            this.list=res.data.resultValue
        })
@@ -53,29 +56,34 @@ export default {
       },
     //   实名认证
       goshim(){
-           if(this.list.realNameAuth=="0"){
+           if(this.realNameAuth=="0"){
                    Toast('已认证');
-            }else if(this.list.realNameAuth=="2"){
+            }else if(this.realNameAuth=="2"){
                 Toast('正在审核中，请稍等');
-            }else if(this.list.realNameAuth=="1"){
+            }else if(this.realNameAuth=="1"){
                 // 跳转到实名认证页面
+               this.$router.push('/certification')
             } 
       },
     //   电工认证
        gorenzheng () {
-           if(this.list.realNameAuth=="1" || this.list.realNameAuth==null){
+           if(this.realNameAuth=="1" || this.realNameAuth==null){
                Toast("您还没有实名认证，请实名认证")
            }else{
-                console.log(this.list.realNameAuth)
+                console.log(this.realNameAuth)
                 if(this.list.auditStatus=="0"){
                         console.log(this.customerId,"a1")
                 this.$router.push('/autation')
-            }else if(this.list.auditStatus=="1"){
+            }else if(this.auditStatus=="1"){
                 Toast('正在审核中，请稍等');
-            }else if(this.list.auditStatus=="2"){
+            }else if(this.auditStatus=="2"){
                     Toast('已审核');
             }
            }
+    },
+    // 常用户号
+    goaccount(){
+           this.$router.push('/account')
     }
   },
  

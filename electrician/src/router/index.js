@@ -60,6 +60,14 @@ const routes = [
     name: 'My',
     component: () => import('../views/My/my.vue')
   }, {
+    path: '/account', //常用户号
+    name: 'account',
+    component: () => import('../views/My/account.vue')
+  }, {
+    path: '/certification', //实名认证
+    name: 'certification',
+    component: () => import('../views/My/certification.vue')
+  }, {
     path: '/autation', //电工认证
     name: 'autation',
     component: () => import('../views/My/autation.vue')
@@ -137,7 +145,7 @@ const routes = [
       name: 'map',
       component: () => import("../views/map/map.vue")
     },{
-      path: '/compla/:orderComplaintId', //地图
+      path: '/compla/:orderComplaintId', //修改密码
       name: 'compla',
       component: () => import("../views/complaint/compla.vue")
     },

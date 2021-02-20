@@ -95,7 +95,7 @@ export default {
                 Toast.success('投诉成功')
               this.$axios.post(
                       `/orderComplaint/save`,
-                      this.fd,{headers: {'Content-Type': 'multipart/form-data'}},
+                      this.fd,{headers: {'Content-Type': 'multipart/form-data'}},{withCredentials: true},
                       Toast.success('投诉成功'),
                     );   
                   this.set=setTimeout(()=>{
@@ -106,7 +106,7 @@ export default {
   },
   mounted() {
     this.orderId=this.$route.query.orderId
-    this.$api.get('/baseLabel/?params={"pageIndex":1,"pageSize":20,"filter":"labelId=complaint"}',{},res=>{
+    this.$axios.get('/baseLabel/?params={"pageIndex":1,"pageSize":20,"filter":"labelId=complaint"}',{withCredentials: true}).then(res=>{
       // console.log(res.data.resultValue.items)
        res.data.resultValue.items.forEach(item => {
          this.data.push(item.labelName)

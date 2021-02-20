@@ -2,19 +2,39 @@
     <div class="contianer">
         <div class="backgroundbox">
         <p  @click="goback"><img src="../../assets/images/jiantou.png" alt=""></p>
-        <p>电工注册认证</p>
+        <p>实名认证</p>
         </div>
         <div class="content">
           <div class="context">
-            <div class="topbox" @click="choosebtn">
-              <p>所属公司</p>
-              <p>{{companyName}}</p>
-              <p><img src="../../assets/images/textjiantou.png" alt=""></p>
-            </div>
-
+            <ul class="uls">
+                <van-form >
+                <li>
+                     <van-field
+                        v-model="userName"
+                        name="validator"
+                        placeholder="请输入姓名"
+                        label="姓名"
+                        clearable
+                        maxlength="10"
+                        :rules="[{ validator, message: '请填写中文' }]"
+                    />
+                </li>
+                <li>
+                    <van-field
+                        v-model="idCardNum"
+                        name="pattern"
+                        placeholder="请输入身份证"
+                        label="身份证"
+                        clearable
+                        maxlength="18"
+                        :rules="[{ pattern, message: '请填写正确的身份证号码' }]"
+                    />
+                </li>
+                 </van-form>
+            </ul>
             <div class="science">
-
-              <p style="margin-top:10px"><span style="color:red">*</span>证明材料</p>
+                
+              <p style="margin-top:10px"><span style="color:red">*</span>上传身份证正面</p>
               <div class="ploader">
             <van-uploader v-model="fileList" multiple :after-read="upimgbtn">
               <van-button type="primary" class="loader">
@@ -26,7 +46,7 @@
             </van-uploader>
               </div>
 
-              <p style="margin-top:10px"><span style="color:red">*</span>电工证</p>
+              <p style="margin-top:10px"><span style="color:red">*</span>上传身份证背面</p>
                <div class="ploader">
             <van-uploader v-model="fileLists" multiple :after-read="upimgbtn">
               <van-button type="primary" class="loader">
@@ -45,7 +65,6 @@
     </div>
 </template>
 <script>
-import bus from "../../libs/eventBus.js"
 import { Toast } from 'vant';
 export default {
   data () {
@@ -60,29 +79,24 @@ export default {
       electricianId:"321",
       customerId:"",
       companyId:"11",
-      subCompanyId:""
+      subCompanyId:"",
+      userName:"",
+      idCardNum:"",
+      pattern:/(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/
     }
   },
   created () {
-      this.customerId=this.$route.query.customerId
+    
   },
     mounted () {
-        console.log(this.$route.params)
-        this.companyName=this.$route.params.companyName
-        this.companyId=this.$route.params.companyId
-        this.subCompanyId=this.$route.params.subCompanyId
+      this.customerId=localStorage.getItem("customerId")
   },
   methods: {
     goback () {
-      this.$router.go(-1)
+      this.$router.push("/my")
     },
-    choosebtn(){
-      this.$router.push({
-        path:"/autCom",
-        query:{
-          customerId:this.customerId
-        }
-      })
+     validator(val) {
+      return /^[\u4e00-\u9fa5]+$/.test(val);
     },
     blues (file) {
       console.log(file)
@@ -95,40 +109,43 @@ export default {
       this.fd=file.file
     },
     order(){
-      if(this.companyId===undefined){
-          Toast("未选择公司")
-      }else if(this.fileList.length==0){
-          Toast("未上传证明材料")
-      }else if(this.fileLists.length==0){
-          Toast("未上传电工证")
-      }else{
-        this.customerId=localStorage.getItem("customerId")
-      var fd=new FormData()
-      if(this.files===null||this.files===""){
-        fd.append("myFile","")
-        fd.append("file2","")
-      }else{
+         if(this.userName==""){
+           Toast("未输入姓名")
+         }else if(this.idCardNum==""){
+           Toast("未上输入身份证号码")
+         }else if(this.fileList.length==0){
+          Toast("未上传身份证正面")
+         }else if(this.fileLists.length==0){
+          Toast("未上传身份证背面")
+        }else{
+          this.customerId=localStorage.getItem("customerId")
+          var fd=new FormData()
+       if(this.files===null||this.files===""){
+          fd.append("myFile","")
+            fd.append("file2","")
+         }else{
         fd.append("myFile",this.files)
         fd.append("file2",this.fd)
-      }
-      this.files=fd
-       this.files.append("items",`{"customerId":"${this.customerId}","companyId":"${this.companyId}","subCompanyId":"${this.subCompanyId}","companyName":"${this.companyName}"}`)
-       this.$axios.post("/customerInfo/changeToElecInfo", this.files, {headers: {'Content-Type': 'multipart/form-data'}},{withCredentials: true}).then(res => {
-           console.log(res)
-           if(res.data.successful==true){
-              Toast.success('提交成功')
-             this.$router.push("/my")
-           }
-        }).catch(err => {
-            alert(err)
-        })
+          }
+            this.files=fd
+            this.files.append("items",`{"userId":"${this.customerId}","userName":"${this.userName}","idCardNum":"${this.idCardNum}"}`)
+            this.$axios.post("/orderRealAudit/save", this.files, {headers: {'Content-Type': 'multipart/form-data'}},{withCredentials: true}).then(res => {
+            console.log(res)
+            if(res.data.successful==true){
+                Toast.success('提交成功')
+                 localStorage.setItem("realNameAuth",0)
+                this.$router.push("/my")
+            }
+            }).catch(err => {
+                alert(err)
+            })
       }
     }
   }
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss" >
 .contianer p{
   padding: 0;
 }
@@ -141,13 +158,14 @@ padding-bottom: 20px;
 box-sizing: border-box;
 overflow: auto;
 }
+.uls{
+    margin-top: 20px;
+}
 .contianer .backgroundbox{
       width: 100%;
-    height: 90px;
+    height: 60px;
     line-height: 60px;
     background-color: #87cefa;
-    border-bottom-right-radius: 20%;
-    border-bottom-left-radius: 20%;
     display: flex;
     box-sizing: border-box;
 }
@@ -170,7 +188,7 @@ font-weight: bold;
   width: 100%;
   height: auto;
   position: absolute;
-  top: 65px;
+  top: 50px;
   left: 0;
   padding: 0 13px;
   box-sizing: border-box;
@@ -217,7 +235,7 @@ font-weight: bold;
   border-radius: 10px;
   padding: 12px 28px;
   box-sizing: border-box;
-  padding-bottom: 50px;
+  padding-bottom: 30px;
 }
 .science p{
 font-size: 13px;
@@ -337,7 +355,7 @@ background: #f7fbff;
       }
       /deep/ .van-uploader__preview-delete{
             position: absolute;
-            top: 18px;
+            top: 0px;
             right: 5px;
       }
       .loader {
@@ -347,4 +365,8 @@ background: #f7fbff;
          background: #f7fbff;
       }
     }
+      // input 选择历史记录默认样式
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px white inset !important;
+} 
 </style>

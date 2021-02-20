@@ -36,7 +36,7 @@ export default {
     },
     serchbtn(){
       var params=this.searchtext
-      this.$axios.get("/electricianCompanyInfo/findCompany?companyName="+encodeURI(params)).then(res => {
+      this.$axios.get("/electricianCompanyInfo/findCompany?companyName="+encodeURI(params),{withCredentials: true}).then(res => {
          console.log(res.data)
          this.data=res.data.resultValue.items
         });

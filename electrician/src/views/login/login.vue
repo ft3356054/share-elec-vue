@@ -3,7 +3,7 @@
            <div class="image">
                <img src="../../assets/images/banner.png" alt="">
            </div>
-           <div class="conent">
+           <div class="conents">
                <van-form @submit="onSubmit">
                     <van-field
                         v-model="phone"
@@ -110,10 +110,10 @@ export default {
         height: 100%;
     }
 }
-.conent{
+.conents{
     position: absolute;
     left: 2.5%;
-    top: 32%;
+     top: 32%;
      background: #fff;
      width: 95%;
      height: 380px;

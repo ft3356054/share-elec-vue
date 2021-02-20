@@ -31,6 +31,7 @@ Vue.use(VueLazyload, {
   listenEvents: [ 'scroll' ]  //你想监听的事件
 })
 import axios from "axios"
+axios.defaults.withCredentials=true
 // 引用地图
 import VueAMap from 'vue-amap'
 Vue.use(VueAMap)

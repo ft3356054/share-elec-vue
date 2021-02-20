@@ -52,8 +52,7 @@ export default {
     mounted() {
         console.log(this.$route.params.orderId)
         this.orderId=this.$route.params.orderId
-         this.$api.get(`/orderCustomer/OrderDetail/${this.orderId}`,{
-       },res=>{
+         this.$axios.get(`/orderCustomer/OrderDetail/${this.orderId}`,{withCredentials: true}).then(res=>{
            console.log(res.data.resultValue.items)
            this.list=res.data.resultValue.items
        })
@@ -92,7 +91,7 @@ export default {
              `{"orderId":"${this.orderId}",  
                 "orderStatus":"26",
                 }`)
-          this.$axios.post("/orderCustomer/save",this.items).then(res=>{
+          this.$axios.post("/orderCustomer/save",this.items,{withCredentials: true}).then(res=>{
             if(res.data.successful==false){
                      console.log(res.data.resultHint)
                        Toast.fail(res.data.resultHint)

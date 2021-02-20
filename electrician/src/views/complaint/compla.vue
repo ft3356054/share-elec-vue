@@ -60,7 +60,7 @@ export default {
   },
   mounted() {
     this.orderComplaintId=this.$route.params.orderComplaintId
-    this.$api.get(`/orderComplaint/${this.orderComplaintId}`,{},res=>{
+    this.$axios.get(`/orderComplaint/${this.orderComplaintId}`,{withCredentials: true}).then(res=>{
       console.log(res.data)
       this.data=res.data.resultValue.items
       this.message=res.data.resultValue.items[0].complaintDetail

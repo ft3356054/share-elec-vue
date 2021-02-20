@@ -56,12 +56,14 @@ export default {
             img:require("../../assets/images/yc.png"),
             imgs:require("../../assets/images/yc.png"),
             phone:"",
-            sms:""        
+            sms:"",
+            list:""        
         }
     },
     mounted() {
       this.phone=this.$route.params.phone
        this.sms=this.$route.params.sms
+       this.list=this.$route.query.list
     },
     methods: {
         fh(){
@@ -80,8 +82,9 @@ export default {
             },
       // 请求修改密码
       postpass(){
-           this.$axios.post(
-                `/authorityUser/save`,
+        if(this.list==1){
+            this.$axios.post(
+                `/authorityUser/add`,
                `{"items":[{"userPsw":"${this.password}","phonenumber":"${this.phone}","authCode":"${this.sms}"}]}`,{headers: { "Content-Type": "application/json" }} 
               ).then(res=>{
                 if(res.data.successful==false){
@@ -93,6 +96,22 @@ export default {
                        this.$router.push("/login")
                   } 
               })  
+        }else{
+              this.$axios.post(
+                `/authorityUser/change`,
+               `{"items":[{"userPsw":"${this.password}","phonenumber":"${this.phone}","authCode":"${this.sms}"}]}`,{headers: { "Content-Type": "application/json" }} 
+              ).then(res=>{
+                if(res.data.successful==false){
+                    //  console.log(res.data.resultHint)
+                       Toast.fail(res.data.resultHint)
+                  }else{
+                       Toast.success('设置成功')
+                       console.log(res.data)
+                       this.$router.push("/login")
+                  } 
+              })  
+        }
+          
       },
      //点击图标看密码
     changeSeen(){

@@ -84,8 +84,7 @@ export default {
         this.$router.go(-1);
     },
     getdemo(){
-        this.$api.get(`/orderCustomer/OrderDetail/${this.orderId}`,{
-       },res=>{
+        this.$axios.get(`/orderCustomer/OrderDetail/${this.orderId}`,{withCredentials: true}).then(res=>{
            console.log(res.data.resultValue.items)
            this.demo=res.data.resultValue.items
        })

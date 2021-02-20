@@ -193,10 +193,9 @@ export default {
         this.$router.push("/customer")
     },
     select() {    //获取类型
-      this.$api.get(
-        `/baseOrderType/queryAll/`,
-        {},
-        (res) => {
+      this.$axios.get(
+        `/baseOrderType/queryAll/`,{withCredentials: true},
+        {}).then(res => {
           // console.log(res.data.resultValue);
           this.selectList=res.data.resultValue.items    
         }
@@ -205,20 +204,20 @@ export default {
       console.log(this.selected)
     },
     iden(){   //获取身份
-        this.$api.get(
+        this.$axios.get(
                 `/baseIdentityDetail/queryAll/`,
-                {},
-                (res) => {
+                {withCredentials: true})
+                .then(res => {
                   // console.log(res.data.resultValue);
                   this.idendata=res.data.resultValue.items
                 }
               );
     },
     baseVoltage(){  //获取电压
-          this.$api.get(
+          this.$axios.get(
                 `/baseVoltage/queryAll/`,
-                {},
-                (res) => {
+                {withCredentials: true})
+                .then(res => {
                   // console.log(res.data.resultValue);
                   this.baseVoltageData=res.data.resultValue.items
                 }
@@ -268,7 +267,7 @@ export default {
                 }`)
             this.$axios.post(
                     `/orderCustomer/save`,
-                    this.fd,{headers: {'Content-Type': 'multipart/form-data'}},
+                    this.fd,{headers: {'Content-Type': 'multipart/form-data'}},{withCredentials: true}
                     
                   ).then(res=>{
                     console.log(res)
@@ -288,10 +287,10 @@ export default {
     },
     // 用户信息
     custtom(){
-          this.$api.get(
+          this.$axios.get(
                 `/customerInfo/${this.customerId}`,
-                {},
-                (res) => {
+                {withCredentials: true})
+                .then(res => {
                   console.log(res.data);
                   let red=res.data.resultValue
                   this.customerName=red.customerName

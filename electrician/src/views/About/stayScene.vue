@@ -86,16 +86,14 @@ export default {
      this.shows=true
     },
      getdemo(){
-        this.$api.get(`/orderCustomer/OrderDetail/${this.orderId}`,{
-       },res=>{
+        this.$axios.get(`/orderCustomer/OrderDetail/${this.orderId}`,{withCredentials: true}).then(res=>{
            console.log(res.data.resultValue.items)
            this.demo=res.data.resultValue.items
        })
     },
     // 催单
     tocomplaint() {
-      this.$api.get(`/notifyAnnounce/hasten/${this.orderId}`,{        
-      },res=>{
+      this.$axios.get(`/notifyAnnounce/hasten/${this.orderId}`,{withCredentials: true}).then(res=>{
            console.log(res.data.successful)
            if(res.data.successful==true){
                   Toast.success('催单成功')

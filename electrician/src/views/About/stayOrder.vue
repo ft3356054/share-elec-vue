@@ -105,7 +105,7 @@ export default {
                 }`)
            this.$axios.post(
                 `/orderCustomer/save`,
-                this.items).then(res=>{
+                this.items,{withCredentials: true}).then(res=>{
                   if(res.data.successful==false){
                      console.log(res.data.resultHint)
                        Toast.fail(res.data.resultHint)
@@ -116,8 +116,7 @@ export default {
                 });
     },
      getdemo(){
-        this.$api.get(`/orderCustomer/OrderDetail/${this.orderId}`,{
-       },res=>{
+        this.$axios.get(`/orderCustomer/OrderDetail/${this.orderId}`,{withCredentials: true}).then(res=>{
            console.log(res.data.resultValue.items)
            this.demo=res.data.resultValue.items
        })
