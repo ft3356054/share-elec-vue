@@ -12,7 +12,7 @@
          <div class="dian">用户</div>
      </div>
      <div class="head-bottom">
-           <div class="box" @click="goshim">实名认证
+           <div class="box" >实名认证
                <span v-if="this.realNameAuth=='0'">是</span>
                <span v-if="this.realNameAuth=='1'">否</span>
                <span v-if="this.realNameAuth=='2'">待审核</span>

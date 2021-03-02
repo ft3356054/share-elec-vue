@@ -2,7 +2,7 @@
     <div class="hoursTip">{{hoursTip}}{{time1}}</div>
 </template>
 <script>
-    export default {
+    export default {    //判断时间
         name:"hoursTip",
         data() {
             return {

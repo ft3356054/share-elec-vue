@@ -83,29 +83,31 @@ export default {
       // 请求修改密码
       postpass(){
         if(this.list==1){
+          // 新增密码
             this.$axios.post(
-                `/authorityUser/add`,
+                `/userLogin/add`,
                `{"items":[{"userPsw":"${this.password}","phonenumber":"${this.phone}","authCode":"${this.sms}"}]}`,{headers: { "Content-Type": "application/json" }} 
               ).then(res=>{
                 if(res.data.successful==false){
                     //  console.log(res.data.resultHint)
                        Toast.fail(res.data.resultHint)
                   }else{
-                       Toast.success('设置成功')
+                       Toast.success('设置密码成功')
                        console.log(res.data)
                        this.$router.push("/login")
                   } 
               })  
         }else{
+          // 更改密码
               this.$axios.post(
-                `/authorityUser/change`,
+                `/userLogin/change`,
                `{"items":[{"userPsw":"${this.password}","phonenumber":"${this.phone}","authCode":"${this.sms}"}]}`,{headers: { "Content-Type": "application/json" }} 
               ).then(res=>{
                 if(res.data.successful==false){
                     //  console.log(res.data.resultHint)
                        Toast.fail(res.data.resultHint)
                   }else{
-                       Toast.success('设置成功')
+                       Toast.success('更改密码成功')
                        console.log(res.data)
                        this.$router.push("/login")
                   } 
@@ -176,7 +178,7 @@ input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0px 1000px white inset !important;
 } 
  .van-toast{
-    top: 70px;
+    top: 40%;
     color: #000; 
     background: bisque;
     }

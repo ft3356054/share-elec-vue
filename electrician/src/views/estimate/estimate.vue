@@ -1,7 +1,7 @@
 <template>
   <div class="warp">
     <div class="head">
-      <p><span @click="fh()"><img src="@/assets/images/bai.png" alt=""></span>服务评价</p>
+      <p><span @click="fh()"><img src="@/assets/images/bai.png" alt=""></span>服务投诉</p>
     </div>
     <div class="top">
       <div class="est">

@@ -268,20 +268,16 @@ export default {
             this.$axios.post(
                     `/orderCustomer/save`,
                     this.fd,{headers: {'Content-Type': 'multipart/form-data'}},{withCredentials: true}
-                    
                   ).then(res=>{
                     console.log(res)
                     if(res.data.successful==true){
                        Toast.success('发单成功'), 
                       this.set=setTimeout(()=>{
-                            this.$router.push({
-                            path: `/Pay/${res.data.resultValue.items[0].orderId}`,
-                         })  
+                           this.$router.push("/customer")
                         },1000)    
                     }else{
                        Toast.fail('发单失败')
                     }
-                    
                   });  
        }  
     },

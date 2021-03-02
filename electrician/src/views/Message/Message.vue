@@ -80,6 +80,7 @@ export default {
       mounted() {
       // console.log(this.$route.query.cust)
        this.cust=this.$route.query.cust
+       console.log('aa',this.cust)
        this.getList()
   },
   methods: {
@@ -233,9 +234,9 @@ export default {
         })
       },
       // 获取消息列表
-    async  getList(){
+      getList(){
       this.pageIndex=this.pageNumber*this.pageSize-(this.pageSize-1)
-          this.$axios.get(`/notifyAnnounceUser/queryAll?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":["userId=${this.cust}","status=2"]}`,{withCredentials: true}).then(res=>{
+          this.$axios.get(`/notifyAnnounceUser/queryAll?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":["userId=${this.cust}","status=2"]}`).then(res=>{
            console.log(res.data)
              if(res.data.successful==false){
               this.list=[]
@@ -370,8 +371,8 @@ export default {
 		  async  onLoad() {
       this.tomer=setTimeout(() => {
           this.pageIndex=this.pageNumber*this.pageSize-(this.pageSize-1)
-             this.$axios.get(`/notifyAnnounceUser/queryAll?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":["userId=${this.cust}","status=2"]}`,
-              {withCredentials: true}).then(res=>{
+             this.$axios.get(`/notifyAnnounceUser/queryAll?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":["userId=${this.cust}","status=2"]}`
+            ).then(res=>{
                   let datas= res.data.resultValue.items    //datas是列表集合
                   this.list=this.list.concat(datas)
                   this.itemCount = res.data.resultValue.itemCount;  //总条数

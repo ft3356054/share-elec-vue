@@ -171,14 +171,14 @@ export default {
       active: "0",
       content:"",
       list:[],
-      cust:"",
+      cust:"customer001",
       orderId:"",
       items:{},
       show:false,
       ths:false,
       path:"ws://localhost:8083/websocketserver/",  //websocketserver
       messages:"",
-      realNameAuth:""
+      realNameAuth:"0"
     };
   },
   inject:['reload'],
@@ -186,8 +186,10 @@ export default {
    
   },
   mounted() {
-     this.realNameAuth=localStorage.getItem("realNameAuth")
-    this.cust=localStorage.getItem("customerId")
+    //  this.realNameAuth=localStorage.getItem("realNameAuth")
+    // this.cust=localStorage.getItem("customerId")
+       localStorage.setItem("realNameAuth",this.realNameAuth)
+      localStorage.setItem("customerId",this.cust)
     this.getContent(),  //获取未读消息数量
     this.getGunlist()   // 获取滚动数据
     this.getlist(this.num)   //获取订单数据
@@ -203,29 +205,12 @@ export default {
                　let date=new Date();
         // console.log(date.getHours())
             　　if( date.getHours()>=9 && date.getHours() <=18 ){
-                   if(this.realNameAuth==1){
-                            　this.$dialog.alert({
-                              width:"80%",
-                                title: '未实名认证',
-                              message: "请到个人信息进行认证",
-                              closeOnClickOverlay:true
-                        }).then(() => {
-                               this.$router.push({
-                                  path:"/My",
-                                  query:{
-                                    customerId:this.cust
-                                  }
-                                });
-                            });
-                   }else{
                       this.$router.push({
                         path:"/demand",
                         query:{
                           cust:this.cust
                         }
                       });
-                   }
-                   
             　　}else{
                   　this.$dialog.alert({
                         width:"80%",

@@ -190,7 +190,7 @@ header{
 }
 
  .van-toast{
-    top: 70px;
+    top: 40%;
     color: #000; 
     background: bisque;
     }

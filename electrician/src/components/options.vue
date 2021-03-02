@@ -2,7 +2,7 @@
   <div v-qr="options" v-if="options" />
 </template>
 <script>
-export default {
+export default {   //生成二维码
   name: "baseOptions",
   data() {
     return {

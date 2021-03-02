@@ -1,7 +1,7 @@
 import axios from 'axios';
 let http = axios.create({
-    // baseURL: 'http://localhost:8083',
-    baseURL: process.env.NODE_ENV==='production' ? process.env.BASE_API:"/" ,
+    baseURL: 'http://localhost:8083',
+    // baseURL: process.env.NODE_ENV==='production' ? process.env.BASE_API:"/" ,
     timeout: 20000,
     withCredentials: false,
     headers: {

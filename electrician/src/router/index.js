@@ -7,7 +7,7 @@ Vue.use(VueRouter)
 const routes = [
   {
     path:"/",
-    redirect: "/login"
+    redirect: "/customer"
   },
   {
     path: '/login', //登陆
