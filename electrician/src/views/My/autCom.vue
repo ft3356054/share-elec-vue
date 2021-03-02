@@ -46,9 +46,7 @@ export default {
         name:'autation',
         params:{
           companyName:item.companyName,
-          companyId:item.companyId,
-          subCompanyId:item.subCompanyId,
-          customerId:this.companyId
+          companyId:item.companyId
           }})
     }
   }

@@ -246,7 +246,7 @@ export default {
          this.items=fd
       this.items.append("items",
              `{"orderId":"${this.orderId}",  
-                "orderStatus":"8",
+                "orderStatus":"32",
                 }`)
            this.$axios.post(
                 `/orderCustomer/save`,
@@ -768,7 +768,7 @@ font-size: 14px;
   }
 }
 /deep/ .van-overlay{
-  background-color: rgba(0,0,0,.1);
+  background-color: rgba(0,0,0,0.7);
 }
 .no-comment{
   margin-top: 100px;

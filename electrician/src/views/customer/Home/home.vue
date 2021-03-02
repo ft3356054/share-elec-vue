@@ -194,6 +194,7 @@ export default {
     this.getGunlist()   // 获取滚动数据
     this.getlist(this.num)   //获取订单数据
      this.WebSocketTest()  //websocketserver
+
   
   },
   methods: {
@@ -266,7 +267,7 @@ export default {
          this.items=fd
       this.items.append("items",
              `{"orderId":"${this.orderId}",  
-                "orderStatus":"8",
+                "orderStatus":"32",
                 }`)
            this.$axios.post(
                 `/orderCustomer/save`,

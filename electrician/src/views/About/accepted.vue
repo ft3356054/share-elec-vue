@@ -106,7 +106,7 @@ export default {
          this.items=fd
       this.items.append("items",
              `{"orderId":"${this.orderId}",  
-                "orderStatus":"8",
+                "orderStatus":"32",
                 }`)
            this.$axios.post(
                 `/orderCustomer/save`,

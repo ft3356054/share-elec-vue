@@ -52,6 +52,9 @@ Vue.use(qrcode)
 import VueBus from 'vue-bus';
 Vue.use(VueBus);
 
+import Uap from './plugins/registryComponents.js'
+Vue.use(Uap);
+
 Vue.config.productionTip = false
 
 new Vue({

@@ -13,7 +13,10 @@
             </div>
 
             <div class="science">
-
+                 <ul class="ipt">
+                   <li><span>*</span><div class="p1">姓名：</div><input type="text" v-model="electricianName"></li>
+                   <li><span>*</span><div class="p1">手机号：</div><input type="text" v-model="electricianPhonenumber" /></li>
+                 </ul>
               <p style="margin-top:10px"><span style="color:red">*</span>证明材料</p>
               <div class="ploader">
             <van-uploader v-model="fileList" multiple :after-read="upimgbtn">
@@ -60,7 +63,9 @@ export default {
       electricianId:"321",
       customerId:"",
       companyId:"11",
-      subCompanyId:""
+      subCompanyId:"",
+      electricianName:"",
+      electricianPhonenumber:""
     }
   },
   created () {
@@ -70,11 +75,10 @@ export default {
         console.log(this.$route.params)
         this.companyName=this.$route.params.companyName
         this.companyId=this.$route.params.companyId
-        this.subCompanyId=this.$route.params.subCompanyId
   },
   methods: {
     goback () {
-      this.$router.go(-1)
+       this.$router.push("/my")
     },
     choosebtn(){
       this.$router.push({
@@ -87,7 +91,6 @@ export default {
     blues (file) {
       console.log(file)
       this.files=file.file
-      
     },
     //  图片上传
     upimgbtn (file) {
@@ -97,6 +100,10 @@ export default {
     order(){
       if(this.companyId===undefined){
           Toast("未选择公司")
+      }else if(this.electricianName==""){
+          Toast("未输入姓名")
+      }else if(this.electricianPhonenumber==""){
+          Toast("未输入手机号")
       }else if(this.fileList.length==0){
           Toast("未上传证明材料")
       }else if(this.fileLists.length==0){
@@ -112,7 +119,7 @@ export default {
         fd.append("file2",this.fd)
       }
       this.files=fd
-       this.files.append("items",`{"customerId":"${this.customerId}","companyId":"${this.companyId}","subCompanyId":"${this.subCompanyId}","companyName":"${this.companyName}"}`)
+       this.files.append("items",`{"customerId":"${this.customerId}","companyId":"${this.companyId}","electricianName":"${this.electricianName}","electricianPhonenumber":"${this.electricianPhonenumber}","companyName":"${this.companyName}"}`)
        this.$axios.post("/customerInfo/changeToElecInfo", this.files, {headers: {'Content-Type': 'multipart/form-data'}},{withCredentials: true}).then(res => {
            console.log(res)
            if(res.data.successful==true){
@@ -217,7 +224,7 @@ font-weight: bold;
   border-radius: 10px;
   padding: 12px 28px;
   box-sizing: border-box;
-  padding-bottom: 50px;
+  padding-bottom: 20px;
 }
 .science p{
 font-size: 13px;
@@ -282,7 +289,7 @@ padding: 0;
 }
 .examine{
   text-align: center;
-  margin-top: 25px;
+  margin-top:10px;
 }
 /deep/ .van-uploader__upload{
 background: #f7fbff;
@@ -347,4 +354,31 @@ background: #f7fbff;
          background: #f7fbff;
       }
     }
+ .ipt {
+   margin-bottom: 10px;
+    span {
+      color: red;
+      // margin-right: 5px;
+    }
+    li {
+      height: 30px;
+      line-height: 30px;
+      margin-top: 10px;
+      .p1 {
+        display: contents;
+        width: 78px;
+        font-size: 13px;
+      }
+      input {
+        width: 70%;
+        float: right;
+        border-top: none;
+        border-left: none;
+        border-right: none;
+        border-bottom: 1px solid #ebebeb;
+        color: #000;
+        font-size: 13px;
+      }
+    }
+ }
 </style>
