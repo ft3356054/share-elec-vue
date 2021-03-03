@@ -40,6 +40,7 @@ export default {
         }
     }, 
     mounted() {
+        
       this.customerId=localStorage.getItem("customerId")
        this.realNameAuth=localStorage.getItem("realNameAuth")
     //    console.log(localStorage.getItem("realNameAuth"),"111")
@@ -70,15 +71,15 @@ export default {
            if(this.realNameAuth=="1" || this.realNameAuth==null){
                Toast("您还没有实名认证，请实名认证")
            }else{
-                console.log(this.realNameAuth)
-                if(this.list.auditStatus=="0"){
-                        console.log(this.customerId,"a1")
-                this.$router.push('/autation')
-            }else if(this.auditStatus=="1"){
-                Toast('正在审核中，请稍等');
-            }else if(this.auditStatus=="2"){
-                    Toast('已审核');
-            }
+                    console.log(this.realNameAuth)
+                    if(this.list.auditStatus=="0"){
+                            console.log(this.customerId,"a1")
+                    this.$router.push('/autation')
+                }else if(this.auditStatus=="1"){
+                    Toast('正在审核中，请稍等');
+                }else if(this.auditStatus=="2"){
+                        Toast('已审核');
+                }
            }
     },
     // 常用户号

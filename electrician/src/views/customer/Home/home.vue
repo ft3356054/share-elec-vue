@@ -40,8 +40,9 @@
             系统消息:  {{item.content}}
           </van-swipe-item>
         </van-swipe>
-        <img src="../../../assets/images/messagejiantou.png" alt="">
+      
       </van-notice-bar>
+        <img class="imgs" src="../../../assets/images/messagejiantou.png" alt="">
     </nav>
     <section>
     <div class="tab-box">
@@ -644,7 +645,7 @@ nav {
     height: 110px;
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    justify-content: space-around;
 
     dl {
       margin: 20px 0;
@@ -676,14 +677,14 @@ nav {
          white-space: nowrap;
          position: relative;
          width: 100%;
-         img{
+       
+ }
+   .imgs{
            position: absolute;
-           right: 0%;
-           top: 30%;
+           right: 3%;
+           top: 86%;
            width: 6px;
          }
- }
- 
   /deep/ .notice-swipe {
     height: 32px;
     line-height: 32px;
