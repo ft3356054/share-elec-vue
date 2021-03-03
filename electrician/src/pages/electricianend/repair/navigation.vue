@@ -6,8 +6,8 @@
             <p>导航去维修</p>
           </div>
       </header>
-        <div class="content">
-            <div class="topaddress">
+        <div class="content" id="map"  style="width: 100%; height: 400px;">
+            <!-- <div class="topaddress">
                <div class="amap-wrapper">
                    <el-amap class="amap-box" vid="map" :zoom="zoom" :center="center" :plugin="plugin">
                        <el-amap-marker vid="marker" :position="center" ></el-amap-marker>
@@ -24,17 +24,16 @@
                             </el-amap-circle>
                    </el-amap>
                 </div>
-            </div>
+            </div> -->
         </div>
         <div class="btnbox">
           <button @click="goaddress" id="xianchang">到达现场</button>
         </div>
     </div>
 </template>
-
 <script>
-import { loadBMap } from '../../../apiconfig/location'
-// import AMap from 'vue-amap'
+import epgis from "../../../apiconfig/epgis.maps"
+var map;
 export default {
   data () {
     let vm = this
@@ -44,66 +43,69 @@ export default {
       lng: '',
       lat: '',
       radius: 100,
-      plugin: [
-        {
-          pName: 'ToolBar',
-          // 工具条插件
-          position: 'LB'
-        },
-        {
-          pName: 'MapType',
-          // 卫星与地图切换
-          defaultType: 0,
-          showTraffic: true
-          // 实时交通图层
-        },
-        {
-          pName: 'OverView'
-          // isOpen:true//鹰眼是否打开
-        },
-        {
-          pName: 'Scale'
-        },
-        {
-          pName: 'Geolocation',
-          // 定位插件
-          showMarker: true,
-          events: {
-            init (o) {
-              // 定位成功 自动将marker和circle移到定位点
-              o.getCurrentPosition((status, result) => {
-                console.log(result)
-                // vm.center = [result.position.lng, result.position.lat]
-              })
-            }
-          }
-        }],
         orderId:"",
         electricianId:""
     }
   },
   created() {
-    window.initBaiduMapScript = () =>{
-        console.log(BMap);
-        this.getlocation();
-    }
-    loadBMap('initBaiduMapScript');
+  
 },
   mounted () {
 
     this.orderId=this.$route.params.orderId
     this.electricianId=this.$route.params.electricianId,
     this.getdetail()
-    // this.getLocation()
+    this.$nextTick(()=>{
+          let _this=this
+       // 申请的key和sn
+       SGMap.tokenTask.login("b8454220b1ed35b9a0c28dfb7383beaf", "4bced7664302366cb297403389660723").then(function(res){
+         console.log(res)
+         _this.initMap();
+       })
+    })
+  },
+  activated() {
+    
   },
   methods: {
+       initMap() {
+          map = new SGMap.Map({
+          // 地图绑定的DOM元素ID
+          container: "map",
+          // 地图样式
+          style: "aegis://styles/aegis/Streets",
+          // 默认缩放层级
+          zoom: 15,
+          // 地图中心点
+          center: [117.21081309, 39.1439299],
+          // 地图默认字体
+          localIdeographFontFamily: "Microsoft YoHei",
+          transition: {
+            duration: 300,
+            delay: 0
+          },
+          renderWorldCopies:false
+        });
+      //加载插件
+          map.addControl(
+            new epgis.ScaleControl({
+              maxWidth: 80,
+              unit: "metric"
+            }),
+            "bottom-left"
+          );
+          map.on("click", function (e) {
+            console.log(e);
+          });
+    //添加定位控件
+    map.addControl(new SGMap.GeolocateControl(),"bottom-right");  
+    },
     goback () {
       this.$router.push('electricianend')
     },
     getdetail(){
         this.$api.get("/orderElectrician/orderDetails/"+this.orderId, {"electricianId":this.electricianId}, response => {
-            // this.center.splice(0,1,response.data.resultValue.items[0].addressLatitude)
-            // this.center.splice(1,2,response.data.resultValue.items[0].addressLongitude)
+            
         });
     },
     goaddress () {
@@ -123,21 +125,7 @@ export default {
         }).catch(err => {
             alert(err)
         })
-    },
-     getlocation(){this.$nextTick(function(){
-        try{
-           const geolocation =new BMap.Geolocation();
-           geolocation.getCurrentPosition(function(r){
-              console.log(r,"aaaa");
-              if(this.getStatus() == BMAP_STATUS_SUCCESS){
-                 const{lat =null, lng=null} = r.point;
-              }
-           });
-        }catch(e){
-           console.log(e)
-        }
-      })
-   }
+    }
   }
 }
 </script>

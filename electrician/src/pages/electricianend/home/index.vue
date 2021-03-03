@@ -909,6 +909,7 @@ margin-top: 5px;
     margin-top: 10px;
 }
 .no-comment{
+
   position: relative;
   img{
     width: 100%;
