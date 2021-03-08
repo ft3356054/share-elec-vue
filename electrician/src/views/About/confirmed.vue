@@ -11,7 +11,7 @@
       <ul class="ipt" v-for="(item,index) in demo" :key="index">
         <li>
           <div class="left">订单编号</div>
-          <span>{{item.orderId }}</span>
+          <span>{{ item.orderId }}</span>
         </li>
         <li>
           <div class="left">接单人</div>
@@ -19,56 +19,61 @@
         </li>
         <li>
           <div class="left">标题</div>
-          <span>{{ item.customerDescriveTitle }}</span>
+          <span>{{ item.customerDescriveTitle  }}</span>
         </li>
         <li>
           <div class="left">内容说明</div>
-          <b style="display:table-row">{{ item.customerDescrive }}</b>
+          <b style="display:table-row">{{  item.customerDescrive }}</b>
         </li>
         <li>
           <div class="left">地址</div>
-          <span>{{item.customerAddress }}</span>
+          <span>{{ item.customerAddress }}</span>
         </li>
         <li>
-          <div class="left">接单时间</div>
-          <span>{{item.acceptTime }}</span>
+          <div class="left">维修价格</div>
+          <span class="momy">￥{{ item.electricianPrice }}</span>
+        </li>
+        <li>
+          <div class="left">到达现场时间</div>
+          <span>{{item.updateTime }}</span>
         </li>
         <li>
           <div class="left">状态</div>
-          <span class="zt" v-if="item.orderStatus">待预约</span>
+          <span class="zt" v-if="item.orderStatus">待确认</span>
         </li>
       </ul>
-      <h4 class="hzh">故障图片</h4>
-      <div class="gz" style="margin-bottom:5px"  v-for="(item,index) in demo" :key="index+2" @click="imgs">
-        <img :src="item.customerDescriveIcon" alt="" />
-         <van-image-preview v-model="shows" :images="[item.customerDescriveIcon]" >
+      <h4 class="hzh">合同</h4>
+      <div class="gz" style="margin-bottom:5px" v-for="(item,id) in demo" :key="id+2" @click="imgs">
+          <img :src="item.orderContract" alt="" />
+            <van-image-preview v-model="shows" :images="[item.orderContract]" >
        </van-image-preview>
       </div>
       
     </div>
-     <div class="btt"><button @click="cancel">取消订单</button> <button @click="tocomplaint">催单</button></div>
-     <van-dialog v-model="show" title="" show-cancel-button class="show" 
-             @confirm="confirm()" @cancel="cancels"
-            >
-           <div class="box">确定取消订单吗？取消订单后不能回复</div>
-               </van-dialog>
+     <div class="btt"><button @click="qd()">确认订单</button><button @click="thshow()">退回</button></div>
+      <van-dialog v-model="ths" title="" show-cancel-button class="show" 
+                        @confirm="th(item.orderId)" @cancel="cancels"
+                        >
+                             <div class="box">确定退回订单吗？退回订单后不能恢复</div>
+                          </van-dialog>
   </div>
 </template>
 
 <script>
 import { Toast } from 'vant';
 export default {
-   data() {
+    data() {
     return {
       value: 3,
       fileList: [],
-      demo: {},
-      orderId:"",
-      show:false,
-      shows:false
+       demo: {},
+       orderId:"",
+       shows:false,
+       orderComplaintId:"",
+         ths:false
     };
   },
-  mounted() {
+   mounted() {
     this.orderId=this.$route.query.orderId
     this.getdemo()
   },
@@ -80,51 +85,82 @@ export default {
     imgs(){
      this.shows=true
     },
+        // 投诉详情
+    tsxp(){
+      this.$router.push({
+          name:"compla",
+          params:{
+            orderId:this.orderComplaintId
+          }
+      })
+    },
     getdemo(){
         this.$axios.get(`/orderCustomer/OrderDetail/${this.orderId}`,{withCredentials: true}).then(res=>{
            console.log(res.data.resultValue.items)
            this.demo=res.data.resultValue.items
+           this.orderComplaintId=res.data.resultValue.items[0].orderComplaintId
        })
     },
     // 催单
-    tocomplaint() {
+     tocomplaint() {
       this.$axios.get(`/notifyAnnounce/hasten/${this.orderId}`,{withCredentials: true}).then(res=>{
            console.log(res.data.successful)
            if(res.data.successful==true){
                   Toast.success('催单成功')
            }
       })
-    }, 
-      // 取消订单
-    cancel(){
-      this.show=true       
     },
-    // 点击取消时
-    cancels(){
-     this.show=false
+    // 投诉
+     tous(){
+        this.$router.push({
+        path:"/complaint",
+        query:{
+          orderId:this.orderId
+        }
+      })
     },
-    // 点击确认时
-    confirm(){
+     // 点击退回
+    thshow(){
+      this.ths=true
+    },
+      //   退回
+     th(){
          var fd = new FormData()
          this.items=fd
       this.items.append("items",
              `{"orderId":"${this.orderId}",  
-                "orderStatus":"4",
+                "orderStatus":"26",
                 }`)
-           this.$axios.post(
-                `/orderCustomer/save`,
-                this.items).then(res=>{
-                  if(res.data.successful==false){
+          this.$axios.post("/orderCustomer/save",this.items,{withCredentials: true}).then(res=>{
+            if(res.data.successful==false){
                      console.log(res.data.resultHint)
                        Toast.fail(res.data.resultHint)
                   }else{
-                       Toast.success('取消成功')
-                       this.$router.push("/customer")
+                       Toast.success('退回成功')
+                        this.$router.push("/customer")
                   } 
-                });
-    },
+          })   
+     },
+    //  确定
+     qd(){
+        var fd = new FormData()
+                this.items=fd
+            this.items.append("items",
+                    `{"orderId":"${this.orderId}",  
+                        "orderStatus":"3",
+                        }`)
+                this.$axios.post("/orderCustomer/save",this.items,{withCredentials: true}).then(res=>{
+                    if(res.data.successful==false){
+                            console.log(res.data.resultHint)
+                            Toast.fail(res.data.resultHint)
+                        }else{
+                            Toast.success('退回成功')
+                             this.$router.push("/customer")
+                        } 
+                })   
+     }
   },
-   
+
 };
 </script>
 
@@ -186,7 +222,7 @@ export default {
     li {
       line-height: 25px;
       .left {
-        width: 25%;
+        width: 30%;
         float: left;
         margin-right: 5px;
         color: #848484;
@@ -227,13 +263,12 @@ export default {
 .btt {
   width: 100%;
   height: 80px;
-  float: left;
   overflow: hidden;
   display: flex;
   align-items: center;
   flex-direction: row;
   justify-content: center;
-  // margin-top: 50px;
+  margin-top: 7px;
   button {
     margin-left: 10px;
     width: 85px;

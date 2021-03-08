@@ -55,7 +55,7 @@
             style="padding-right: 7%"
             placeholder="请输入地址"
           />
-          <img src="@/assets/images/position.png" alt="" />
+          <!-- <img src="@/assets/images/position.png" alt="" /> -->
         </li>
         <li>
           <span v-html="err"></span><b>预约时间</b>
@@ -106,6 +106,7 @@
 </template>
 
 <script>
+import { loadBMap } from '../../apiconfig/location.js'
 import { Toast } from 'vant';
 export default {
   data() {
@@ -126,7 +127,7 @@ export default {
       voltage: "",  //  电压
       customerAddress: "", //地址
       appointmentTime: "",  //预约时间
-      provinceId:"", //省份ID
+      areaId:"11111", //省份ID
       minDate: new Date(),
       maxDate: new Date(2050, 10, 1),
       currentDate: new Date(),
@@ -135,8 +136,8 @@ export default {
       baseVoltageData:[],
       files:{},
       fd:{},
-      addressLongitude:117.223132, //坐标
-      addressLatitude:39.134212,  //坐标
+      addressLongitude:"", //坐标
+      addressLatitude:"",  //坐标
       set:"",
     };
   },
@@ -144,6 +145,10 @@ export default {
     this.select()   //获取类型的数据
     this.iden()  //获取身份
     this.baseVoltage()  //获取电压
+     window.initBaiduMapScript = () =>{
+        this.getlocation();
+    }
+     loadBMap('initBaiduMapScript');
   }, 
 
   methods: {
@@ -259,7 +264,7 @@ export default {
                   "voltage":"${this.voltage}", 
                   "identityId":"${this.sele}",  
                   "registeredNumber":"${this.registeredNumber}", 
-                  "areaId":"120110",
+                  "areaId":"${this.areaId}",
                   "customerAddress":"${this.customerAddress}", 
                   "appointmentTime":"${this.appointmentTime}", 
                   "addressLongitude":"${this.addressLongitude}",
@@ -281,6 +286,24 @@ export default {
                   });  
        }  
     },
+          // 获取坐标
+      getlocation(){
+           const geolocation =new BMap.Geolocation();
+            geolocation.getCurrentPosition((r)=>{
+                    this.log=r.point.lng+""
+                    this.lat=r.point.lat+""
+                    // console.log(this.log,"x")
+                    // console.log(this.lat,"y")
+                    this.addressLongitude=this.log
+                    this.addressLatitud= this.lat
+                    // console.log(this.addressLongitude,"x1")
+                    // console.log(this.addressLatitud,"y1")
+                    var params={"items":[{"electricianId":this.electricianId,"lon":this.log,"lat":this.lat}]}
+                    this.$axios.post("/elecPosition/save", params) .then(res => {
+
+                    });
+            })
+        },
     // 用户信息
     custtom(){
           this.$axios.get(

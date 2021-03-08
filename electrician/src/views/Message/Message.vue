@@ -199,9 +199,12 @@ export default {
            path: `/Pay/${this.orderId}`,
           })
           break;
-        case "23":  //待现场勘查察
+        case "23":  //等待用户确认维修费
             this.$router.push({
-           path: `/Pay/${this.orderId}`,
+             path:"/confirmed",
+            query:{
+              orderId:this.orderId
+            }
           })
           break;                
         case "31":  //施工中
@@ -255,10 +258,14 @@ export default {
           }
          
        })
-        this.finName="已全部加载完成"
+       if(this.itemCount==0){
+           this.finName=""
+       }else{
+           this.finName="已全部加载完成"
           setTimeout(()=>{
                  this.finName=""
              },2000)
+       }
       },
       // 展示消息时间
       transTime (time) {

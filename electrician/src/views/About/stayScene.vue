@@ -33,10 +33,6 @@
           <span>{{item.customerAddress}}</span>
         </li>
         <li>
-          <div class="left">上门费</div>
-          <span class="momy">￥{{ item.customerPrice}}</span>
-        </li>
-        <li>
           <div class="left">到达现场时间</div>
           <span>{{ item.updateTime  }}</span>
         </li>

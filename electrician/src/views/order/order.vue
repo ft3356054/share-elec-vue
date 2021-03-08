@@ -18,7 +18,7 @@
           <!-- 无数据时的展示 -->
       <div class="no-comment" v-if="this.list==[]||this.list.length===0">
         <img src="../../assets/images/wu.png" alt="">
-        <span>暂无消息!</span>
+        <span>暂无数据!</span>
      </div>
          <section >
            <van-pull-refresh  v-model="isLoading" success-text="刷新成功" @refresh="onRefresh">
@@ -127,7 +127,7 @@
                           </van-dialog>
                     </dd>
                     <dd v-else-if="item.orderStatus=='23'">
-                         <button @click="thshow(item.orderId)">退回</button> <button class="zf" @click="zf(item.orderId)">支付</button>
+                         <button @click="thshow(item.orderId)">退回</button> <button class="zf" @click="qd(item.orderId)">确定</button>
                          <van-dialog v-model="ths" title="" show-cancel-button class="show" 
                         @confirm="th(item.orderId)" @cancel="cancels"
                         >
@@ -182,6 +182,7 @@
 
 <script>
 import { Toast } from 'vant';
+import { loadBMap } from '../../apiconfig/location.js'
 export default {
   components: {
     
@@ -217,6 +218,10 @@ export default {
   mounted() {
     this.cust = this.$route.query.cust;
      this.shousui(this.num)
+        window.initBaiduMapScript = () =>{
+        this.getlocation();
+    }
+     loadBMap('initBaiduMapScript');
   },
   methods: {
     fh(){
@@ -313,7 +318,14 @@ export default {
                       this.isLoading = false
                       this.loading = false
           }
-         
+                        if(this.itemCount==0){
+                      this.finName=""
+                  }else{
+                      this.finName="已全部加载完成"
+                      setTimeout(()=>{
+                            this.finName=""
+                        },2000)
+                  }
          })
      },
        // 下拉刷新
@@ -330,7 +342,7 @@ export default {
 		    onLoad() {
              setTimeout(() => {
                  this.pageIndex=this.pageNumber*this.pageSize-(this.pageSize-1)
-               this.$api.get(`/orderCustomer/searchBox?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":["customerId=${this.cust}","tagType=${this.num}","searchContent=${this.value}"]}`,{withCredentials: true}).then(res=>{
+               this.$axios.get(`/orderCustomer/searchBox?params={"pageIndex":${this.pageIndex},"pageSize":${this.pageSize},"filter":["customerId=${this.cust}","tagType=${this.num}","searchContent=${this.value}"]}`,{withCredentials: true}).then(res=>{
               //  console.log(res.data)
                 let datas= res.data.resultValue.items    //datas是列表集合
                 this.list=this.list.concat(datas)
@@ -401,6 +413,25 @@ export default {
                        Toast.success('退回成功')
                   } 
           })   
+     },
+    //  确定
+      qd(orderId){
+        this.orderId=orderId
+      var fd = new FormData()
+                      this.items=fd
+                  this.items.append("items",
+                          `{"orderId":"${this.orderId}",  
+                              "orderStatus":"3",
+                              }`)
+                      this.$axios.post("/orderCustomer/save",this.items,{withCredentials: true}).then(res=>{
+                          if(res.data.successful==false){
+                                  console.log(res.data.resultHint)
+                                  Toast.fail(res.data.resultHint)
+                              }else{
+                                  Toast.success('退回成功')
+                                  this.$router.push("/customer")
+                              } 
+                      })   
      },
     // 支付
     zf (orderId) {
@@ -505,9 +536,12 @@ export default {
            path: `/Pay/${this.orderId}`,
           })
           break;
-        case "23":  //待现场勘查察
+        case "23":  //等待用户确认维修费
             this.$router.push({
-           path: `/Pay/${this.orderId}`,
+             path:"/confirmed",
+            query:{
+              orderId:this.orderId
+            }
           })
           break;                
         case "31":  //施工中
@@ -539,6 +573,20 @@ export default {
       }
         })
       },
+      // 获取坐标
+      getlocation(){
+           const geolocation =new BMap.Geolocation();
+            geolocation.getCurrentPosition((r)=>{
+                    this.log=r.point.lng+""
+                    this.lat=r.point.lat+""
+                    console.log(this.log,"x")
+                    console.log(this.lat,"y")
+                    var params={"items":[{"electricianId":this.electricianId,"lon":this.log,"lat":this.lat}]}
+                    this.$axios.post("/elecPosition/save", params) .then(res => {
+
+                    });
+            })
+        },
   },
 }
 </script>

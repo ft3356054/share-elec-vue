@@ -41,10 +41,6 @@
           <b>{{ item.finishTime }}</b>
         </li>
         <li>
-          <div class="left">上门费</div>
-          <span class="momy">￥{{ item.customerPrice }}</span>
-        </li>
-        <li>
          <div class="left">维修费</div>
           <span class="momy">￥{{ item.electricianPrice }}</span>
         </li>

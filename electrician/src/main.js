@@ -54,6 +54,8 @@ Vue.use(VueBus);
 
 import './plugins/registryComponents.js'
 
+// 打印当前的环境
+console.log(process.env.VUE_APP_URL,"环境")
 Vue.config.productionTip = false
 
 new Vue({

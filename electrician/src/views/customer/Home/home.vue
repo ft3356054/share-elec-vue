@@ -53,10 +53,10 @@
                      <!-- 无数据时的展示 -->
       <div class="no-comment" v-if="this.list==[]||this.list.length===0">
         <img src="../../../assets/images/wu.png" alt="">
-        <span>暂无消息!</span>
+        <span>暂无数据!</span>
      </div>
     <div  class="contentbox">
-        <div  class="content" v-show="num==0" v-for="(item,index) in list" :key="index">
+         <div  class="content" v-show="num==0" v-for="(item,index) in list" :key="index">
           <div class="tab">
             <div class="typebox">
                 <p><span>类别</span><span>{{item.customerDescriveTitle}}</span></p>
@@ -79,7 +79,7 @@
                           </van-dialog>
                     </dd>
                     <dd v-else>
-                         <button @click="thshow(item.orderId)">退回</button> <button class="zf" @click="zf(item.orderId)">支付</button>
+                         <button @click="thshow(item.orderId)">退回</button> <button class="zf" @click="qd(item.orderId)">确认</button>
                          <van-dialog v-model="ths" title="" show-cancel-button class="show" 
                         @confirm="th(item.orderId)" @cancel="cancels"
                         >
@@ -89,7 +89,7 @@
                 </dl>
             </div>
           </div>
-        </div>
+        </div> 
         <div class="content" v-show="num==1" v-for="(item,index) in list" :key="'in'+index">
            <div class="tab">
                <div class="typebox">
@@ -122,14 +122,13 @@
           <div class="tab">
             <div class="typebox">
                 <p><span>类别</span><span>{{item.customerDescriveTitle}}</span></p>
-                <p>{{item.orderStatus}}</p>
+                <p></p>
                   <p>{{ item.finishTime }}</p>
             </div>
             <div class="addressbox">
                 <dl>
                     <dt @click="about(item.orderId)">
                         <p>{{ item.customerDescrive }}</p>
-                        <p>上门费 {{item.customerPrice }}</p>
                         <p>维修费 {{item.electricianPrice }}</p>
                     </dt>
                     <dd>
@@ -151,7 +150,7 @@ export default {
   components: {},
   data() {
     return {
-      tabs: ['待支付', '待验收', '待评价'],
+      tabs: ['待确认','待验收', '待评价'],
       num: 0,
       navlist: [
         {
@@ -200,6 +199,7 @@ export default {
   },
   methods: {
     nums(index){  
+      console.log("dad",index)
      this.getlist(index)
     },
     nalist(index) {
@@ -360,6 +360,25 @@ export default {
                   } 
           })   
      },
+    //  确定
+     qd(orderId){
+        this.orderId=orderId
+      var fd = new FormData()
+                      this.items=fd
+                  this.items.append("items",
+                          `{"orderId":"${this.orderId}",  
+                              "orderStatus":"3",
+                              }`)
+                      this.$axios.post("/orderCustomer/save",this.items,{withCredentials: true}).then(res=>{
+                          if(res.data.successful==false){
+                                  console.log(res.data.resultHint)
+                                  Toast.fail(res.data.resultHint)
+                              }else{
+                                  Toast.success('退回成功')
+                                  this.$router.push("/customer")
+                              } 
+                      })   
+     },
     // 获取滚动消息数据
     getGunlist(orderId){
       this.$axios.get(`/notifyAnnounceUser/queryAll?params={"pageIndex":1,"pageSize":5,"filter":["userId=${this.cust}","status=0"]}`,{withCredentials: true},{
@@ -490,9 +509,12 @@ export default {
            path: `/Pay/${this.orderId}`,
           })
           break;
-        case "23":  //待现场勘查察
+        case "23":  //等待用户确认维修费
             this.$router.push({
-           path: `/Pay/${this.orderId}`,
+             path:"/confirmed",
+            query:{
+              orderId:this.orderId
+            }
           })
           break;                
         case "31":  //施工中

@@ -32,6 +32,11 @@ const routes = [
     component: () => import('../views/Payment/Pay.vue'),
   },
   {
+    path: '/confirmed', //确定  
+    name: 'confirmed',
+    component: () => import('../views/About/confirmed.vue'),
+  },
+  {
     path: '/Paytwo', //支付  扫码
     name: 'Paytwo',
     component: () => import('../views/Payment/Paytwo.vue'),
@@ -296,7 +301,7 @@ const routes = [
 
 const router = new VueRouter({
   mode: 'history',
-  base: process.env.BASE_URL,
+  base: process.env.VUE_APP_URL,
   routes
 })
 
