@@ -15,7 +15,7 @@
 
           <div class="no-comment" v-if="this.list.length==0">
         <img src="@/assets/images/wu.png" alt="">
-        <span>暂无消息!</span>
+        <span>暂无数据!</span>
      </div>
         <section>
          <div class="contentbox">
@@ -42,7 +42,7 @@
                         <p v-show="item.orderElectricianStatus==='0'" style="color:red">待预约</p>
                         <p v-show="item.orderElectricianStatus==='21'" style="color:red">待维修</p>
                         <p v-show="item.orderElectricianStatus==='22'" style="color:red">待现场勘察</p>
-                        <p v-show="item.orderElectricianStatus==='23'" style="color:red">待支付维修费</p>
+                        <p v-show="item.orderElectricianStatus==='23'" style="color:red">待确认订单</p>
                         <p v-show="item.orderElectricianStatus==='24'" style="color:red">施工完成</p>
                         <p v-show="item.orderElectricianStatus==='25'" style="color:red">待验收</p>
                         <p v-show="item.orderElectricianStatus==='26'" style="color:red">待填写维修费</p>
@@ -75,7 +75,7 @@
                         <p v-show="item1.orderElectricianStatus==='0'" style="color:red">待预约</p>
                         <p v-show="item1.orderElectricianStatus==='21'" style="color:red">待维修</p>
                         <p v-show="item1.orderElectricianStatus==='22'" style="color:red">待现场勘察</p>
-                        <p v-show="item1.orderElectricianStatus==='23'" style="color:red">待支付维修费</p>
+                        <p v-show="item1.orderElectricianStatus==='23'" style="color:red">待确认订单</p>
                         <p v-show="item1.orderElectricianStatus==='24'" style="color:red">施工完成</p>
                         <p v-show="item1.orderElectricianStatus==='25'" style="color:red">待验收</p>
                         <p v-show="item1.orderElectricianStatus==='26'" style="color:red">待填写维修费</p>

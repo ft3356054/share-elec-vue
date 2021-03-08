@@ -4,6 +4,7 @@
           <div class="topserch">
             <p @click="goback"><img src="@/assets/images/jiantou.png" alt=""></p>
             <p>导航去维修</p>
+           
           </div>
       </header>
         <div class="content" id="map"  style="width: 100%; height: 400px;">
@@ -28,6 +29,8 @@
         </div>
         <div class="btnbox">
           <button @click="goaddress" id="xianchang">到达现场</button>
+
+           <!-- <p><a href="http://api.map.baidu.com/geocoder?address=北京市海淀区上地信息路9号奎科科技大厦&output=html&src=webapp.baidu.openAPIdemo">点222</a></p> -->
         </div>
     </div>
 </template>
