@@ -34,7 +34,8 @@
         </li>
         <li>
           <div class="left">状态</div>
-          <span class="zt"  v-if="item.orderStatus">已完成</span>
+          <span class="zt"  v-if="item.orderStatus==8">待评价</span>
+          <span class="zt"  v-if="item.orderStatus==9">已完成</span>
         </li>
         <li>
           <div class="left">完成时间</div>
@@ -46,18 +47,18 @@
         </li>
         <li>
           <div class="left">探测情况</div>
-          <span style="display:table-row;">{{ item.electricianDescrive }}
+          <span>{{ item.electricianDescrive }}
           </span>
         </li>
         <li>
           <div class="left">施工人员</div>
-          <ul style="margin-left:80px">
-              <li style="width:60%">{{item.otherElectricianName}}</li>
+          <ul style="margin-left:80px;">
+              <li style="width:60%;display:inline-block">{{item.otherElectricianName}}</li>
               </ul>
         </li>
-        <li style="padding-bottom:20px">
+        <li style="padding-bottom:20p;">
           <div class="left" >施工内容</div>
-          <span style="display:table-row;">{{ item.constructionContent}} </span>
+          <span>{{ item.constructionContent}} </span>
         </li>
       </ul>
     </div>
@@ -78,7 +79,7 @@
           </div>
          
       </div>
-      <div class="btt" v-show="ts" v-if="this.orderStatus==8">
+      <div class="btt"  v-if="this.orderStatus==8">
         <!-- <button v-if="this.orderStatus==9" @click="tocomplaint()">投诉</button>   -->
         <button  @click="estimate">评价</button>
       </div>

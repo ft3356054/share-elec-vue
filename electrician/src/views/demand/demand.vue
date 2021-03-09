@@ -65,12 +65,12 @@
           <van-popup
             v-model="show"
             position="bottom"
-            :style="{ height: '40%' }"
           >
             <van-datetime-picker
               v-model="currentDate"
               type="datetime"
               title="选择完整时间"
+             
               :formatter="formatter"
               :min-date="minDate"
               :max-date="maxDate"
@@ -127,7 +127,7 @@ export default {
       voltage: "",  //  电压
       customerAddress: "", //地址
       appointmentTime: "",  //预约时间
-      areaId:"1", //省份ID
+      areaId:"1231", //省份ID
       minDate: new Date(),
       maxDate: new Date(2050, 10, 1),
       currentDate: new Date(),
@@ -282,7 +282,12 @@ export default {
                     if(res.data.successful==true){
                        Toast.success('发单成功'), 
                       this.set=setTimeout(()=>{
-                           this.$router.push("/customer")
+                           this.$router.push({
+                            path:"/order",
+                            query:{
+                              cust:this.customerId
+                            }
+                          });
                         },1000)    
                     }else{
                        Toast.fail('发单失败')
@@ -306,6 +311,7 @@ export default {
                     this.$axios.post("/elecPosition/save", params) .then(res => {
 
                     });
+                    
             })
         },
     // 用户信息

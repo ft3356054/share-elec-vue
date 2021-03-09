@@ -58,8 +58,14 @@
                               <p>{{ item.createTime }}</p>
                       </div>
                     </dt>
-                    <dd v-if="item.orderStatus=='4'|| item.orderStatus=='9' || item.orderStatus=='8'">
+                    <dd v-if="item.orderStatus=='9' ">
                         <span class="wancan">已完成</span>
+                    </dd>
+                    <dd v-if="item.orderStatus=='4'">
+                        <span class="wancan">已取消</span>
+                    </dd>
+                    <dd v-if="item.orderStatus=='8'">
+                        <span class="wancan"><button class="zf" @click="estimate(item.orderId)">评价</button></span>
                     </dd>
                     <dd v-else-if="item.orderStatus=='0'">
                         <button @click="cancel">取消</button> <button class="zf" @click="zf(item.orderId)">支付</button>
@@ -182,7 +188,6 @@
 
 <script>
 import { Toast } from 'vant';
-import { loadBMap } from '../../apiconfig/location.js'
 export default {
   components: {
     
@@ -221,7 +226,7 @@ export default {
   },
   methods: {
     fh(){
-      this.$router.go(-1)
+      this.$router.push("/customer")
     },
     nums(index){
        this.pageIndex=1
@@ -357,7 +362,17 @@ export default {
               })
          }, 500);
                 
-		    },
+        },
+        // 点击评价
+        estimate(orderId){
+       this.orderId=orderId
+        this.$router.push({
+        path:"/estimate",
+        query:{
+          orderId:this.orderId
+        }
+      })
+    },
       // 取消
     cancel(){
       this.show=true       
