@@ -268,7 +268,7 @@ export default {
          this.items=fd
       this.items.append("items",
              `{"orderId":"${this.orderId}",  
-                "orderStatus":"32",
+                "orderStatus":"8",
                 }`)
            this.$axios.post(
                 `/orderCustomer/save`,
@@ -374,7 +374,7 @@ export default {
                                   console.log(res.data.resultHint)
                                   Toast.fail(res.data.resultHint)
                               }else{
-                                  Toast.success('退回成功')
+                                  Toast.success('确定成功')
                                   this.$router.push("/customer")
                               } 
                       })   

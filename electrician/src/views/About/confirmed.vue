@@ -154,7 +154,7 @@ export default {
                             console.log(res.data.resultHint)
                             Toast.fail(res.data.resultHint)
                         }else{
-                            Toast.success('退回成功')
+                            Toast.success('确定成功')
                              this.$router.push("/customer")
                         } 
                 })   
