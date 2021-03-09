@@ -15,7 +15,7 @@
                 <p class="pswidth"><span>联系人</span><span>{{item.customerName}}</span></p>
                 <p class="pswidth"><span>联系电话</span><span>{{item.customerPhonenumber}}</span></p>
                 <p class="pswidth"><span>发单时间</span><span>{{item.createTime}}</span></p>
-                <p class="pswidth"><span>上门费</span><span id="money" v-if="item.customerPrice===null"></span><span id="money" v-else>¥{{item.customerPrice}}</span></p>
+                <!-- <p class="pswidth"><span>上门费</span><span id="money" v-if="item.customerPrice===null"></span><span id="money" v-else>¥{{item.customerPrice}}</span></p> -->
                 <p class="pswidth"><span>状态</span><span v-if="item.orderStatus=='22'">待现场勘察</span></p>
                 <p class="pswidth"><span>内容说明</span> <span>{{item.customerDescrive}}</span> </p>
             </div>

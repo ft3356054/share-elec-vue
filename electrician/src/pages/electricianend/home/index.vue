@@ -107,6 +107,7 @@
                         <p v-show="item.orderElectricianStatus==='25'" style="color:red">待验收</p>
                         <p v-show="item.orderElectricianStatus==='26'" style="color:red">待填写维修费</p>
                         <p v-show="item.orderElectricianStatus==='31'" style="color:red">施工中</p>
+                        <p v-show="item.orderElectricianStatus==='32'" style="color:red">待支付维修费</p>
                         <p v-show="item.orderElectricianStatus==='2'" style="line-height:0"><button @click="quxiao(item)">取消</button> <button class="jiedan" @click="jiedan(item)">接单</button></p>
                     </dd>
                 </dl>
@@ -383,6 +384,12 @@ export default {
             this.$router.push({name:'Uploadcontract',params:{orderId:item.orderId,electricianId:this.electricianId}})
          }else if(orderElectricianStatus==="31"){
             this.$router.push({name:'Completion',params:{orderId:item.orderId,electricianId:this.electricianId}})
+         }else if(orderElectricianStatus==="32"){
+            　this.$dialog.alert({
+                        width:"80%",
+                        message: "等待用户支付",
+                        closeOnClickOverlay:true
+                  });
          }else if(orderElectricianStatus==="3"){
             this.$router.push({name:'Personneladd',params:{orderId:item.orderId,electricianId:this.electricianId}})
          }else if(orderElectricianStatus==="4"){

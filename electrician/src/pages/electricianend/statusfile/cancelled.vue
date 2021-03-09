@@ -17,7 +17,7 @@
                 <p class="pswidth"><span>电压类型</span><span>{{item.voltage}}</span></p>
                 <p class="pswidth"><span>需求类型</span><span>{{item.orderTypeId}}</span></p>
                 <p class="pswidth"><span>地址</span><span>{{item.customerAddress}}</span></p>
-                <p class="pswidth"><span>上门费</span><span id="money">¥{{item.customerPrice}}</span></p>
+                <!-- <p class="pswidth"><span>上门费</span><span id="money">¥{{item.customerPrice}}</span></p> -->
                 <p class="pswidth"><span>状态</span><span>已取消</span></p>
                 <p class="pswidth"><span>内容说明</span> <span>{{item.customerDescrive}}</span> </p>
                 <p class="pswidth"><span>发单时间</span><span>{{item.createTime}}</span></p>

@@ -14,7 +14,7 @@
                 <p class="pswidth"><span>联系人</span><span>{{item.customerName}}</span> </p>
                 <p class="pswidth del"><span>联系电话</span> <span>{{item.customerPhonenumber}}</span></p>
                 <p class="pswidth del"><span>发单时间</span> <span>{{item.createTime}}</span></p>
-                <p class="pswidth"><span>上门费</span><span id="money">{{item.customerPrice}}</span></p>
+                <!-- <p class="pswidth"><span>上门费</span><span id="money">{{item.customerPrice}}</span></p> -->
                 <p class="pswidth"><span>状态</span><span v-if="item.orderStatus==='23'">待支付</span><span v-if="item.orderStatus==='26'">待填写维修费</span></p>
                 <p class="pswidth"><span>勘察情况</span> <span>{{item.electricianDescrive}}</span> </p>
             </div>
