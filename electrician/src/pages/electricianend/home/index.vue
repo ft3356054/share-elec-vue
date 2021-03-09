@@ -557,8 +557,7 @@ export default {
             geolocation.getCurrentPosition((r)=>{
                     this.log=r.point.lng+""
                     this.lat=r.point.lat+""
-                    console.log(this.log)
-                    console.log(this.lat)
+                    console.log(r)
                     var params={"items":[{"electricianId":this.electricianId,"lon":this.log,"lat":this.lat}]}
                     this.$axios.post("/elecPosition/save", params) .then(res => {
 

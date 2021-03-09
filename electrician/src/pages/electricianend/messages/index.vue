@@ -337,9 +337,9 @@ height: 100%;
 background: #f0f6fd;
 display: flex;
 flex-direction: column;
-padding-bottom: 20px;
-box-sizing: border-box;
-overflow: auto;
+/* padding-bottom: 20px;
+box-sizing: border-box; */
+/* overflow: auto; */
 }
 /deep/ .van-pull-refresh{
   overflow: auto;
