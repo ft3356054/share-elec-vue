@@ -15,7 +15,7 @@
                 <p class="pswidth"><span>发单时间</span><span>{{item.createTime}}</span></p>
                 <p class="pswidth"><span>状态</span><span>已完成</span></p>
                 <p class="pswidth"><span>完成时间</span><span>{{item.finishTime}}</span></p>
-                <p class="pswidth"><span>上门费</span><span id="money">¥{{item.customerPrice}}</span></p>
+                <!-- <p class="pswidth"><span>上门费</span><span id="money">¥{{item.customerPrice}}</span></p> -->
                 <p class="pswidth"><span>维修价格</span><span id="money1">¥{{item.electricianPrice}}</span></p>
                 <p class="pswidth"><span>勘察情况</span> <span>{{item.electricianDescrive}}</span> </p>
                 <p class="pswidth"><span>施工人员</span> <span style="display:inline-block;width:50px;overflow:hidden;word-break:break-all">{{item.remarkStr1}}</span> </p>

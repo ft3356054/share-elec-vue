@@ -114,9 +114,15 @@ export default {
       this.$router.go(-1)
     },
     seebtn(item){
+      var _this=this
             this.$axios.get(`/notifyAnnounce/read/?params={"filter":["announceId=${item.announceId}","announceUserId=${item.announceUserId}"]}`).then(res => {
-              if(res.data.resultValue){
-                this.orderId=res.data.resultValue.items[0].orderId
+                console.log(res)
+              
+             if(res.data.resultValue){
+                console.log(_this.orderId)
+
+                _this.orderId=item.orderId
+                console.log(_this.orderId)
                 this.getdetail()
               }else{
 
@@ -155,6 +161,8 @@ export default {
                     this.$router.push({name:'Uploadcontract',params:{orderId:items.orderId,electricianId:this.electricianId}})
                 }else if(items.orderElectricianStatus==="31"){
                     this.$router.push({name:'Completion',params:{orderId:items.orderId,electricianId:this.electricianId}})
+                }else if(items.orderElectricianStatus==="32"){
+                    Toast.fail("待用户支付")
                 }else if(items.orderElectricianStatus==="3"){
                     this.$router.push({name:'Personneladd',params:{orderId:items.orderId,electricianId:this.electricianId}})
                 }else if(items.orderElectricianStatus==="4"){
