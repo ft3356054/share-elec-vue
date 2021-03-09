@@ -142,10 +142,7 @@ export default {
     };
   },
   created() {
-        window.initBaiduMapScript = () =>{
-        this.getlocation();
-    }
-     loadBMap('initBaiduMapScript');
+
   }, 
     mounted() {
      this.select();   //获取类型的数据
@@ -153,7 +150,10 @@ export default {
     this.baseVoltage();  //获取电压
      this.customerId = this.$route.query.cust;
      this.custtom();  //获取个人信息
-
+        window.initBaiduMapScript = () =>{
+        this.getlocation();
+    }
+     loadBMap('initBaiduMapScript');
   },
   methods: {
     showPopup() {
@@ -299,7 +299,7 @@ export default {
                     console.log(this.log,"x")
                     console.log(this.lat,"y")
                     this.addressLongitude=this.log
-                    this.addressLatitud= this.lat
+                    this.addressLatitude= this.lat
                     // console.log(this.addressLongitude,"x1")
                     // console.log(this.addressLatitud,"y1")
                     var params={"items":[{"electricianId":this.electricianId,"lon":this.log,"lat":this.lat}]}
