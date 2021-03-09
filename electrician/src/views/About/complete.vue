@@ -38,7 +38,7 @@
         </li>
         <li>
           <div class="left">完成时间</div>
-          <b>{{ item.finishTime }}</b>
+          <span>{{ item.finishTime }}</span>
         </li>
         <li>
          <div class="left">维修费</div>
@@ -258,7 +258,7 @@ export default {
         font-weight: normal;
       }
       span {
-        // font-weight: 800;
+           display: inline-block;
         color: #343434;
       }
       .momy {

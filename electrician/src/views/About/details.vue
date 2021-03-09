@@ -173,6 +173,7 @@ export default {
         font-weight: normal;
       }
       span {
+            display: inline-block;
         color: #343434;
       }
       .momy {
