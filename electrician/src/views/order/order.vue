@@ -35,7 +35,7 @@
         <div class="content" v-show="num==0" v-for="(item,index) in list" :key="index">
             <div class="typebox">
                 <p><span>类别</span><span>{{item.customerDescriveTitle}}</span></p>
-                <p>{{item.orderStatus}}</p>
+                <p></p>
                 <p v-if="item.orderStatus=='0'">上门费 {{item.customerPrice }}</p>
                 <p v-else-if="item.orderStatus=='23'">维修费 {{item.electricianPrice }}</p>
                 <p v-else-if="item.orderStatus!=='0'|| item.orderStatus!=='23' ">{{item.createTime }}</p>
@@ -92,7 +92,7 @@
         <div class="content" v-show="num==1" v-for="(item,index) in list" :key="'in'+index">
             <div class="typebox">
                 <p><span>类别</span><span>{{item.customerDescriveTitle}}</span></p>
-                <p>{{item.orderStatus}}</p>
+                <p></p>
                 <p v-if="item.orderStatus=='0'">上门费 {{item.customerPrice }}</p>
                 <p v-else-if="item.orderStatus=='23'">维修费 {{item.electricianPrice }}</p>
                 <p v-else-if="item.orderStatus!=='0'|| item.orderStatus!=='23' ">{{item.createTime }}</p>
@@ -149,7 +149,7 @@
         <div class="content" v-show="num==2" v-for="(item,index) in list" :key="'info2'+index">
             <div class="typebox">
                 <p><span>类别</span><span>{{item.customerDescriveTitle}}</span></p>
-                <p>{{item.orderStatus}}</p>
+                <p></p>
                  <p>{{item.finishTime }}</p>
             </div>
             <div class="addressbox">
