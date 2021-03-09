@@ -127,7 +127,7 @@ export default {
       voltage: "",  //  电压
       customerAddress: "", //地址
       appointmentTime: "",  //预约时间
-      areaId:"11111", //省份ID
+      areaId:"1", //省份ID
       minDate: new Date(),
       maxDate: new Date(2050, 10, 1),
       currentDate: new Date(),
@@ -142,15 +142,19 @@ export default {
     };
   },
   created() {
-    this.select()   //获取类型的数据
-    this.iden()  //获取身份
-    this.baseVoltage()  //获取电压
-     window.initBaiduMapScript = () =>{
+        window.initBaiduMapScript = () =>{
         this.getlocation();
     }
      loadBMap('initBaiduMapScript');
   }, 
+    mounted() {
+     this.select();   //获取类型的数据
+    this.iden();  //获取身份
+    this.baseVoltage();  //获取电压
+     this.customerId = this.$route.query.cust;
+     this.custtom();  //获取个人信息
 
+  },
   methods: {
     showPopup() {
       this.show = true;
@@ -292,8 +296,8 @@ export default {
             geolocation.getCurrentPosition((r)=>{
                     this.log=r.point.lng+""
                     this.lat=r.point.lat+""
-                    // console.log(this.log,"x")
-                    // console.log(this.lat,"y")
+                    console.log(this.log,"x")
+                    console.log(this.lat,"y")
                     this.addressLongitude=this.log
                     this.addressLatitud= this.lat
                     // console.log(this.addressLongitude,"x1")
@@ -323,10 +327,6 @@ export default {
            this.files=file.file  
       // console.log(this.files)
     },
-  },
-  mounted() {
-    this.customerId = this.$route.query.cust;
-     this.custtom()  //获取个人信息
   },
     destroyed() {
       clearInterval(this.set)

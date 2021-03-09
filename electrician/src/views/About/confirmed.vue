@@ -52,7 +52,7 @@
     </div>
      <div class="btt"><button @click="qd()">确认订单</button><button @click="thshow()">退回</button></div>
       <van-dialog v-model="ths" title="" show-cancel-button class="show" 
-                        @confirm="th(item.orderId)" @cancel="cancels"
+                        @confirm="th()" @cancel="cancels"
                         >
                              <div class="box">确定退回订单吗？退回订单后不能恢复</div>
                           </van-dialog>
@@ -80,6 +80,10 @@ export default {
   methods: {
     fh() {
       this.$router.go(-1);
+    },
+      cancels(){
+     this.show=false
+     this.ths=false
     },
       // 点击图片显示
     imgs(){
@@ -235,7 +239,6 @@ export default {
         font-weight: normal;
       }
       span {
-        font-weight: 800;
         color: #343434;
       }
       .momy {

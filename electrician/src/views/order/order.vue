@@ -218,10 +218,6 @@ export default {
   mounted() {
     this.cust = this.$route.query.cust;
      this.shousui(this.num)
-        window.initBaiduMapScript = () =>{
-        this.getlocation();
-    }
-     loadBMap('initBaiduMapScript');
   },
   methods: {
     fh(){
@@ -573,20 +569,7 @@ export default {
       }
         })
       },
-      // 获取坐标
-      getlocation(){
-           const geolocation =new BMap.Geolocation();
-            geolocation.getCurrentPosition((r)=>{
-                    this.log=r.point.lng+""
-                    this.lat=r.point.lat+""
-                    console.log(this.log,"x")
-                    console.log(this.lat,"y")
-                    var params={"items":[{"electricianId":this.electricianId,"lon":this.log,"lat":this.lat}]}
-                    this.$axios.post("/elecPosition/save", params) .then(res => {
 
-                    });
-            })
-        },
   },
 }
 </script>

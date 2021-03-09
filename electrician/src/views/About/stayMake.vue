@@ -199,7 +199,6 @@ export default {
         font-weight: normal;
       }
       span {
-        font-weight: 800;
         color: #343434;
       }
       .momy {
