@@ -206,7 +206,7 @@ export default {
       if (index === 0) {
                　let date=new Date();
         // console.log(date.getHours())
-            　　if( date.getHours()>=9 && date.getHours() <=18 ){
+            　　if( date.getHours()>=9 && date.getHours() <=24 ){  //18
                       this.$router.push({
                         path:"/demand",
                         query:{

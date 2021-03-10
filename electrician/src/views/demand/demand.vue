@@ -307,10 +307,6 @@ export default {
                     this.addressLatitude= this.lat
                     // console.log(this.addressLongitude,"x1")
                     // console.log(this.addressLatitud,"y1")
-                    var params={"items":[{"electricianId":this.electricianId,"lon":this.log,"lat":this.lat}]}
-                    this.$axios.post("/elecPosition/save", params) .then(res => {
-
-                    });
                     
             })
         },
