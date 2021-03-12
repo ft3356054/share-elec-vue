@@ -72,6 +72,11 @@ export default {
     },
     // 点击添加户号
     but(){
+        if(this.selected==""){
+             Toast("请选择地区")
+       }else if(this.digit==""){
+             Toast("请输入户号")
+       }else{
        this.$axios.post(
                 `/customerInfo/save`,
                `{"items":[{"customerId":"${this.customerId}","provinceId":"${this.selected}","registeredNumber":"${this.digit}"}]}`,{headers: { "Content-Type": "application/json" }}, {withCredentials: true} 
@@ -84,6 +89,7 @@ export default {
                        this.$router.push("/my")
                   } 
               })  
+       }
     },
   },
  
