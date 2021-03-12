@@ -75,7 +75,7 @@
         <ul>
              <li v-for="(item,index) in tabs" :key="index" :class="{active:num==index}" @click="nums(index)">{{item}}</li>
         </ul>
-    </div>
+    </div>0.
                     <!-- 无数据时的展示 -->
      <div class="no-comment" v-if="this.data.length===0">
         <img src="../../../assets/images/wu.png" alt="">
@@ -646,9 +646,9 @@ header{
 header .backimg{
     width: 100%;
     height: 214px;
-     background: url(../../../assets/images/banner.png) no-repeat;
+    background: url(../../../assets/images/banner.png) no-repeat;
     background-size: 100% 100%;
-    padding-top: 10px;
+    padding-top: 40px;
     box-sizing: border-box;
 }
 header .backimg p{
@@ -928,4 +928,4 @@ margin-top: 5px;
     font-size: 13px;
   }
 }
-</style>>
+</style>

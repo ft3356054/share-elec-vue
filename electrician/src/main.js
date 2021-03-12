@@ -37,8 +37,15 @@ import VueAMap from 'vue-amap'
 Vue.use(VueAMap)
 Vue.prototype.$axios = axios
 Vue.config.productionTip = false
-axios.defaults.baseURL = process.env.BASE_URL
+// axios.defaults.baseURL = process.env.BASE_URL
 /* eslint-disable no-new */
+if(process.env.NODE_ENV === 'production'){
+  if(process.env.VUE_APP_FLAG === 'pro'){
+    axios.defaults.baseURL= "http://30.20.109.76:32265/"
+  }else{
+    axios.defaults.baseURL= "http://30.20.109.76:32265/"
+  }
+}
 VueAMap.initAMapApiLoader({
   key: 'b4ea20b01a3b0bfccaf8d72153915391',
   plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.Geolocation', 'AMap.Geocoder', 'AMap.AMapManager', 'AMap.Marker'],
@@ -53,9 +60,14 @@ import VueBus from 'vue-bus';
 Vue.use(VueBus);
 
 import './plugins/registryComponents.js'
-
+// App.all("*",function(req,res,next){
+//   res.header("Access-Control-Allow-Origin","*");
+//   res.header("Access-Control-Allow-Headers","X-Requested-With,Content-Type");
+//   res.header("Access-Control-Allow-Methods","PUT,POST,GET,DELETE,OPTIONS")
+// })
+// App.use("/",router)
 // 打印当前的环境
-console.log(process.env.VUE_APP_URL,"环境")
+// console.log(process.env.VUE_APP_URL,"环境")
 Vue.config.productionTip = false
 
 new Vue({
