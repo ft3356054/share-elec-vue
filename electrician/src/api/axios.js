@@ -3,7 +3,7 @@ let http = axios.create({
     // baseURL: 'http://172.20.10.13:8083',
    baseURL: process.env.NODE_ENV==='development' ? "/":process.env.VUE_APP_URL ,
     timeout: 20000,
-    withCredentials: true,
+    withCredentials: false,
     headers: {
         'Content-Type': 'application/json;charset=UTF-8',
         "withCredentials": false,

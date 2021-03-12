@@ -32,6 +32,7 @@ export default {
          uexCore.init(JSON.stringify({}),function(data){
            if(data.code=='1'){
               console.log(data.data.userId) //获取用户的id
+              alert(data.data.userId)
            }
          })
        }

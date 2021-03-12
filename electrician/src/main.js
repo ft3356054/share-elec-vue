@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import Api from './api/axios.js';
+// import './apiconfig/uap.js'
 Vue.prototype.$api = Api;
 // Vant
 import Vant from 'vant';
@@ -31,7 +32,7 @@ Vue.use(VueLazyload, {
   listenEvents: [ 'scroll' ]  //你想监听的事件
 })
 import axios from "axios"
-axios.defaults.withCredentials=true
+axios.defaults.withCredentials=false
 // 引用地图
 import VueAMap from 'vue-amap'
 Vue.use(VueAMap)
