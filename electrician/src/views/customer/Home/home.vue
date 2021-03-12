@@ -258,11 +258,11 @@ export default {
     },
     // 验收通过
     yanshou(orderId){
+       this.orderId=orderId
         this.$dialog.confirm({
       width:"80%",
       message:'确定通过验收吗？'
     }).then(()=>{
-      this.orderId=orderId
       this.items={}
          var fd = new FormData()
          this.items=fd
@@ -369,13 +369,13 @@ export default {
                           `{"orderId":"${this.orderId}",  
                               "orderStatus":"3",
                               }`)
-                      this.$axios.post("/orderCustomer/save",this.items,{withCredentials: true}).then(res=>{
+                      this.$axios.post("/orderCustomer/save",this.items).then(res=>{
                           if(res.data.successful==false){
-                                  console.log(res.data.resultHint)
+                                  // console.log(res.data.resultHint)
                                   Toast.fail(res.data.resultHint)
                               }else{
                                   Toast.success('确定成功')
-                                  this.$router.push("/customer")
+                                   this.reload() 
                               } 
                       })   
      },

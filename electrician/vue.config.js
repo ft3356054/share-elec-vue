@@ -1,42 +1,3 @@
-// const FileManagerPlugin = require("filemanager-webpack-plugin"); //引入
-// const packageName = 'dist';
-// var path = require('path')
-// module.exports = {
-//   productionSourceMap: false,
-//   outputDir: packageName, // 包名，我这里将他提取成了一个常量
-//   devServer: {
-//     open: true, // 默认打开
-//     port: 8080, // 本地服务端口口
-//     proxy: {
-//         // 代理
-//       "/api": {
-//         target: 'http://localhost:8083', //服务器地址
-//         changeOrigin: true,
-//         ws: true,
-//         pathRewrite: {
-//           "^/api": ""
-//         }
-//       }
-//     }
-//   },
-//   // webpack配置
-//   configureWebpack: config => {
-//     config.resolve = {
-//       extensions: ['.js', '.vue', '.json', '.ts'],
-//       alias: {
-//         '@': path.join(__dirname, 'src')
-//       }
-//     }
-//     // plugins插件是一个数组且webpack本身已经有一些配置，那么我们需要将其追加到数组中
-//     let fileManagerPlugin = new FileManagerPlugin({ 
-    
-//     })
-//     config.plugins.push(fileManagerPlugin) // 追加到webpack plugins数组中。
-//   }
-// };
-
-
-
 // const path = require('path')
 
 // function resolve (dir) {
@@ -139,7 +100,7 @@ module.exports = {
   }
 };
 
-
+  
 
       // module.exports = {
       //   devServer: {

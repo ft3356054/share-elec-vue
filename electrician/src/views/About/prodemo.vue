@@ -40,29 +40,22 @@
           <div class="left">完成时间</div>
           <b>{{ item.updateTime }}</b>
         </li>
-        <li>
-         <div class="left">维修费</div>
-          <span class="momy">￥{{ item.electricianPrice }}</span>
-        </li>
-        <li>
+        <li style="padding-bottom:20px">
           <div class="left">探测情况</div>
           <span style="display:table-row;">{{ item.electricianDescrive }}
           </span>
         </li>
-        <li style="padding-bottom:20px">
-          <div class="left" >施工内容</div>
-          <span style="display:table-row;">{{ item.constructionContent}} </span>
-        </li>
       </ul>
     </div>
-     <div class="box" v-for="(item,id) in demo" :key="id+2">
+     <!-- <div class="box" v-for="(item,id) in demo" :key="id+2">
          <h4>合同</h4>
          <div class="gz"  @click="img">   
         <img :src="item.orderContract" alt="" />
          <van-image-preview v-model="show" :images="[item.orderContract]" >
        </van-image-preview>
       </div>
-      </div>
+      </div> -->
+       <div class="btt"><button @click="fh">返回</button></div>
   </div>
 </template>
 
@@ -238,6 +231,34 @@ export default {
       width: 100%;
       height: 100%;
     }
+  }
+}
+.btt {
+  width: 100%;
+  height: 80px;
+  float: left;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+  // margin-top: 50px;
+  button {
+    margin-left: 10px;
+    width: 85px;
+    height: 37px;
+   background: -webkit-linear-gradient(#83ccfa,#7bcbf7,#6ec1f5,#61bbf3,#57b6f0);
+    border-radius: 20px;
+    border: none;
+    outline: none;
+    color: #fff;
+    font-size: 16px;
+    // font-weight: bold;
+  }
+  :nth-child(1){
+    background: none;
+    color: #6b6c6c;
+    border: 1px solid #c0c2c4;
   }
 }
 </style>

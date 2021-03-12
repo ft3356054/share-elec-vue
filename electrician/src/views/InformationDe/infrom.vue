@@ -57,7 +57,7 @@ export default {
           this.$router.push("/indet")
       },
       fh(){
-          this.$router.go(-1)
+        this.$router.push("/customer")
       }
   },
 };

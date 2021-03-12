@@ -37,7 +37,7 @@ export default {
   },
   methods: {
       fh(){
-          this.$router.go(-1)
+           this.$router.push("/infrom")
       }
   },
 }
