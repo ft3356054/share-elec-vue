@@ -637,8 +637,8 @@ header {
     width: 25px;
     height: 25px;
     position: absolute;
-    top: 7%;
-    left: 3%;
+    top: 4%;
+    left: 4%;
     img {
       width: 100%;
       height: 100%;
@@ -648,8 +648,8 @@ header {
     width: 25px;
     height: 25px;
     position: absolute;
-    top: 7%;
-    right: 3%;
+    top: 4%;
+    right: 4%;
   }
 }
 nav {
