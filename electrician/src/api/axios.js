@@ -7,7 +7,7 @@ let http = axios.create({
     headers: {
         'Content-Type': 'application/json;charset=UTF-8',
         "withCredentials": false,
-        "Access-Control-Allow-Origin":"http://30.20.109.76:32265/"
+        // "Access-Control-Allow-Origin":"http://30.20.109.76:32265/"
     },
     transformRequest: [function (data) {
         let newData = '';

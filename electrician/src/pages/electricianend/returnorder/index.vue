@@ -11,8 +11,8 @@
                 <textarea v-model="returncontext" name="" id="" cols="30" rows="5" placeholder="请输入退回原因"></textarea>
             </div>
             <div>
-                <p style="font-weight:bold;margin-bottom:20px">勘察原因:</p>
-                <textarea v-model="returncontext1" name="" id="" cols="30" rows="5" placeholder="请输入勘察原因"></textarea>
+                <p style="font-weight:bold;margin-bottom:20px">勘察情况:</p>
+                <textarea v-model="returncontext1" name="" id="" cols="30" rows="5" placeholder="请输入勘察情况"></textarea>
             </div>
         </div>
     <div class="buttons"><button @click="Order">确定</button></div>
