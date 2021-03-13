@@ -80,7 +80,7 @@
                          <van-dialog v-model="ths" title="" show-cancel-button class="show" 
                         @confirm="th(item.orderId)" @cancel="cancels"
                         >
-                             <div class="box">确定退回订单吗？退回订单后不能恢复</div>
+                             <div class="box">确定退回订单吗？</div>
                           </van-dialog>
                     </dd>
                       <dd v-else-if="item.orderStatus=='25' && item.orderComplaintId===null">
@@ -137,7 +137,7 @@
                          <van-dialog v-model="ths" title="" show-cancel-button class="show" 
                         @confirm="th(item.orderId)" @cancel="cancels"
                         >
-                             <div class="box">确定退回订单吗？退回订单后不能恢复</div>
+                             <div class="box">确定退回订单吗？</div>
                           </van-dialog>
                     </dd>
                      <dd v-else-if="item.orderStatus=='25' && item.orderComplaintId===null">

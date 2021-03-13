@@ -83,7 +83,7 @@
                          <van-dialog v-model="ths" title="" show-cancel-button class="show" 
                         @confirm="th(item.orderId)" @cancel="cancels"
                         >
-                             <div class="box">确定退回订单吗？退回订单后不能恢复</div>
+                             <div class="box">确定退回订单吗？</div>
                           </van-dialog>
                     </dd>
                 </dl>
@@ -145,6 +145,7 @@
 
 <script>
 import { Toast } from 'vant';
+import {mapActions ,mapState} from "vuex"
 export default {
   name: "Home",
   components: {},
@@ -178,12 +179,15 @@ export default {
       ths:false,
       path:"ws://localhost:8083/websocketserver/",  //websocketserver
       messages:"",
-      realNameAuth:"0"
+      realNameAuth:"0",
+      opid:"",
+      names:"",
+      districtid:""
     };
   },
   inject:['reload'],
   created () {
-   
+    this.initData()  //获取信息
   },
   mounted() {
     //  this.realNameAuth=localStorage.getItem("realNameAuth")
@@ -194,10 +198,58 @@ export default {
     this.getGunlist()   // 获取滚动数据
     this.getlist(this.num)   //获取订单数据
      this.WebSocketTest()  //websocketserver
-
-  
+     this.initData()  //获取信息
+     this.next()
+   
   },
   methods: {
+        // 获得初始化数据，获取token,userid
+    initData(){
+       let _this=this
+       if(window.uexCore){
+         uexCore.init(JSON.stringify({}),function(data){
+           if(data.code=='1'){
+              console.log(data.data.userId,"用户") //获取用户的id
+              console.log(data,"信息") //获取用户的id
+              // opid=data.data.userId
+              // names=data.data.realName_dst
+              _this.$store.commit('opid',data.data.userId)  //用户姓名
+              _this.$store.commit('districtid1',data.data.districtid)  //用户区域
+              _this.$store.commit('names',data.data.realName_dst)  //用户姓名 
+              _this.opid=data.data.userId
+              console.log( _this.opid,"id") //获取用户的id
+           }
+         })
+       }
+    },
+    next(){
+      this.districtid=this.$store.state.districtid
+      this.names=this.$store.state.name
+      this.opid=this.$store.state.userId
+       console.log(this.names,"用户姓名")
+      console.log(this.opid,"用户编号")
+      console.log(this.districtid,"地区编号")
+      localStorage.setItem("name",this.names)
+          this.$axios.get(`/index/findIndexPage/${this.opid}}`,{withCredentials: true},{
+              }).then(res=>{
+                      //  console.log(res.data,"信息1")
+                      if(res.data.successful==false){
+                        console.log(res.data.resultHint)
+                          Toast.fail(res.data.resultHint)
+                      }else{
+                        console.log(res.data.resultValue.toPage,"sss")
+                          if(res.data.resultValue.toPage=="0"){
+                              this.cust=res.data.resultValue.userId
+                            localStorage.setItem("customerId",this.cust)
+                              // this.$router.push("/")
+                          }else if(res.data.resultValue.toPage=="1"){
+                            this.cust=res.data.resultValue.userId
+                             localStorage.setItem("electricianend",this.cust)
+                              // this.$router.push("/electricianend")
+                          }
+                      } 
+              })
+    },
     nums(index){  
       console.log("dad",index)
      this.getlist(index)
@@ -357,6 +409,7 @@ export default {
                        Toast.fail(res.data.resultHint)
                   }else{
                        Toast.success('退回成功')
+                       this.reload() 
                   } 
           })   
      },

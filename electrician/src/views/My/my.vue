@@ -6,23 +6,23 @@
      <div class="head-top">
          <img src="@/assets/images/information.png" alt="">
          <dl>
-             <dt>{{this.list.customerName}}</dt>
+             <dt>{{this.name}}</dt>
              <dd>{{this.list.customerPhonenumber}}</dd>
          </dl>
          <div class="dian">用户</div>
      </div>
      <div class="head-bottom">
            <div class="box" >实名认证
-               <span v-if="this.realNameAuth=='0'">是</span>
-               <span v-if="this.realNameAuth=='1'">否</span>
-               <span v-if="this.realNameAuth=='2'">待审核</span>
+               <span v-if="this.realNameAuth=='0'" style="color:#87cefa">是</span>
+               <span v-if="this.realNameAuth=='1'" style="color:#87cefa">否</span>
+               <span v-if="this.realNameAuth=='2'" style="color:#87cefa">待审核</span>
             </div>
                <div class="box"  @click="gorenzheng">电工认证
                    <span style="color:#87cefa" v-if="this.list.auditStatus=='0'">未认证</span>
                    <span  style="color:#87cefa" v-else-if="this.list.auditStatus=='1'">待审核</span>
                    <span style="color:#87cefa" v-else-if="this.list.auditStatus=='2'">已审核</span>
                 </div>
-            <!-- <div class="box">电工认证<span @click="gorenzheng"  style="color:#87cefa">高级电工></span></div> -->
+            <div class="box">电工绑定<span @click="bin"  style="color:#87cefa">未绑定</span></div>
             <div class="box" @click="goaccount">常用户号<span>{{this.list.registeredNumber}}</span></div>
      </div>
      <!-- <button>退出登录</button> -->
@@ -36,11 +36,12 @@ export default {
         return {
             customerId:"",
             list:"",
-            realNameAuth:""
+            realNameAuth:"",
+            name:""
         }
     }, 
     mounted() {
-        
+        this.name=localStorage.getItem("name")
       this.customerId=localStorage.getItem("customerId")
        this.realNameAuth=localStorage.getItem("realNameAuth")
     //    console.log(localStorage.getItem("realNameAuth"),"111")
@@ -85,6 +86,9 @@ export default {
     // 常用户号
     goaccount(){
            this.$router.push('/account')
+    },
+     bin(){
+           this.$router.push('/binding')
     }
   },
  
@@ -182,7 +186,7 @@ export default {
         float: right;
     }
 }
-.box:nth-child(3){
+.box:nth-child(4){
     border: none;
 }
 button{

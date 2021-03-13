@@ -69,6 +69,10 @@ const routes = [
     name: 'account',
     component: () => import('../views/My/account.vue')
   }, {
+    path: '/binding', //常用户号
+    name: 'binding',
+    component: () => import('../views/My/binding.vue')
+  }, {
     path: '/certification', //实名认证
     name: 'certification',
     component: () => import('../views/My/certification.vue')

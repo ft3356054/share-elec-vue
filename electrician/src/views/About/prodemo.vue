@@ -26,7 +26,7 @@
         </li>
         <li>
           <div class="left">联系电话</div>
-          <span>{{ item.electricianPrice }}</span>
+          <span>{{ item.electricianPhonenumber }}</span>
         </li>
         <li>
           <div class="left">接单时间</div>
@@ -34,14 +34,14 @@
         </li>
         <li>
           <div class="left">状态</div>
-          <span class="zt"  v-if="item.orderStatus">现场勘查完成</span>
+          <span class="zt"  v-if="item.orderStatus">现场勘察完成</span>
         </li>
         <li>
           <div class="left">完成时间</div>
           <b>{{ item.updateTime }}</b>
         </li>
         <li style="padding-bottom:20px">
-          <div class="left">探测情况</div>
+          <div class="left">勘察情况</div>
           <span style="display:table-row;">{{ item.electricianDescrive }}
           </span>
         </li>

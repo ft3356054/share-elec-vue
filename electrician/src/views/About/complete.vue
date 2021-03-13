@@ -46,7 +46,7 @@
           <span class="momy">￥{{ item.electricianPrice }}</span>
         </li>
         <li>
-          <div class="left">探测情况</div>
+          <div class="left">勘察情况</div>
           <span>{{ item.electricianDescrive }}
           </span>
         </li>

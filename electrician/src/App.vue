@@ -4,6 +4,7 @@
   </div>
 </template>
 <script>
+
 export default {
   provide(){
     return {
@@ -15,8 +16,8 @@ export default {
       isRouterAlive:true
     }
   },
-  created() {
-    // initData()  //获取参数
+  mounted() {
+    // this.initData()  //获取参数
   },
   methods: {
     reload(){
@@ -25,17 +26,7 @@ export default {
         this.isRouterAlive=true
       })
     },
-    // 获得初始化数据，获取token,userid
-    initData(){
-       let _this=this
-       if(window.uexCore){
-         uexCore.init(JSON.stringify({}),function(data){
-           if(data.code=='1'){
-              console.log(data.data.userId) //获取用户的id
-           }
-         })
-       }
-    }
+
   },
   destroyed() {
     localStorage.clear()
