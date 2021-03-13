@@ -75,7 +75,7 @@
         <ul>
              <li v-for="(item,index) in tabs" :key="index" :class="{active:num==index}" @click="nums(index)">{{item}}</li>
         </ul>
-    </div>0.
+    </div>
                     <!-- 无数据时的展示 -->
      <div class="no-comment" v-if="this.data.length===0">
         <img src="../../../assets/images/wu.png" alt="">

@@ -3,6 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import Api from './api/axios.js';
+// import './apiconfig/uap.js'
 Vue.prototype.$api = Api;
 // Vant
 import Vant from 'vant';
@@ -31,7 +32,7 @@ Vue.use(VueLazyload, {
   listenEvents: [ 'scroll' ]  //你想监听的事件
 })
 import axios from "axios"
-axios.defaults.withCredentials=true
+axios.defaults.withCredentials=false
 // 引用地图
 import VueAMap from 'vue-amap'
 Vue.use(VueAMap)
@@ -39,13 +40,13 @@ Vue.prototype.$axios = axios
 Vue.config.productionTip = false
 // axios.defaults.baseURL = process.env.BASE_URL
 /* eslint-disable no-new */
-if(process.env.NODE_ENV === 'production'){
-  if(process.env.VUE_APP_FLAG === 'pro'){
-    axios.defaults.baseURL= "http://30.20.109.76:32265/"
-  }else{
-    axios.defaults.baseURL= "http://30.20.109.76:32265/"
-  }
-}
+// if(process.env.NODE_ENV === 'production'){
+//   if(process.env.VUE_APP_FLAG === 'pro'){
+//     axios.defaults.baseURL= "http://30.20.109.76:32265/"
+//   }else{
+//     axios.defaults.baseURL= "http://30.20.109.76:32265/"
+//   }
+// }
 VueAMap.initAMapApiLoader({
   key: 'b4ea20b01a3b0bfccaf8d72153915391',
   plugin: ['AMap.Autocomplete', 'AMap.PlaceSearch', 'AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.Geolocation', 'AMap.Geocoder', 'AMap.AMapManager', 'AMap.Marker'],

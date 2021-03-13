@@ -26,7 +26,6 @@ export default {
         this.isRouterAlive=true
       })
     },
-
   },
   destroyed() {
     localStorage.clear()
